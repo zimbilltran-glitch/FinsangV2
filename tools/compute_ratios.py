@@ -3,14 +3,15 @@ Phase C CFO Advanced Analytics (compute_ratios.py)
 
 WHAT IT DOES:
 Calculates key financial ratios (Gross Margin, Net Margin, ROE, ROA, Debt/Equity) using data from the
-`income_statement` and `balance_sheet` tables, then upserts the results into the `financial_ratios` table.
+`income_statement` and `balance_sheet` tables mapped directly to the Fireant Universal Data Framework (`tt200_coa`), 
+then upserts the results into the `financial_ratios` table.
 
 WHY IT'S DESIGNED THIS WAY (Architectural Decisions):
 1. Pre-Computation (MOLAP approach): Financial ratios could technically be computed on-the-fly via SQL Views or React frontend. 
    However, pre-computing them into a dedicated `financial_ratios` table dramatically reduces CPU load during API calls 
    and allows complex cross-period queries (e.g., "Find all VN30 companies with ROE > 15% in Q4") instantly.
-2. Cross-Table Dependency: Ratios like ROE require Net Income (from Income Statement) divided by Equity (from Balance Sheet). 
-   Doing this via script acts exactly like a Data Warehouse ETL layer, ensuring data lineage.
+2. Single Source of Truth: We rely purely on exact `item_id`s (e.g. `kqkd_3`, `cdkt_66`) rather than scraping text,
+   guaranteeing mathematical stability and preventing KeyError crashes during Machine Learning processing.
 """
 import os
 import sys
@@ -38,21 +39,17 @@ def fetch_periods(supabase: Client, symbol: str) -> list:
     periods = set([r["period"] for r in response.data])
     return sorted(list(periods))
 
-def get_value(supabase: Client, table: str, symbol: str, period: str, search_items: list) -> float:
+def get_value(supabase: Client, table: str, symbol: str, period: str, target_id: str) -> float:
     """
-    Helper to fetch a value matching any of the search_items names.
-    
-    WHY LIST MATCHING: The KBSV API items sometimes change slightly (e.g., "VỐN CHỦ SỞ HỮU" vs "Tổng cộng nguồn vốn chủ sỡ hữu").
-    Passing an array of synonyms makes the ratio calculation resilient to upstream naming drift.
+    Helper to fetch an exact value matching the Fireant target_id (`item_id`).
     """
-    for item_name in search_items:
-        res = supabase.table(table).select("value").eq("stock_name", symbol).eq("period", period).ilike("item", f"%{item_name}%").execute()
-        if res.data and len(res.data) > 0 and res.data[0]['value'] is not None:
-            return float(res.data[0]['value'])
+    res = supabase.table(table).select("value").eq("stock_name", symbol).eq("period", period).eq("item_id", target_id).execute()
+    if res.data and len(res.data) > 0 and res.data[0]['value'] is not None:
+        return float(res.data[0]['value'])
     return 0.0
 
 def compute_ratios_for_symbol(symbol: str):
-    logger.info(f"Computing CFO Financial Ratios for {symbol}...")
+    logger.info(f"Computing CFO Financial Ratios for {symbol} using Fireant Framework...")
     load_dotenv()
     supabase = connect_supabase()
     
@@ -64,14 +61,14 @@ def compute_ratios_for_symbol(symbol: str):
     ratios_records = []
 
     for period in periods:
-        # Fetch key metrics
-        revenue = get_value(supabase, "income_statement", symbol, period, ["Doanh thu thuần"])
-        gross_profit = get_value(supabase, "income_statement", symbol, period, ["Lợi nhuận gộp"])
-        net_income = get_value(supabase, "income_statement", symbol, period, ["Lợi nhuận sau thuế thu nhập doanh nghiệp"])
+        # Fetch key metrics by Fireant Exact ID
+        revenue = get_value(supabase, "income_statement", symbol, period, "kqkd_3") # 3. Doanh thu thuần
+        gross_profit = get_value(supabase, "income_statement", symbol, period, "kqkd_5") # 5. Lợi nhuận gộp
+        net_income = get_value(supabase, "income_statement", symbol, period, "kqkd_19") # 19. Lợi nhuận sau thuế TNDN
         
-        total_assets = get_value(supabase, "balance_sheet", symbol, period, ["TỔNG CỘNG TÀI SẢN"])
-        total_equity = get_value(supabase, "balance_sheet", symbol, period, ["VỐN CHỦ SỞ HỮU", "Tổng cộng nguồn vốn chủ sỡ hữu"])
-        total_liabilities = get_value(supabase, "balance_sheet", symbol, period, ["NỢ PHẢI TRẢ"])
+        total_assets = get_value(supabase, "balance_sheet", symbol, period, "cdkt_66") # TỔNG CỘNG TÀI SẢN
+        total_equity = get_value(supabase, "balance_sheet", symbol, period, "cdkt_100") # I. Vốn chủ sở hữu
+        total_liabilities = get_value(supabase, "balance_sheet", symbol, period, "cdkt_68") # A. Nợ phải trả
 
         # Calculate Ratios
         gross_margin = (gross_profit / revenue * 100) if revenue else 0.0
@@ -92,6 +89,7 @@ def compute_ratios_for_symbol(symbol: str):
             ratios_records.append({
                 "stock_name": symbol,
                 "asset_type": "STOCK",
+                "source": "KBSV",
                 "ratio_name": ratio_name,
                 "period": period,
                 "value": round(val, 2)
@@ -100,7 +98,7 @@ def compute_ratios_for_symbol(symbol: str):
     if ratios_records:
         logger.info(f"Upserting {len(ratios_records)} ratio records...")
         try:
-            supabase.table("financial_ratios").upsert(ratios_records, on_conflict="stock_name,period,ratio_name").execute()
+            supabase.table("financial_ratios").upsert(ratios_records, on_conflict="stock_name,period,ratio_name,source").execute()
             logger.info("Successfully upserted ratios!")
         except Exception as e:
             logger.error(f"Failed to upsert ratios: {e}")

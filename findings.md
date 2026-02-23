@@ -24,3 +24,8 @@
   3. Lacks Unit Tests (`pytest`) to mock extreme API failures for the recursive node-mapping functions.
 - **Timestamp:** 2026-02-22T22:33:43+07:00
 - **Auditor:** @cto-mentor-supervisor
+
+## 🔄 V2 Pivot: Fireant Data Reverse-Engineering Findings
+- **Endpoint Structure**: Fireant uses two distinct endpoints depending on the request type: `full-financial-reports` (Tree-structured arrays) and `financial-reports` (Matrix/Flat structures).
+- **Cash Flow Discovery**: Contrary to initial testing, Cash Flow (LCTT_TT, LCTT_GT) *does* exist on the `full-financial-reports` endpoint. The initial zero-row bug was caused by an out-of-sync COA `report_type` string in the database (`LCTT_GT`) versus the Python script attempting to query the deprecated `LCTT_GIAN_TIEP`.
+- **Duplicate Item Names**: Fireant's JSON payload reuses identical strings (e.g., `- Nguyên giá`) across different sections (Tangible vs. Intangible assets). A standard dictionary lookup will blindly overwrite the first occurrence, destroying data density.

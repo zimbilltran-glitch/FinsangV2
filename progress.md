@@ -10,7 +10,9 @@
 
 ## Phase L – Link
 - **Supabase**: Connection successful via provided API key.
-- **VNStock/KBS**: Cloned `vnstock-agent-guide` (VNstock3_learn repo). Discovered that the correct package is `vnstock` (not `vnstock3`). Used the provided VIP key `vnstock_2d1ee456ced9e231ebdbc66c05b8e9a6` to hit the `kbs` source. Handshake script confirmed that fetching OHLC Quote data works successfully.
+```markdown
+- **VNStock/KBS**: Cloned `vnstock-agent-guide` (VNstock3_learn repo). Discovered that the correct package is `vnstock` (not `vnstock3`). Used the provided VIP key (redacted) to hit the `kbs` source. Handshake script confirmed that fetching OHLC Quote data works successfully.
+```
 
 ## Phase A – Architect
 - Wrote `system-sop.md` and `tools-sop.md` detailing ETL and Data Schemas.

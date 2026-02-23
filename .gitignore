@@ -53,3 +53,16 @@ dist/
 kbsv_items.tmp
 fireant_raw.md
 logs/
+
+# ── CTO Security: Never commit intercepted tokens or raw API payloads ──────
+keys.txt                   # Contains intercepted Fireant Bearer token URLs
+fireant_network.json       # Raw Playwright network intercept dump (112KB)
+fireant_network.log        # Bearer token intercept log
+fireant_unmatched.log      # Unmatched COA items log (internal debug)
+lctt*.json                 # Raw LCTT API response dumps
+lctt_dump.json
+cdkt.txt                   # Raw debug text
+kbsv_items.txt             # Internal API item list
+*.log                      # All log files
+.venv/                     # Python virtual environment
+

@@ -2,7 +2,59 @@ import { useEffect, useState, useMemo } from 'react'
 import { supabase } from './supabaseClient'
 import './App.css'
 
-function App() {
+// ─── CFO Note ──────────────────────────────────────────────────────────────
+// DB stores values in Tỷ VND. Display in Triệu VND (×1000) to match Fireant.
+// Columns sorted newest → oldest (Simplize / Fireant standard).
+// Mini bar chart: newest period bars on LEFT → oldest on RIGHT (newest-first).
+// ────────────────────────────────────────────────────────────────────────────
+
+const STOCK_NAMES = {
+  'NLG': 'CTCP Đầu tư Nam Long',
+  'VND': 'CTCP Chứng khoán VNDirect',
+  'SSI': 'CTCP Chứng khoán SSI',
+  'FPT': 'CTCP Tập đoàn FPT',
+  'HPG': 'CTCP Tập đoàn Hoà Phát',
+}
+
+// Normalize legacy period formats: "Q4/2025" → "2025-Q4"
+function normalizePeriod(p) {
+  if (!p) return p
+  const m = p.match(/^Q(\d)\/(\d{4})$/)
+  if (m) return `${m[2]}-Q${m[1]}`
+  return p
+}
+
+// Format period label for display: "2025-Q4" → "Q4/2025"
+function formatPeriodLabel(p) {
+  if (!p) return p
+  const match = p.match(/^(\d{4})-Q(\d)$/)
+  if (match) return `Q${match[2]}/${match[1]}`
+  if (p.endsWith('-0')) return p.replace('-0', '')
+  return p
+}
+
+// Number formatter: Tỷ VND × 1000 = Triệu VND, comma thousand separator
+function formatNumber(num) {
+  if (num === null || num === undefined || num === 0) return '–'
+  const inMillions = num * 1000
+  // Format: 1,234,567 (comma thousands, dot decimal)
+  return new Intl.NumberFormat('en-US', {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+  }).format(inMillions)
+}
+
+// Is this row a major heading that gets uppercase treatment?
+function isMajorHeading(row) {
+  return (
+    row.levels === 0 ||
+    row.item.startsWith('TỔNG') ||
+    row.item.startsWith('Cộng') ||
+    /^[IVX]+\./.test(row.item)
+  )
+}
+
+export default function App() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [stockName, setStockName] = useState('NLG')
@@ -13,16 +65,14 @@ function App() {
   useEffect(() => {
     async function fetchData() {
       setLoading(true)
-
       const tableMap = {
         'KQKD': 'income_statement_wide',
         'CDKT': 'balance_sheet_wide',
         'LCTT_TT': 'cash_flow_wide',
         'LCTT_GT': 'cash_flow_wide',
-        'CSTO': 'financial_ratios_wide'
-      };
-
-      const tableName = tableMap[reportType] || 'balance_sheet_wide';
+        'CSTO': 'financial_ratios_wide',
+      }
+      const tableName = tableMap[reportType] || 'balance_sheet_wide'
 
       const { data: reports, error } = await supabase
         .from(tableName)
@@ -31,93 +81,90 @@ function App() {
         .order('row_number', { ascending: true })
 
       if (error) {
-        console.error(`Lỗi khi tải dữ liệu từ ${tableName}:`, error)
-      } else if (reports && reports.length > 0) {
-
-        // Filter specific cash flow types since they share the same view and row numbers interleave
-        let filteredReports = reports;
-        if (reportType === 'LCTT_TT') {
-          filteredReports = reports.filter(r => r.item_id.startsWith('lctttt'));
-        } else if (reportType === 'LCTT_GT') {
-          filteredReports = reports.filter(r => r.item_id.startsWith('lcttgt'));
-        }
-
-        // Parent ID calculation 
-        const processed = filteredReports.map((row, index) => {
-          let parent_id = null;
-          if (row.levels > 0) {
-            for (let j = index - 1; j >= 0; j--) {
-              if (filteredReports[j].levels === row.levels - 1) {
-                parent_id = filteredReports[j].item_id;
-                break;
-              }
-            }
-          }
-          return { ...row, parent_id };
-        });
-
-        setData(processed)
-
-        // Generate columns
-        if (processed.length > 0) {
-          const samplePeriodsData = processed[0].periods_data || {}
-          let cols = Object.keys(samplePeriodsData)
-          cols.sort((a, b) => b.localeCompare(a))
-          setPeriods(cols)
-        }
-
-        setExpandedRows({})
-      } else {
-        setData([])
-        setPeriods([])
+        console.error(error)
+        setData([]); setPeriods([]); setLoading(false); return
       }
+      if (!reports || reports.length === 0) {
+        setData([]); setPeriods([]); setLoading(false); return
+      }
+
+      let filtered = reports
+      if (reportType === 'LCTT_TT') filtered = reports.filter(r => r.item_id?.startsWith('lctttt'))
+      if (reportType === 'LCTT_GT') filtered = reports.filter(r => r.item_id?.startsWith('lcttgt'))
+
+      // Normalize period keys inside periods_data
+      const normalized = filtered.map(row => {
+        const rawPd = row.periods_data || {}
+        const pd = {}
+        Object.entries(rawPd).forEach(([k, v]) => { pd[normalizePeriod(k)] = v })
+        return { ...row, periods_data: pd }
+      })
+
+      // Build parent tree
+      const processed = normalized.map((row, i) => {
+        let parent_id = null
+        if (row.levels > 0) {
+          for (let j = i - 1; j >= 0; j--) {
+            if (normalized[j].levels === row.levels - 1) { parent_id = normalized[j].item_id; break }
+          }
+        }
+        return { ...row, parent_id }
+      })
+
+      setData(processed)
+
+      // Collect all unique periods, sort newest → oldest (Z→A)
+      const allPeriods = new Set()
+      processed.forEach(r => Object.keys(r.periods_data || {}).forEach(p => allPeriods.add(p)))
+      const cols = Array.from(allPeriods).sort((a, b) => b.localeCompare(a)).slice(0, 8)
+      setPeriods(cols)
+
+      // Auto-expand L0 + L1
+      const defaultExpanded = {}
+      processed.forEach(r => { if (r.levels <= 1) defaultExpanded[r.item_id] = true })
+      setExpandedRows(defaultExpanded)
       setLoading(false)
     }
-
     fetchData()
   }, [stockName, reportType])
 
   const dataMap = useMemo(() => {
-    const map = {};
-    data.forEach(r => { map[r.item_id] = r; });
-    return map;
-  }, [data]);
+    const m = {}; data.forEach(r => { m[r.item_id] = r }); return m
+  }, [data])
 
-  const isRowVisible = (row) => {
-    if (row.levels === 0) return true;
-    let currParent = dataMap[row.parent_id];
-    while (currParent) {
-      if (!expandedRows[currParent.item_id]) return false;
-      currParent = dataMap[currParent.parent_id];
+  const isVisible = (row) => {
+    if (row.levels === 0) return true
+    let curr = dataMap[row.parent_id]
+    while (curr) {
+      if (!expandedRows[curr.item_id]) return false
+      curr = dataMap[curr.parent_id]
     }
-    return true;
-  };
+    return true
+  }
 
-  const toggleRow = (itemId) => {
-    setExpandedRows(prev => ({
-      ...prev,
-      [itemId]: !prev[itemId]
-    }));
-  };
+  const toggle = (id) => setExpandedRows(p => ({ ...p, [id]: !p[id] }))
 
+  // ── Simplize Mini Bar Chart ────────────────────────────────────────────
+  // periods prop is already newest→oldest. Chart displays newest LEFT → oldest RIGHT.
+  // Positive bars grow UP from the baseline, negative bars grow DOWN.
   const MiniBarChart = ({ values }) => {
-    if (!values || values.length === 0) return null;
-    const maxVal = Math.max(...values.map(Math.abs)) || 1;
+    if (!values || values.length === 0) return <span className="no-chart">–</span>
+    const maxVal = Math.max(...values.map(Math.abs)) || 1
+    const hasNeg = values.some(v => v < 0)
     return (
-      <div className="mini-bar-container">
+      <div className={`mini-bar-container${hasNeg ? ' mixed' : ''}`}>
         {values.map((v, i) => {
-          const heightPct = Math.min(50, Math.max(2, (Math.abs(v) / maxVal) * 50));
-          const isNegative = v < 0;
+          const pct = Math.min(90, Math.max(4, (Math.abs(v) / maxVal) * 90))
           return (
-            <div key={i} className="mini-bar-wrapper" title={v}>
-              <div
-                className={`mini-bar ${isNegative ? 'negative' : 'positive'}`}
-                style={{
-                  height: `${heightPct}%`,
-                  marginTop: isNegative ? '12px' : 'auto',
-                  marginBottom: isNegative ? '0' : '12px',
-                }}
-              ></div>
+            <div key={i} className="bar-col" title={formatNumber(v)}>
+              {/* Positive half — grows UP from baseline */}
+              <div className="bar-pos-area">
+                {v >= 0 && <div className="bar-fill pos" style={{ height: `${pct}%` }} />}
+              </div>
+              {/* Negative half — grows DOWN from baseline */}
+              <div className="bar-neg-area">
+                {v < 0 && <div className="bar-fill neg" style={{ height: `${pct}%` }} />}
+              </div>
             </div>
           )
         })}
@@ -125,112 +172,94 @@ function App() {
     )
   }
 
-  const formatNumber = (num) => {
-    if (num === null || num === undefined) return '-';
-    // Format perfectly to match standard Accounting
-    if (num === 0) return '-';
-    return new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(num);
-  }
-
   return (
     <div className="app">
+      {/* Header */}
       <header className="app-header">
-        <h1><span>⚡</span> Finsang Terminal</h1>
+        <div className="brand">
+          <span className="brand-icon">⚡</span>
+          <span className="brand-name">Finsang Terminal</span>
+        </div>
+        <span className="ticker-badge">{stockName}:HSX</span>
       </header>
 
-      <div className="controls" style={{ display: 'flex', gap: '20px', alignItems: 'center', marginBottom: '10px' }}>
-        <select value={stockName} onChange={e => setStockName(e.target.value)} style={{ padding: '8px', borderRadius: '4px' }}>
-          <option value="NLG">NLG - Tập đoàn Nam Long</option>
-          <option value="VND">VND - VNDirect</option>
-          <option value="SSI">SSI - Chứng khoán SSI</option>
-          <option value="FPT">FPT - Tập đoàn FPT</option>
-          <option value="HPG">HPG - Tập đoàn Hoà Phát</option>
+      {/* Company title */}
+      <div className="company-bar">
+        <span className="company-name">{STOCK_NAMES[stockName]}</span>
+        <span className="company-sub">Báo cáo tài chính · Đơn vị: Triệu VND</span>
+      </div>
+
+      {/* Controls */}
+      <div className="controls">
+        <select className="stock-select" value={stockName} onChange={e => setStockName(e.target.value)}>
+          {Object.entries(STOCK_NAMES).map(([code, name]) => (
+            <option key={code} value={code}>{code} – {name.split(' ').slice(-2).join(' ')}</option>
+          ))}
         </select>
       </div>
 
-      <div className="tabs-container" style={{ display: 'flex', gap: '5px', marginBottom: '20px', borderBottom: '1px solid #333', paddingBottom: '0px' }}>
+      {/* Tabs */}
+      <div className="tabs">
         {[
           { id: 'CDKT', label: 'Cân đối kế toán' },
           { id: 'KQKD', label: 'Kết quả kinh doanh' },
-          { id: 'LCTT_TT', label: 'LCTT Trực tiếp' },
-          { id: 'LCTT_GT', label: 'LCTT Gián tiếp' },
-          { id: 'CSTO', label: 'Chỉ số tài chính' }
-        ].map(tab => (
-          <button
-            key={tab.id}
-            className={`tab-button ${reportType === tab.id ? 'active' : ''}`}
-            onClick={() => setReportType(tab.id)}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: reportType === tab.id ? '#2a2a2a' : 'transparent',
-              color: reportType === tab.id ? '#4ade80' : '#888',
-              border: 'none',
-              borderBottom: reportType === tab.id ? '2px solid #4ade80' : '2px solid transparent',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            {tab.label}
+          { id: 'LCTT_TT', label: 'LCTT trực tiếp' },
+          { id: 'LCTT_GT', label: 'LCTT gián tiếp' },
+          { id: 'CSTO', label: 'Chỉ số tài chính' },
+        ].map(t => (
+          <button key={t.id} className={`tab${reportType === t.id ? ' active' : ''}`} onClick={() => setReportType(t.id)}>
+            {t.label}
           </button>
         ))}
       </div>
 
-      <div className="table-container">
+      {/* Table */}
+      <div className="table-wrap">
         {loading ? (
-          <div className="loading">Đang tải dữ liệu từ Supabase...</div>
+          <div className="state-msg">Đang tải...</div>
         ) : data.length === 0 ? (
-          <div className="loading">Hệ thống ghi nhận API KBSV không trả về dữ liệu {reportType} trực tiếp/chi tiết cho {stockName} (Trị số bằng 0).</div>
+          <div className="state-msg">Không có dữ liệu {reportType} cho {stockName}</div>
         ) : (
-          <table>
+          <table className="fin-table">
             <thead>
               <tr>
-                <th>Bảng chỉ số tài chính (Tỷ đồng)</th>
-                <th>Biểu đồ (Z-A)</th>
-                {periods.map(period => (
-                  <th key={period}>{period}</th>
-                ))}
+                <th className="th-item">Chỉ tiêu</th>
+                <th className="th-chart" />
+                {periods.map(p => <th key={p} className="th-val">{formatPeriodLabel(p)}</th>)}
               </tr>
             </thead>
             <tbody>
-              {data.map((row, index) => {
-                if (!isRowVisible(row)) return null;
-
-                const hasChildren = index < data.length - 1 && data[index + 1].levels > row.levels;
-                const isExpanded = !!expandedRows[row.item_id];
-                const chartValues = periods.map(p => row.periods_data[p] || 0);
-
-                const isMajorHeading = row.levels === 0 ||
-                  row.item.startsWith('Cộng') ||
-                  /^[IVX]+\./.test(row.item);
+              {data.map((row, idx) => {
+                if (!isVisible(row)) return null
+                const hasChildren = idx < data.length - 1 && data[idx + 1].levels > row.levels
+                const isOpen = !!expandedRows[row.item_id]
+                // Newest-first chart values align with column order
+                const chartVals = periods.map(p => row.periods_data?.[p] || 0)
+                const major = isMajorHeading(row)
+                const displayLabel = major ? row.item.toUpperCase() : row.item
 
                 return (
-                  <tr key={row.item_id} className={`table-row-level-${row.levels} ${isMajorHeading ? 'parent-row' : 'child-row'}`}>
-                    <td>
-                      <div className="item-name-cell" style={{ paddingLeft: `${row.levels * 20}px` }}>
-                        {hasChildren ? (
-                          <button
-                            className="expand-btn"
-                            onClick={() => toggleRow(row.item_id)}
-                          >
-                            {isExpanded ? '[-]' : '[+]'}
-                          </button>
-                        ) : (
-                          <span className="expand-placeholder"></span>
-                        )}
-                        <span className="item-label">{row.item}</span>
+                  <tr key={row.item_id} className={`fin-row${major ? ' row-major' : ' row-child'} lv${Math.min(row.levels, 4)}`}>
+                    <td className="td-item">
+                      <div className="item-cell" style={{ paddingLeft: `${6 + row.levels * 16}px` }}>
+                        {hasChildren
+                          ? <button className="tog" onClick={() => toggle(row.item_id)}>{isOpen ? '▾' : '▸'}</button>
+                          : <span className="tog-ph" />
+                        }
+                        <span className={`label${major ? ' label-major' : ''}`}>{displayLabel}</span>
                       </div>
                     </td>
-
-                    <td className="chart-td">
-                      {!hasChildren && row.levels > 0 && <MiniBarChart values={chartValues} />}
+                    <td className="td-chart">
+                      {!major && <MiniBarChart values={chartVals} />}
                     </td>
-
-                    {periods.map(period => (
-                      <td key={period}>
-                        {formatNumber(row.periods_data && row.periods_data[period])}
-                      </td>
-                    ))}
+                    {periods.map(p => {
+                      const v = row.periods_data?.[p]
+                      return (
+                        <td key={p} className={`td-val${v < 0 ? ' neg' : ''}`}>
+                          {formatNumber(v)}
+                        </td>
+                      )
+                    })}
                   </tr>
                 )
               })}
@@ -241,7 +270,3 @@ function App() {
     </div>
   )
 }
-
-export default App
-
-
