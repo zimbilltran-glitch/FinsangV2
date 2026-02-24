@@ -1,0 +1,403 @@
+"""
+Phase A/T — Architect + Trigger: Core Pipeline
+pipeline.py — Vietcap API → Normalize → Parquet (Hive) → GC → Supabase log
+
+API field key convention (confirmed Phase L + Phase A refinement):
+  The integer N in keys like bsa{N}, isa{N}, cfa{N}, noa{N} is NOT the absolute
+  Excel row number — it is the 1-indexed sequential position within that sheet's
+  field list (i.e., the position among all rows in that section/tab).
+
+  Balance Sheet  : bsa{N}, bsb{N}, bss{N}, bsi{N}   (N = 1..~287)
+  Income Stmt    : isa{N}, isb{N}, iss{N}, isi{N}   (N = 1..~180)
+  Cash Flow      : cfa{N}, cfb{N}, cfs{N}, cfi{N}   (N = 1..~80)
+  Note           : noa{N}, nos{N}, noi{N}            (N = 1..~413)
+
+  Example: isa5  → 5th row of Income Statement  = Lợi nhuận gộp
+           bsa96 → 96th row of Balance Sheet    = TỔNG CỘNG TÀI SẢN + NV
+
+Phase T (Trigger):
+  Supabase `pipeline_runs` logging enabled via .env (SUPABASE_URL + SUPABASE_KEY).
+  Each section run logs one row. Graceful fallback if supabase-py not installed.
+
+Usage:
+  python Version_2/pipeline.py --ticker VHC
+  python Version_2/pipeline.py --ticker FPT
+  python Version_2/run_all.py          # runs all FINSANG_TICKERS from .env
+"""
+
+import argparse, json, re, os
+from pathlib import Path
+from datetime import datetime
+
+# ── Phase T: load .env credentials gracefully ─────────────────────────────────
+try:
+    from dotenv import load_dotenv
+    load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
+except ImportError:
+    pass  # python-dotenv not installed; secrets from OS environment
+
+import requests
+import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
+
+# ─── Paths ────────────────────────────────────────────────────────────────────
+ROOT       = Path(__file__).parent.parent
+SCHEMA_F   = Path(__file__).parent / "golden_schema.json"
+DATA_DIR   = ROOT / "data" / "financial"
+TMP_DIR    = ROOT / ".tmp" / "raw"
+LOG_FILE   = Path(__file__).parent / "pipeline.log"
+
+# ─── Vietcap API ──────────────────────────────────────────────────────────────
+BASE_URL   = "https://iq.vietcap.com.vn/api/iq-insight-service/v1/company/{ticker}/financial-statement?section={section}"
+HEADERS    = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Accept": "application/json",
+    "Referer": "https://trading.vietcap.com.vn/",
+    "Origin": "https://trading.vietcap.com.vn",
+}
+
+# ─── Section → Sheet mapping ──────────────────────────────────────────────────
+SECTION_MAP = {
+    "BALANCE_SHEET":    "CDKT",
+    "INCOME_STATEMENT": "KQKD",
+    "CASH_FLOW":        "LCTT",
+    "NOTE":             "NOTE",
+}
+
+# ─── Load Golden Schema ───────────────────────────────────────────────────────
+def load_schema() -> dict[str, list[dict]]:
+    """Returns {sheet_id → sorted list of field dicts} from golden_schema.json"""
+    with open(SCHEMA_F, encoding="utf-8") as f:
+        raw = json.load(f)
+    schema = {}
+    for field in raw["fields"]:
+        sid = field["sheet"]
+        schema.setdefault(sid, []).append(field)
+    for sid in schema:
+        schema[sid].sort(key=lambda x: x["row_number"])
+    return schema
+
+# ─── Fetch raw API response ───────────────────────────────────────────────────
+def fetch_section(ticker: str, section: str) -> dict | None:
+    url = BASE_URL.format(ticker=ticker.upper(), section=section)
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=20)
+        r.raise_for_status()
+        data = r.json()
+        if not data.get("successful"):
+            print(f"    ⚠️  API returned unsuccessful: {data.get('msg')}")
+            return None
+        return data.get("data", {})
+    except Exception as e:
+        print(f"    ❌ Fetch error for {section}: {e}")
+        return None
+
+# ─── Save raw JSON to .tmp/ ───────────────────────────────────────────────────
+def save_raw(ticker: str, section: str, payload: dict) -> Path:
+    tmp_dir = TMP_DIR / ticker.upper()
+    tmp_dir.mkdir(parents=True, exist_ok=True)
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+    out = tmp_dir / f"{section.lower()}_{ts}.json"
+    with open(out, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False)
+    return out
+
+# ─── Extract API field prefix for each section ────────────────────────────────
+API_PREFIX = {
+    "BALANCE_SHEET":    ["bsa", "bsb", "bss", "bsi"],
+    "INCOME_STATEMENT": ["isa", "isb", "iss", "isi"],
+    "CASH_FLOW":        ["cfa", "cfb", "cfs", "cfi", "cfs"],
+    "NOTE":             ["noa", "nob", "nos", "noi"],
+}
+
+def get_api_value(row: dict, section: str, sheet_row_idx: int) -> float | None:
+    """
+    Look up a field value from one API row dict.
+
+    Args:
+        row:           One period dict from the API (years[i] or quarters[i]).
+        section:       'BALANCE_SHEET' | 'INCOME_STATEMENT' | 'CASH_FLOW' | 'NOTE'
+        sheet_row_idx: 1-indexed position of this field within its sheet's field list.
+                       Example: 5th Income Statement row → sheet_row_idx=5 → key='isa5'
+
+    Strategy:
+        1. Try all known prefixes for the section with {prefix}{sheet_row_idx}.
+        2. Return the first non-None match; None if all miss.
+    """
+    prefixes = API_PREFIX.get(section, [])
+    for pfx in prefixes:
+        key = f"{pfx}{sheet_row_idx}"
+        if key in row:
+            v = row[key]
+            return None if v is None else float(v)
+    return None  # Key simply not in this API row (field not applicable to this company type)
+
+# ─── Normalize: build flat DataFrame from API payload ─────────────────────────
+def normalize(payload: dict, section: str, sheet_id: str,
+              schema_fields: list[dict]) -> pd.DataFrame:
+    """
+    Convert one API section payload into a tidy long-format DataFrame.
+
+    Column schema:
+        ticker | period_type | period_label | sheet | field_id
+        vn_name | value | unit | level | sheet_row_idx | vietcap_mapped
+
+    Key design decision (Phase A refinement):
+        schema_fields must be sorted by row_number (load_schema() guarantees this).
+        We use enumerate(..., start=1) to get the 1-indexed position within the sheet,
+        which exactly matches the Vietcap API key integer (e.g. isa5 = 5th IS field).
+
+    Quarter period encoding:
+        yearReport   = calendar year (e.g. 2024)
+        lengthReport = 1|2|3|4 for quarterly, 5 for full-year annual rows
+    """
+    records = []
+
+    for period_type in ("years", "quarters"):
+        rows = payload.get(period_type, [])
+        for api_row in rows:
+            yr = api_row.get("yearReport")
+            lr = api_row.get("lengthReport")   # 1-4 = quarter, 5 = full year
+
+            if period_type == "quarters":
+                # Quarter: lengthReport = 1|2|3|4
+                q_num = int(lr) if lr and int(lr) in (1, 2, 3, 4) else None
+                period_label = f"Q{q_num}/{int(yr)}" if (q_num and yr) else (
+                               f"Q?/{int(yr)}" if yr else "unknown")
+                pt_tag = "quarter"
+            else:
+                period_label = str(int(yr)) if yr else "unknown"
+                pt_tag = "year"
+
+            ticker = api_row.get("ticker", api_row.get("organCode", "?"))
+
+            # ── Critical fix: enumerate gives 1-indexed sheet position ──────────
+            # sheet_row_idx=1 → first field in this sheet → API key e.g. bsa1 / isa1
+            # sheet_row_idx=5 → fifth field → bsa5 / isa5 (= Lợi nhuận gộp for IS)
+            for sheet_row_idx, field in enumerate(schema_fields, start=1):
+                val = get_api_value(api_row, section, sheet_row_idx)
+                records.append({
+                    "ticker":         ticker,
+                    "period_type":    pt_tag,
+                    "period_label":   period_label,
+                    "sheet":          sheet_id,
+                    "field_id":       field["field_id"],
+                    "vn_name":        field["vn_name"],
+                    "value":          val,
+                    "unit":           field["unit"],
+                    "level":          field["level"],
+                    "sheet_row_idx":  sheet_row_idx,  # stored for debug/audit
+                    "vietcap_mapped": val is not None,
+                })
+
+    return pd.DataFrame(records)
+
+# ─── Write Parquet with Hive partitioning ─────────────────────────────────────
+def write_parquet(df: pd.DataFrame, ticker: str, period_type: str, sheet_id: str):
+    out_dir = DATA_DIR / ticker.upper() / f"period_type={period_type}" / f"sheet={sheet_id.lower()}"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_file = out_dir / f"{ticker.upper()}.parquet"
+    table = pa.Table.from_pandas(df, preserve_index=False)
+    pq.write_table(table, out_file, compression="snappy")
+    return out_file
+
+# ─── Garbage Collection: delete .tmp/ after successful Parquet write ──────────
+def cleanup_tmp(ticker: str):
+    tmp_dir = TMP_DIR / ticker.upper()
+    if tmp_dir.exists():
+        for f in tmp_dir.iterdir():
+            f.unlink()
+        print(f"  🗑️  GC: cleaned .tmp/raw/{ticker.upper()}/")
+
+# ─── Log to pipeline.log ──────────────────────────────────────────────────────
+def log_run(ticker: str, section: str, sheet_id: str,
+            n_periods: int, status: str, note: str = ""):
+    ts = datetime.now().strftime("%Y-%m-%dT%H:%M:%S+07:00")
+    line = f"{ts} | {ticker} | Phase-T | pipeline.py | {sheet_id} | {n_periods} periods | {status} | {note}"
+    with open(LOG_FILE, "a", encoding="utf-8") as f:
+        f.write(line + "\n")
+    print(f"  📋 Logged: {line}")
+
+# ─── Phase T: Supabase pipeline_runs INSERT ──────────────────────────────────
+def log_supabase(ticker: str, sheet_id: str, period_type: str,
+                 n_periods: int, n_fields: int, mapped_pct: float,
+                 parquet_path: str, status: str, error_log: str = "") -> bool:
+    """
+    Insert one row into Supabase `pipeline_runs` table.
+    Gracefully skips if:
+      - supabase-py not installed
+      - SUPABASE_URL / SUPABASE_KEY missing from environment
+      - Network error
+
+    Returns: True if successfully inserted, False otherwise.
+    """
+    url = os.getenv("SUPABASE_URL")
+    key = os.getenv("SUPABASE_KEY")
+    if not url or not key:
+        print("  ⚠️  Supabase: SUPABASE_URL/KEY not set — skipping cloud log")
+        return False
+
+    try:
+        from supabase import create_client
+    except ImportError:
+        print("  ⚠️  Supabase: supabase-py not installed — pip install supabase")
+        return False
+
+    try:
+        sb = create_client(url, key)
+        payload = {
+            "ticker":            ticker.upper(),
+            "sheet":             sheet_id.upper(),
+            "period_type":       period_type,
+            "n_periods":         n_periods,
+            "n_fields":          n_fields,
+            "mapped_pct":        round(mapped_pct, 2),
+            "source":            "vietcap",
+            "extraction_method": "api",
+            "status":            status,
+            "error_log":         error_log or None,
+            "parquet_path":      parquet_path,
+            "phase":             "T",
+        }
+        sb.table("pipeline_runs").insert(payload).execute()
+        print(f"  ☁️  Supabase: logged {ticker}/{sheet_id} ({status})")
+        return True
+    except Exception as e:
+        print(f"  ⚠️  Supabase insert failed (non-fatal): {e}")
+        return False
+
+
+# ─── Main pipeline ────────────────────────────────────────────────────────────
+def run_pipeline(ticker: str):
+    schema = load_schema()
+    print(f"\n{'═'*60}")
+    print(f"  FINSANG PIPELINE v2.0 — {ticker.upper()}")
+    print(f"  {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"{'═'*60}\n")
+
+    parquet_ok = []
+
+    for section, sheet_id in SECTION_MAP.items():
+        print(f"  ▶ {section} ({sheet_id})")
+        sheet_fields = schema.get(sheet_id, [])
+        if not sheet_fields:
+            print(f"    ⚠️  No fields in Golden Schema for {sheet_id} — skipping")
+            continue
+
+        # 1. Fetch
+        payload = fetch_section(ticker, section)
+        if not payload:
+            log_run(ticker, section, sheet_id, 0, "FAIL", "API fetch returned None")
+            continue
+
+        # 2. Save raw to .tmp/
+        raw_path = save_raw(ticker, section, payload)
+        n_years    = len(payload.get("years", []))
+        n_quarters = len(payload.get("quarters", []))
+        print(f"    ✅ Fetched: {n_years}Y + {n_quarters}Q periods")
+
+        # 3. Normalize
+        df = normalize(payload, section, sheet_id, sheet_fields)
+        mapped_pct = df["vietcap_mapped"].mean() * 100
+        print(f"    🔄 Normalized: {len(df)} rows | Mapped: {mapped_pct:.1f}%")
+
+        # 4. Write Parquet per period_type
+        last_pq_path = ""
+        for pt in df["period_type"].unique():
+            sub = df[df["period_type"] == pt].copy()
+            pq_path = write_parquet(sub, ticker, pt, sheet_id)
+            last_pq_path = str(pq_path.relative_to(ROOT))
+            print(f"    💾 Parquet: {last_pq_path}")
+            parquet_ok.append((section, sheet_id, pt))
+
+        n_periods = n_years + n_quarters
+        n_fields  = len(sheet_fields)
+        log_run(ticker, section, sheet_id, n_periods, "SUCCESS",
+                f"Normalized {len(df)} rows, mapped {mapped_pct:.1f}%")
+
+        # 5. Phase T: log to Supabase pipeline_runs (non-fatal)
+        log_supabase(
+            ticker=ticker,
+            sheet_id=sheet_id,
+            period_type="both",
+            n_periods=n_periods,
+            n_fields=n_fields,
+            mapped_pct=mapped_pct,
+            parquet_path=last_pq_path,
+            status="success",
+        )
+
+
+    # 5. Garbage collection (only if all sections succeeded)
+    if len(parquet_ok) == len(SECTION_MAP):
+        cleanup_tmp(ticker)
+    else:
+        failed = len(SECTION_MAP) - len(parquet_ok)
+        print(f"\n  ⚠️  {failed} section(s) failed — .tmp/ retained for debugging")
+
+    print(f"\n{'═'*60}")
+    print(f"  Pipeline complete: {len(parquet_ok)}/{len(SECTION_MAP)} sections OK")
+    print(f"{'═'*60}\n")
+
+
+# ─── Tab loader utility ───────────────────────────────────────────────────────
+def load_tab(ticker: str, period_type: str, sheet: str) -> pd.DataFrame:
+    """
+    Load filtered Parquet for UI tab switching.
+    Args:
+        ticker:      e.g. 'VHC'
+        period_type: 'year' | 'quarter'
+        sheet:       'cdkt' | 'kqkd' | 'lctt' | 'note'
+    Returns: DataFrame with columns: field_id, vn_name, unit, level, + one col per period_label
+             Rows sorted by original Golden Schema row_number order (top → bottom of statement)
+    """
+    pq_path = (DATA_DIR / ticker.upper()
+               / f"period_type={period_type}"
+               / f"sheet={sheet.lower()}"
+               / f"{ticker.upper()}.parquet")
+    if not pq_path.exists():
+        raise FileNotFoundError(f"No Parquet found at {pq_path}. Run pipeline first.")
+
+    df = pd.read_parquet(pq_path)
+
+    # Sort periods newest → oldest
+    all_periods = sorted(df["period_label"].unique(), reverse=True)
+
+    # Build wide form while preserving field order from Golden Schema
+    # Group by field_id, preserving insertion order (which matches row_number order)
+    schema_f = Path(__file__).parent / "golden_schema.json"
+    import json as _json
+    schema_raw = _json.loads(schema_f.read_text(encoding="utf-8"))
+    ordered_fields = [
+        f for f in schema_raw["fields"]
+        if f["sheet"].upper() == sheet.upper()
+    ]
+
+    rows = []
+    for field in ordered_fields:
+        fid = field["field_id"]
+        sub = df[df["field_id"] == fid]
+        if sub.empty:
+            continue
+        row_dict = {
+            "field_id": fid,
+            "vn_name":  field["vn_name"],
+            "unit":     field["unit"],
+            "level":    field["level"],
+        }
+        for p in all_periods:
+            p_row = sub[sub["period_label"] == p]
+            row_dict[p] = p_row["value"].values[0] if not p_row.empty else None
+        rows.append(row_dict)
+
+    result = pd.DataFrame(rows)
+    period_cols = [c for c in result.columns if c not in ("field_id", "vn_name", "unit", "level")]
+    return result[["field_id", "vn_name", "unit", "level"] + sorted(period_cols, reverse=True)]
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Finsang V2.0 Pipeline")
+    parser.add_argument("--ticker", required=True, help="Stock ticker, e.g. VHC")
+    args = parser.parse_args()
+    run_pipeline(args.ticker)
