@@ -38,15 +38,15 @@ def calc_metrics(ticker: str, period: str) -> pd.DataFrame:
         return sub.iloc[0]
 
     # KQKD inputs
-    rev   = get_row(kqkd, "isa3")   # Doanh thu thuần
-    gross = get_row(kqkd, "isa5")   # Lợi nhuận gộp
-    net   = get_row(kqkd, "isa23")  # LNST cổ đông cty mẹ
+    rev   = get_row(kqkd, "kqkd_doanh_thu_thuan")   # Doanh thu thuần
+    gross = get_row(kqkd, "kqkd_loi_nhuan_gop")     # Lợi nhuận gộp
+    net   = get_row(kqkd, "kqkd_loi_nhuan_cua_co_dong_cua_cong_ty_me")  # LNST cổ đông cty mẹ
 
     # CDKT inputs
-    ca    = get_row(cdkt, "bsa1")   # Tài sản ngắn hạn
-    cl    = get_row(cdkt, "bsa98")  # Nợ ngắn hạn
-    debt  = get_row(cdkt, "bsa97")  # Nợ phải trả
-    eq    = get_row(cdkt, "bsa127") # Vốn chủ sở hữu
+    ca    = get_row(cdkt, "cdkt_tai_san_ngan_han")   # Tài sản ngắn hạn
+    cl    = get_row(cdkt, "cdkt_no_ngan_han")        # Nợ ngắn hạn
+    debt  = get_row(cdkt, "cdkt_no_phai_tra")        # Nợ phải trả
+    eq    = get_row(cdkt, "cdkt_von_chu_so_huu")     # Vốn chủ sở hữu
 
     rows = []
 

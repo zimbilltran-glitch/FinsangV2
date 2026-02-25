@@ -36,10 +36,12 @@ try:
 except ImportError:
     pass  # python-dotenv not installed; secrets from OS environment
 
-import requests
 import pandas as pd
+from providers import BaseProvider, VietcapProvider
 import pyarrow as pa
 import pyarrow.parquet as pq
+import io
+from security import get_cipher
 
 # ─── Paths ────────────────────────────────────────────────────────────────────
 ROOT       = Path(__file__).parent.parent
@@ -48,14 +50,7 @@ DATA_DIR   = ROOT / "data" / "financial"
 TMP_DIR    = ROOT / ".tmp" / "raw"
 LOG_FILE   = Path(__file__).parent / "pipeline.log"
 
-# ─── Vietcap API ──────────────────────────────────────────────────────────────
-BASE_URL   = "https://iq.vietcap.com.vn/api/iq-insight-service/v1/company/{ticker}/financial-statement?section={section}"
-HEADERS    = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-    "Accept": "application/json",
-    "Referer": "https://trading.vietcap.com.vn/",
-    "Origin": "https://trading.vietcap.com.vn",
-}
+# ─── API Providers ──────────────────────────────────────────────────────────────
 
 # ─── Section → Sheet mapping ──────────────────────────────────────────────────
 SECTION_MAP = {
@@ -78,20 +73,7 @@ def load_schema() -> dict[str, list[dict]]:
         schema[sid].sort(key=lambda x: x["row_number"])
     return schema
 
-# ─── Fetch raw API response ───────────────────────────────────────────────────
-def fetch_section(ticker: str, section: str) -> dict | None:
-    url = BASE_URL.format(ticker=ticker.upper(), section=section)
-    try:
-        r = requests.get(url, headers=HEADERS, timeout=20)
-        r.raise_for_status()
-        data = r.json()
-        if not data.get("successful"):
-            print(f"    ⚠️  API returned unsuccessful: {data.get('msg')}")
-            return None
-        return data.get("data", {})
-    except Exception as e:
-        print(f"    ❌ Fetch error for {section}: {e}")
-        return None
+# fetch_section is now handled by the Provider class.
 
 # ─── Save raw JSON to .tmp/ ───────────────────────────────────────────────────
 def save_raw(ticker: str, section: str, payload: dict) -> Path:
@@ -103,39 +85,11 @@ def save_raw(ticker: str, section: str, payload: dict) -> Path:
         json.dump(payload, f, ensure_ascii=False)
     return out
 
-# ─── Extract API field prefix for each section ────────────────────────────────
-API_PREFIX = {
-    "BALANCE_SHEET":    ["bsa", "bsb", "bss", "bsi"],
-    "INCOME_STATEMENT": ["isa", "isb", "iss", "isi"],
-    "CASH_FLOW":        ["cfa", "cfb", "cfs", "cfi", "cfs"],
-    "NOTE":             ["noa", "nob", "nos", "noi"],
-}
-
-def get_api_value(row: dict, section: str, sheet_row_idx: int) -> float | None:
-    """
-    Look up a field value from one API row dict.
-
-    Args:
-        row:           One period dict from the API (years[i] or quarters[i]).
-        section:       'BALANCE_SHEET' | 'INCOME_STATEMENT' | 'CASH_FLOW' | 'NOTE'
-        sheet_row_idx: 1-indexed position of this field within its sheet's field list.
-                       Example: 5th Income Statement row → sheet_row_idx=5 → key='isa5'
-
-    Strategy:
-        1. Try all known prefixes for the section with {prefix}{sheet_row_idx}.
-        2. Return the first non-None match; None if all miss.
-    """
-    prefixes = API_PREFIX.get(section, [])
-    for pfx in prefixes:
-        key = f"{pfx}{sheet_row_idx}"
-        if key in row:
-            v = row[key]
-            return None if v is None else float(v)
-    return None  # Key simply not in this API row (field not applicable to this company type)
+# API_PREFIX and get_api_value are now handled by the Provider class.
 
 # ─── Normalize: build flat DataFrame from API payload ─────────────────────────
 def normalize(payload: dict, section: str, sheet_id: str,
-              schema_fields: list[dict]) -> pd.DataFrame:
+              schema_fields: list[dict], provider: BaseProvider) -> pd.DataFrame:
     """
     Convert one API section payload into a tidy long-format DataFrame.
 
@@ -176,7 +130,8 @@ def normalize(payload: dict, section: str, sheet_id: str,
             # sheet_row_idx=1 → first field in this sheet → API key e.g. bsa1 / isa1
             # sheet_row_idx=5 → fifth field → bsa5 / isa5 (= Lợi nhuận gộp for IS)
             for sheet_row_idx, field in enumerate(schema_fields, start=1):
-                val = get_api_value(api_row, section, sheet_row_idx)
+                field_id = field.get("field_id", "")
+                val = provider.get_api_value(api_row, section, sheet_row_idx, field_id)
                 records.append({
                     "ticker":         ticker,
                     "period_type":    pt_tag,
@@ -199,7 +154,17 @@ def write_parquet(df: pd.DataFrame, ticker: str, period_type: str, sheet_id: str
     out_dir.mkdir(parents=True, exist_ok=True)
     out_file = out_dir / f"{ticker.upper()}.parquet"
     table = pa.Table.from_pandas(df, preserve_index=False)
-    pq.write_table(table, out_file, compression="snappy")
+    
+    cipher = get_cipher()
+    if cipher:
+        buf = io.BytesIO()
+        pq.write_table(table, buf, compression="snappy")
+        encrypted_data = cipher.encrypt(buf.getvalue())
+        with open(out_file, "wb") as f:
+            f.write(encrypted_data)
+    else:
+        pq.write_table(table, out_file, compression="snappy")
+    
     return out_file
 
 # ─── Garbage Collection: delete .tmp/ after successful Parquet write ──────────
@@ -269,7 +234,8 @@ def log_supabase(ticker: str, sheet_id: str, period_type: str,
 
 
 # ─── Main pipeline ────────────────────────────────────────────────────────────
-def run_pipeline(ticker: str):
+def run_pipeline(ticker: str, provider: BaseProvider = None):
+    provider = provider or VietcapProvider()
     schema = load_schema()
     print(f"\n{'═'*60}")
     print(f"  FINSANG PIPELINE v2.0 — {ticker.upper()}")
@@ -285,8 +251,8 @@ def run_pipeline(ticker: str):
             print(f"    ⚠️  No fields in Golden Schema for {sheet_id} — skipping")
             continue
 
-        # 1. Fetch
-        payload = fetch_section(ticker, section)
+        # 1. Fetch via Provider
+        payload = provider.fetch_section(ticker, section)
         if not payload:
             log_run(ticker, section, sheet_id, 0, "FAIL", "API fetch returned None")
             continue
@@ -298,7 +264,7 @@ def run_pipeline(ticker: str):
         print(f"    ✅ Fetched: {n_years}Y + {n_quarters}Q periods")
 
         # 3. Normalize
-        df = normalize(payload, section, sheet_id, sheet_fields)
+        df = normalize(payload, section, sheet_id, sheet_fields, provider)
         mapped_pct = df["vietcap_mapped"].mean() * 100
         print(f"    🔄 Normalized: {len(df)} rows | Mapped: {mapped_pct:.1f}%")
 
@@ -330,14 +296,15 @@ def run_pipeline(ticker: str):
 
 
     # 5. Garbage collection (only if all sections succeeded)
-    if len(parquet_ok) == len(SECTION_MAP):
+    sections_ok = len(set(s[0] for s in parquet_ok))
+    if sections_ok == len(SECTION_MAP):
         cleanup_tmp(ticker)
     else:
-        failed = len(SECTION_MAP) - len(parquet_ok)
+        failed = len(SECTION_MAP) - sections_ok
         print(f"\n  ⚠️  {failed} section(s) failed — .tmp/ retained for debugging")
 
     print(f"\n{'═'*60}")
-    print(f"  Pipeline complete: {len(parquet_ok)}/{len(SECTION_MAP)} sections OK")
+    print(f"  Pipeline complete: {sections_ok}/{len(SECTION_MAP)} sections OK")
     print(f"{'═'*60}\n")
 
 
@@ -359,7 +326,18 @@ def load_tab(ticker: str, period_type: str, sheet: str) -> pd.DataFrame:
     if not pq_path.exists():
         raise FileNotFoundError(f"No Parquet found at {pq_path}. Run pipeline first.")
 
-    df = pd.read_parquet(pq_path)
+    cipher = get_cipher()
+    if cipher:
+        with open(pq_path, "rb") as f:
+            encrypted_data = f.read()
+        try:
+            decrypted_data = cipher.decrypt(encrypted_data)
+            df = pd.read_parquet(io.BytesIO(decrypted_data))
+        except Exception:
+            # Fallback if file is actually not encrypted
+            df = pd.read_parquet(pq_path)
+    else:
+        df = pd.read_parquet(pq_path)
 
     # Sort periods newest → oldest
     all_periods = sorted(df["period_label"].unique(), reverse=True)
