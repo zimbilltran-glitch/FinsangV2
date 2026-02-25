@@ -2,110 +2,98 @@ import { useEffect, useState, useMemo } from 'react'
 import { supabase } from './supabaseClient'
 import './App.css'
 
-// ─── CFO Note ──────────────────────────────────────────────────────────────
-// DB stores values in Tỷ VND. Display in Triệu VND (×1000) to match Fireant.
-// Columns sorted newest → oldest (Simplize / Fireant standard).
-// Mini bar chart: newest period bars on LEFT → oldest on RIGHT (newest-first).
+// ─── V2 Data Source ────────────────────────────────────────────────────────
+// Data synced from Version 2 Parquet pipeline (Vietcap API → Parquet → Supabase).
+// Wide views pivot rows via jsonb_object_agg(period, value) = periods_data JSONB.
+// Values stored in Tỷ VND. Display in Triệu VND (×1000).
 // ────────────────────────────────────────────────────────────────────────────
 
-const STOCK_NAMES = {
-  'NLG': 'CTCP Đầu tư Nam Long',
-  'VND': 'CTCP Chứng khoán VNDirect',
-  'SSI': 'CTCP Chứng khoán SSI',
-  'FPT': 'CTCP Tập đoàn FPT',
-  'HPG': 'CTCP Tập đoàn Hoà Phát',
-}
+const TICKERS = [
+  { code: 'VHC', name: 'CTCP Vĩnh Hoàn', exchange: 'HOSE' },
+  { code: 'FPT', name: 'CTCP Tập đoàn FPT', exchange: 'HOSE' },
+  { code: 'HPG', name: 'CTCP Tập đoàn Hoà Phát', exchange: 'HOSE' },
+]
 
-// Normalize legacy period formats: "Q4/2025" → "2025-Q4"
-function normalizePeriod(p) {
-  if (!p) return p
-  const m = p.match(/^Q(\d)\/(\d{4})$/)
-  if (m) return `${m[2]}-Q${m[1]}`
-  return p
-}
+const REPORT_TABS = [
+  { id: 'CDKT', label: 'Cân đối kế toán', table: 'balance_sheet_wide' },
+  { id: 'KQKD', label: 'Kết quả kinh doanh', table: 'income_statement_wide' },
+  { id: 'LCTT', label: 'Lưu chuyển tiền tệ', table: 'cash_flow_wide' },
+  { id: 'CSTC', label: 'Chỉ số tài chính', table: 'financial_ratios_wide' },
+]
 
-// Format period label for display: "2025-Q4" → "Q4/2025"
-function formatPeriodLabel(p) {
-  if (!p) return p
-  const match = p.match(/^(\d{4})-Q(\d)$/)
-  if (match) return `Q${match[2]}/${match[1]}`
-  if (p.endsWith('-0')) return p.replace('-0', '')
-  return p
-}
+const PERIOD_FILTERS = [
+  { id: 'year', label: 'Năm' },
+  { id: 'quarter', label: 'Quý' },
+]
 
-// Number formatter: Tỷ VND × 1000 = Triệu VND, comma thousand separator
+// ─── Helpers ──────────────────────────────────────────────────────────────
+
+// Format: Raw VND (đồng) → Triệu VND (÷ 1,000,000)
 function formatNumber(num) {
   if (num === null || num === undefined || num === 0) return '–'
-  const inMillions = num * 1000
-  // Format: 1,234,567 (comma thousands, dot decimal)
+  const inMillions = num / 1000000
   return new Intl.NumberFormat('en-US', {
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 0,
     minimumFractionDigits: 0,
   }).format(inMillions)
 }
 
-// Is this row a major heading that gets uppercase treatment?
+// Format period for header: "Q4/2024" or "2024" displayed as-is
+function formatPeriodLabel(p) {
+  if (!p) return p
+  return p
+}
+
+// Is this a major heading row (bold, uppercase)?
 function isMajorHeading(row) {
   return (
     row.levels === 0 ||
-    row.item.startsWith('TỔNG') ||
-    row.item.startsWith('Cộng') ||
-    /^[IVX]+\./.test(row.item)
+    row.item?.startsWith('TỔNG') ||
+    row.item?.startsWith('Cộng') ||
+    /^[IVX]+\./.test(row.item || '')
   )
 }
+
+// ─── App ──────────────────────────────────────────────────────────────────
 
 export default function App() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
-  const [stockName, setStockName] = useState('NLG')
+  const [ticker, setTicker] = useState('VHC')
   const [reportType, setReportType] = useState('CDKT')
+  const [periodFilter, setPeriodFilter] = useState('year')
   const [periods, setPeriods] = useState([])
   const [expandedRows, setExpandedRows] = useState({})
+
+  const currentTicker = TICKERS.find(t => t.code === ticker) || TICKERS[0]
+  const currentTab = REPORT_TABS.find(t => t.id === reportType) || REPORT_TABS[0]
 
   useEffect(() => {
     async function fetchData() {
       setLoading(true)
-      const tableMap = {
-        'KQKD': 'income_statement_wide',
-        'CDKT': 'balance_sheet_wide',
-        'LCTT_TT': 'cash_flow_wide',
-        'LCTT_GT': 'cash_flow_wide',
-        'CSTO': 'financial_ratios_wide',
-      }
-      const tableName = tableMap[reportType] || 'balance_sheet_wide'
 
       const { data: reports, error } = await supabase
-        .from(tableName)
+        .from(currentTab.table)
         .select('*')
-        .eq('stock_name', stockName)
+        .eq('stock_name', ticker)
         .order('row_number', { ascending: true })
 
       if (error) {
-        console.error(error)
+        console.error('Supabase error:', error)
         setData([]); setPeriods([]); setLoading(false); return
       }
       if (!reports || reports.length === 0) {
         setData([]); setPeriods([]); setLoading(false); return
       }
 
-      let filtered = reports
-      if (reportType === 'LCTT_TT') filtered = reports.filter(r => r.item_id?.startsWith('lctttt'))
-      if (reportType === 'LCTT_GT') filtered = reports.filter(r => r.item_id?.startsWith('lcttgt'))
-
-      // Normalize period keys inside periods_data
-      const normalized = filtered.map(row => {
-        const rawPd = row.periods_data || {}
-        const pd = {}
-        Object.entries(rawPd).forEach(([k, v]) => { pd[normalizePeriod(k)] = v })
-        return { ...row, periods_data: pd }
-      })
-
-      // Build parent tree
-      const processed = normalized.map((row, i) => {
+      // Build parent tree for expand/collapse
+      const processed = reports.map((row, i) => {
         let parent_id = null
         if (row.levels > 0) {
           for (let j = i - 1; j >= 0; j--) {
-            if (normalized[j].levels === row.levels - 1) { parent_id = normalized[j].item_id; break }
+            if (reports[j].levels === row.levels - 1) {
+              parent_id = reports[j].item_id; break
+            }
           }
         }
         return { ...row, parent_id }
@@ -113,10 +101,21 @@ export default function App() {
 
       setData(processed)
 
-      // Collect all unique periods, sort newest → oldest (Z→A)
+      // Collect period columns from periods_data, filter by year/quarter
       const allPeriods = new Set()
-      processed.forEach(r => Object.keys(r.periods_data || {}).forEach(p => allPeriods.add(p)))
-      const cols = Array.from(allPeriods).sort((a, b) => b.localeCompare(a)).slice(0, 8)
+      processed.forEach(r => {
+        Object.keys(r.periods_data || {}).forEach(p => allPeriods.add(p))
+      })
+
+      let filteredPeriods = Array.from(allPeriods)
+      if (periodFilter === 'year') {
+        filteredPeriods = filteredPeriods.filter(p => /^\d{4}$/.test(p))
+      } else {
+        filteredPeriods = filteredPeriods.filter(p => /^Q\d\/\d{4}$/.test(p))
+      }
+
+      // Sort newest → oldest
+      const cols = filteredPeriods.sort((a, b) => b.localeCompare(a)).slice(0, 8)
       setPeriods(cols)
 
       // Auto-expand L0 + L1
@@ -126,7 +125,7 @@ export default function App() {
       setLoading(false)
     }
     fetchData()
-  }, [stockName, reportType])
+  }, [ticker, reportType, periodFilter])
 
   const dataMap = useMemo(() => {
     const m = {}; data.forEach(r => { m[r.item_id] = r }); return m
@@ -144,9 +143,7 @@ export default function App() {
 
   const toggle = (id) => setExpandedRows(p => ({ ...p, [id]: !p[id] }))
 
-  // ── Simplize Mini Bar Chart ────────────────────────────────────────────
-  // periods prop is already newest→oldest. Chart displays newest LEFT → oldest RIGHT.
-  // Positive bars grow UP from the baseline, negative bars grow DOWN.
+  // ── Mini Bar Chart ─────────────────────────────────────────────────────
   const MiniBarChart = ({ values }) => {
     if (!values || values.length === 0) return <span className="no-chart">–</span>
     const maxVal = Math.max(...values.map(Math.abs)) || 1
@@ -157,11 +154,9 @@ export default function App() {
           const pct = Math.min(90, Math.max(4, (Math.abs(v) / maxVal) * 90))
           return (
             <div key={i} className="bar-col" title={formatNumber(v)}>
-              {/* Positive half — grows UP from baseline */}
               <div className="bar-pos-area">
                 {v >= 0 && <div className="bar-fill pos" style={{ height: `${pct}%` }} />}
               </div>
-              {/* Negative half — grows DOWN from baseline */}
               <div className="bar-neg-area">
                 {v < 0 && <div className="bar-fill neg" style={{ height: `${pct}%` }} />}
               </div>
@@ -172,53 +167,114 @@ export default function App() {
     )
   }
 
+  // ── Stat summary cards ─────────────────────────────────────────────────
+  const statSummary = useMemo(() => {
+    if (!data.length || !periods.length) return null
+    const latestPeriod = periods[0]
+    const rowCount = data.length
+    const filledCount = data.filter(r => r.periods_data?.[latestPeriod] != null).length
+    const coverage = rowCount > 0 ? Math.round((filledCount / rowCount) * 100) : 0
+    return { latestPeriod, rowCount, filledCount, coverage }
+  }, [data, periods])
+
   return (
     <div className="app">
-      {/* Header */}
+      {/* ═══ Header ═══ */}
       <header className="app-header">
         <div className="brand">
-          <span className="brand-icon">⚡</span>
+          <svg className="brand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
           <span className="brand-name">Finsang Terminal</span>
+          <span className="brand-version">v2.0</span>
         </div>
-        <span className="ticker-badge">{stockName}:HSX</span>
+        <div className="header-right">
+          <span className="data-source">Vietcap Data</span>
+          <span className="ticker-badge">{ticker}:{currentTicker.exchange}</span>
+        </div>
       </header>
 
-      {/* Company title */}
+      {/* ═══ Company Info Bar ═══ */}
       <div className="company-bar">
-        <span className="company-name">{STOCK_NAMES[stockName]}</span>
-        <span className="company-sub">Báo cáo tài chính · Đơn vị: Triệu VND</span>
-      </div>
-
-      {/* Controls */}
-      <div className="controls">
-        <select className="stock-select" value={stockName} onChange={e => setStockName(e.target.value)}>
-          {Object.entries(STOCK_NAMES).map(([code, name]) => (
-            <option key={code} value={code}>{code} – {name.split(' ').slice(-2).join(' ')}</option>
+        <div className="company-info">
+          <span className="company-name">{currentTicker.name}</span>
+          <span className="company-sub">Báo cáo tài chính · Đơn vị: Triệu VND</span>
+        </div>
+        <select
+          id="ticker-select"
+          className="stock-select"
+          value={ticker}
+          onChange={e => setTicker(e.target.value)}
+        >
+          {TICKERS.map(t => (
+            <option key={t.code} value={t.code}>{t.code} – {t.name}</option>
           ))}
         </select>
       </div>
 
-      {/* Tabs */}
-      <div className="tabs">
-        {[
-          { id: 'CDKT', label: 'Cân đối kế toán' },
-          { id: 'KQKD', label: 'Kết quả kinh doanh' },
-          { id: 'LCTT_TT', label: 'LCTT trực tiếp' },
-          { id: 'LCTT_GT', label: 'LCTT gián tiếp' },
-          { id: 'CSTO', label: 'Chỉ số tài chính' },
-        ].map(t => (
-          <button key={t.id} className={`tab${reportType === t.id ? ' active' : ''}`} onClick={() => setReportType(t.id)}>
-            {t.label}
-          </button>
-        ))}
+      {/* ═══ Report Tabs ═══ */}
+      <div className="tabs-row">
+        <div className="tabs" role="tablist">
+          {REPORT_TABS.map(t => (
+            <button
+              key={t.id}
+              id={`tab-${t.id}`}
+              role="tab"
+              aria-selected={reportType === t.id}
+              className={`tab${reportType === t.id ? ' active' : ''}`}
+              onClick={() => setReportType(t.id)}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <div className="period-toggle" role="radiogroup" aria-label="Period filter">
+          {PERIOD_FILTERS.map(pf => (
+            <button
+              key={pf.id}
+              id={`period-${pf.id}`}
+              role="radio"
+              aria-checked={periodFilter === pf.id}
+              className={`period-btn${periodFilter === pf.id ? ' active' : ''}`}
+              onClick={() => setPeriodFilter(pf.id)}
+            >
+              {pf.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Table */}
+      {/* ═══ Stats Bar ═══ */}
+      {statSummary && !loading && (
+        <div className="stats-bar">
+          <div className="stat-chip">
+            <span className="stat-label">Kỳ mới nhất</span>
+            <span className="stat-value">{statSummary.latestPeriod}</span>
+          </div>
+          <div className="stat-chip">
+            <span className="stat-label">Dòng dữ liệu</span>
+            <span className="stat-value">{statSummary.filledCount}/{statSummary.rowCount}</span>
+          </div>
+          <div className="stat-chip">
+            <span className="stat-label">Coverage</span>
+            <span className={`stat-value ${statSummary.coverage >= 80 ? 'stat-good' : 'stat-warn'}`}>
+              {statSummary.coverage}%
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ Data Table ═══ */}
       <div className="table-wrap">
         {loading ? (
-          <div className="state-msg">Đang tải...</div>
+          <div className="state-msg">
+            <div className="loader" />
+            <span>Đang tải dữ liệu...</span>
+          </div>
         ) : data.length === 0 ? (
-          <div className="state-msg">Không có dữ liệu {reportType} cho {stockName}</div>
+          <div className="state-msg">
+            <span>Không có dữ liệu {currentTab.label} cho {ticker}</span>
+          </div>
         ) : (
           <table className="fin-table">
             <thead>
@@ -233,17 +289,26 @@ export default function App() {
                 if (!isVisible(row)) return null
                 const hasChildren = idx < data.length - 1 && data[idx + 1].levels > row.levels
                 const isOpen = !!expandedRows[row.item_id]
-                // Newest-first chart values align with column order
                 const chartVals = periods.map(p => row.periods_data?.[p] || 0)
                 const major = isMajorHeading(row)
-                const displayLabel = major ? row.item.toUpperCase() : row.item
+                const displayLabel = major ? (row.item || '').toUpperCase() : (row.item || '')
 
                 return (
-                  <tr key={row.item_id} className={`fin-row${major ? ' row-major' : ' row-child'} lv${Math.min(row.levels, 4)}`}>
+                  <tr
+                    key={row.item_id || idx}
+                    className={`fin-row${major ? ' row-major' : ' row-child'} lv${Math.min(row.levels, 4)}`}
+                  >
                     <td className="td-item">
                       <div className="item-cell" style={{ paddingLeft: `${6 + row.levels * 16}px` }}>
                         {hasChildren
-                          ? <button className="tog" onClick={() => toggle(row.item_id)}>{isOpen ? '▾' : '▸'}</button>
+                          ? <button className="tog" onClick={() => toggle(row.item_id)} aria-label="Toggle expand">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                              {isOpen
+                                ? <path d="M2 4L6 8L10 4" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                                : <path d="M4 2L8 6L4 10" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                              }
+                            </svg>
+                          </button>
                           : <span className="tog-ph" />
                         }
                         <span className={`label${major ? ' label-major' : ''}`}>{displayLabel}</span>
@@ -267,6 +332,12 @@ export default function App() {
           </table>
         )}
       </div>
+
+      {/* ═══ Footer ═══ */}
+      <footer className="app-footer">
+        <span>Finsang Terminal v2.0 · Powered by Vietcap Data Pipeline</span>
+        <span className="footer-source">Source: Version 2 B.L.A.S.T Framework</span>
+      </footer>
     </div>
   )
 }

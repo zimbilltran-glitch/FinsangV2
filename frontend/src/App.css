@@ -1,56 +1,58 @@
-/* ══════════════════════════════════════════════════════
-   Finsang Terminal — Fireant / Simplize Theme
-   ══════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════
+   Finsang Terminal v2.0 — Vietcap IQ Design System
+   Typography: IBM Plex Sans (Financial, Trustworthy)
+   Palette: OLED Dark Mode (Midnight Blue + Trust Blue)
+   Source: @ui-ux-pro-max fintech dashboard tokens
+   ══════════════════════════════════════════════════════════ */
 
-/* ── Tokens ─────────────────────────────────────────── */
+/* ── Design Tokens ─────────────────────────────────────── */
 :root {
-  --bg: #161616;
-  --bg-hdr: #1e1e1e;
-  --bg-major: #1e1e1e;
-  --bg-child: #161616;
-  --bg-hover: #232323;
+  /* Background hierarchy */
+  --bg-deep:    #0a0e17;
+  --bg-base:    #0f1419;
+  --bg-surface: #151c25;
+  --bg-card:    #1a2332;
+  --bg-elevated:#1e293b;
+  --bg-hover:   #243247;
 
-  --txt: #e8e8e8;
-  --txt2: #9a9a9a;
-  --txt3: #666;
-  --txt-neg: #f05050;
+  /* Text hierarchy */
+  --txt-primary:   #f1f5f9;
+  --txt-secondary: #94a3b8;
+  --txt-muted:     #64748b;
+  --txt-dim:       #475569;
 
-  --blue: #2a7fff;
-  /* active tab */
-  --bar-pos: #4a8ec8;
-  /* Simplize-style muted blue */
-  --bar-neg: #e05454;
-  /* red negative */
+  /* Accent colors */
+  --blue:          #3b82f6;
+  --blue-glow:     rgba(59, 130, 246, 0.15);
+  --blue-dim:      #1e40af;
+  --orange:        #f97316;
+  --green:         #22c55e;
+  --red:           #ef4444;
 
-  --border: #262626;
-  --border2: #333;
+  /* Charts */
+  --bar-pos:       #3b82f6;
+  --bar-neg:       #ef4444;
 
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* Borders */
+  --border:        rgba(148, 163, 184, 0.08);
+  --border-accent: rgba(59, 130, 246, 0.3);
+
+  /* Typography */
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 13px;
-  line-height: 1.4;
-  color: var(--txt);
-  background: var(--bg);
+  line-height: 1.45;
+  color: var(--txt-primary);
+  background: var(--bg-deep);
   color-scheme: dark;
+
+  /* Transitions */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Reset ──────────────────────────────────────────── */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: var(--bg);
-  min-height: 100vh;
-}
-
-#root {
-  max-width: 1600px;
-  margin: 0 auto;
-}
+/* ── Reset ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg-deep); min-height: 100vh; }
+#root { max-width: 1600px; margin: 0 auto; }
 
 .app {
   display: flex;
@@ -58,89 +60,134 @@ body {
   min-height: 100vh;
 }
 
-/* ── Header ─────────────────────────────────────────── */
+/* ── Header ─────────────────────────────────────────────── */
 .app-header {
-  background: var(--bg-hdr);
+  background: var(--bg-base);
   border-bottom: 1px solid var(--border);
-  padding: 10px 20px;
+  padding: 12px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: sticky;
   top: 0;
   z-index: 100;
+  backdrop-filter: blur(12px);
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .brand-icon {
-  font-size: 17px;
+  color: var(--blue);
+  flex-shrink: 0;
 }
 
 .brand-name {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
-  letter-spacing: -.2px;
+  letter-spacing: -0.3px;
+  background: linear-gradient(135deg, var(--txt-primary), var(--blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.brand-version {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--txt-muted);
+  background: var(--bg-card);
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.data-source {
+  font-size: 11px;
+  color: var(--txt-muted);
+  font-weight: 500;
 }
 
 .ticker-badge {
   font-size: 11px;
-  color: var(--txt2);
   font-weight: 600;
-  letter-spacing: .5px;
+  color: var(--blue);
+  background: var(--blue-glow);
+  border: 1px solid var(--border-accent);
+  padding: 3px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  font-family: 'IBM Plex Mono', monospace;
 }
 
-/* ── Company bar ────────────────────────────────────── */
+/* ── Company Info Bar ───────────────────────────────────── */
 .company-bar {
-  padding: 12px 20px 6px;
+  padding: 14px 24px 12px;
   border-bottom: 1px solid var(--border);
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-base);
+}
+
+.company-info {
+  display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .company-name {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
+  letter-spacing: -0.3px;
 }
 
 .company-sub {
-  font-size: 11px;
-  color: var(--txt2);
-}
-
-/* ── Controls ───────────────────────────────────────── */
-.controls {
-  padding: 8px 20px;
-  border-bottom: 1px solid var(--border);
+  font-size: 11.5px;
+  color: var(--txt-secondary);
+  font-weight: 400;
 }
 
 .stock-select {
-  background: #222;
-  border: 1px solid var(--border2);
-  color: var(--txt);
-  padding: 5px 10px;
-  border-radius: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--txt-primary);
+  padding: 7px 12px;
+  border-radius: 8px;
   font-size: 12px;
-  min-width: 200px;
+  font-family: inherit;
+  font-weight: 500;
+  min-width: 220px;
   cursor: pointer;
+  transition: border-color 200ms var(--ease);
 }
 
-.stock-select:focus {
-  outline: none;
-  border-color: var(--blue);
+.stock-select:hover { border-color: var(--txt-muted); }
+.stock-select:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-glow); }
+.stock-select option { background: var(--bg-surface); }
+
+/* ── Tabs + Period Toggle ───────────────────────────────── */
+.tabs-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  background: var(--bg-surface);
 }
 
-/* ── Tabs ───────────────────────────────────────────── */
 .tabs {
   display: flex;
-  border-bottom: 1px solid var(--border);
-  padding: 0 20px;
-  background: var(--bg-hdr);
+  gap: 0;
   overflow-x: auto;
 }
 
@@ -148,210 +195,280 @@ body {
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
-  color: var(--txt2);
-  padding: 9px 16px;
+  color: var(--txt-muted);
+  padding: 11px 18px;
   font-size: 12.5px;
   font-weight: 500;
+  font-family: inherit;
   cursor: pointer;
   white-space: nowrap;
-  transition: color .15s, border-color .15s;
+  transition: color 180ms var(--ease), border-color 180ms var(--ease);
+  position: relative;
 }
 
-.tab:hover {
-  color: var(--txt);
-}
+.tab:hover { color: var(--txt-secondary); }
 
 .tab.active {
-  color: #fff;
+  color: var(--txt-primary);
   border-bottom-color: var(--blue);
   font-weight: 600;
 }
 
-/* ── Table wrapper ──────────────────────────────────── */
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 18px;
+  right: 18px;
+  height: 2px;
+  background: var(--blue);
+  border-radius: 1px;
+  box-shadow: 0 0 8px var(--blue-glow);
+}
+
+.period-toggle {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-card);
+  border-radius: 8px;
+  padding: 3px;
+  flex-shrink: 0;
+}
+
+.period-btn {
+  background: none;
+  border: none;
+  color: var(--txt-muted);
+  padding: 5px 14px;
+  font-size: 11.5px;
+  font-weight: 500;
+  font-family: inherit;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 180ms var(--ease);
+}
+
+.period-btn:hover { color: var(--txt-secondary); }
+
+.period-btn.active {
+  background: var(--blue);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+/* ── Stats Bar ──────────────────────────────────────────── */
+.stats-bar {
+  display: flex;
+  gap: 16px;
+  padding: 10px 24px;
+  background: var(--bg-base);
+  border-bottom: 1px solid var(--border);
+}
+
+.stat-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.stat-label {
+  color: var(--txt-muted);
+  font-weight: 400;
+}
+
+.stat-value {
+  color: var(--txt-primary);
+  font-weight: 600;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+}
+
+.stat-good { color: var(--green); }
+.stat-warn { color: var(--orange); }
+
+/* ── Table wrapper ──────────────────────────────────────── */
 .table-wrap {
   flex: 1;
   overflow-x: auto;
 }
 
 .state-msg {
-  padding: 40px 20px;
-  color: var(--txt2);
+  padding: 60px 20px;
+  color: var(--txt-muted);
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
 }
 
-/* ── Financial Table ────────────────────────────────── */
+/* Loading spinner */
+.loader {
+  width: 28px;
+  height: 28px;
+  border: 2.5px solid var(--border);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Financial Table ────────────────────────────────────── */
 .fin-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 12.5px;
 }
 
-/* Header */
 .fin-table thead tr {
-  background: var(--bg-major);
-  border-bottom: 1px solid var(--border2);
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
 }
 
 .fin-table thead th {
-  padding: 7px 10px;
-  font-size: 11px;
+  padding: 8px 12px;
+  font-size: 10.5px;
   font-weight: 600;
-  color: var(--txt2);
+  color: var(--txt-muted);
   white-space: nowrap;
-  letter-spacing: .3px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
+  position: sticky;
+  top: 49px;
+  background: var(--bg-elevated);
+  z-index: 10;
 }
 
 .th-item {
   text-align: left;
-  min-width: 300px;
-  max-width: 420px;
+  min-width: 320px;
+  max-width: 440px;
 }
 
-.th-chart {
-  width: 72px;
-}
+.th-chart { width: 76px; }
 
 .th-val {
   text-align: right;
-  min-width: 92px;
+  min-width: 96px;
+  font-family: 'IBM Plex Mono', monospace;
 }
 
-/* Body rows */
+/* ── Body Rows ──────────────────────────────────────────── */
 .fin-table tbody tr {
   border-bottom: 1px solid var(--border);
-  transition: background .1s;
+  transition: background 120ms var(--ease);
 }
 
 .fin-table tbody tr:hover {
   background: var(--bg-hover) !important;
 }
 
-.row-major {
-  background: var(--bg-major);
-}
+.row-major { background: var(--bg-surface); }
+.row-child { background: var(--bg-base); }
+.row-child:nth-child(even) { background: var(--bg-surface); }
 
-.row-child {
-  background: var(--bg-child);
-}
-
-.row-child:nth-child(even) {
-  background: #181818;
-}
-
-/* ── Labels by level ────────────────────────────────── */
+/* ── Labels by level ────────────────────────────────────── */
 .label-major {
   font-weight: 700;
   font-size: 11.5px;
-  color: #c5c5c5;
-  letter-spacing: .2px;
+  color: var(--txt-primary);
+  letter-spacing: 0.2px;
 }
 
 .lv0 .label-major {
   text-transform: uppercase;
-  letter-spacing: .4px;
+  letter-spacing: 0.4px;
+  color: var(--blue);
 }
 
 .lv1 .label-major {
   font-weight: 600;
-  color: #bbb;
+  color: var(--txt-primary);
 }
 
-.lv2 .label {
-  color: var(--txt2);
-}
+.lv2 .label { color: var(--txt-secondary); }
+.lv3 .label { color: var(--txt-muted); font-size: 12px; }
+.lv4 .label { color: var(--txt-dim); font-size: 11.5px; }
 
-.lv3 .label {
-  color: var(--txt3);
-  font-size: 12px;
-}
-
-.lv4 .label {
-  color: var(--txt3);
-  font-size: 11.5px;
-}
-
-/* Item cell */
+/* ── Item Cell ──────────────────────────────────────────── */
 .fin-table td {
-  padding: 3px 10px;
+  padding: 3px 12px;
   vertical-align: middle;
 }
 
-.td-item {
-  text-align: left;
-}
+.td-item { text-align: left; }
 
 .item-cell {
   display: flex;
   align-items: center;
-  gap: 4px;
-  min-height: 28px;
+  gap: 5px;
+  min-height: 30px;
 }
 
 .tog {
   background: none;
   border: none;
-  color: var(--txt2);
-  font-size: 10px;
+  color: var(--txt-muted);
   cursor: pointer;
-  padding: 2px 3px;
-  min-width: 16px;
+  padding: 3px;
+  min-width: 18px;
   flex-shrink: 0;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 150ms var(--ease);
 }
 
 .tog:hover {
-  color: var(--txt);
+  color: var(--blue);
+  background: var(--blue-glow);
 }
 
 .tog-ph {
   display: inline-block;
-  min-width: 16px;
+  min-width: 18px;
   flex-shrink: 0;
 }
 
 .label {
   font-size: 12.5px;
-  color: var(--txt);
+  color: var(--txt-primary);
 }
 
-/* Period value cells */
+/* ── Period Value Cells ─────────────────────────────────── */
 .td-val {
   text-align: right;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  color: var(--txt);
+  color: var(--txt-primary);
   font-size: 12.5px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 400;
 }
 
-.td-val.neg {
-  color: var(--txt-neg);
-}
+.td-val.neg { color: var(--red); }
 
-/* ── Simplize Mini Bar Chart ────────────────────────── */
-/*
-  Layout: one column per period (newest on left = matching table header order).
-  Each column has two halves: pos-area (top) and neg-area (bottom).
-  Positive values: fill grows UP from the midline (bottom of pos-area).
-  Negative values: fill grows DOWN from the midline (top of neg-area).
-*/
+/* ── Mini Bar Chart ─────────────────────────────────────── */
 .td-chart {
-  width: 72px;
+  width: 76px;
   padding: 0 6px;
   vertical-align: middle;
 }
 
-.no-chart {
-  color: var(--txt3);
-}
+.no-chart { color: var(--txt-dim); }
 
 .mini-bar-container {
   display: flex;
   align-items: stretch;
   gap: 2px;
-  height: 26px;
+  height: 28px;
 }
 
-/* Each period column */
 .bar-col {
   flex: 1;
   display: flex;
@@ -359,44 +476,62 @@ body {
   min-width: 6px;
 }
 
-/* Positive half: flex-end so fill sticks to the bottom of this area */
 .bar-pos-area {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  /* fill grows UP */
 }
 
-/* Negative half: flex-start so fill sticks to the top of this area */
 .bar-neg-area {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  /* fill grows DOWN */
 }
 
-/* The colored fill */
 .bar-fill {
   width: 100%;
-  border-radius: 1px;
-  transition: height .15s;
+  border-radius: 2px;
+  transition: height 200ms var(--ease);
 }
 
-.bar-fill.pos {
-  background: var(--bar-pos);
+.bar-fill.pos { background: var(--bar-pos); opacity: 0.8; }
+.bar-fill.neg { background: var(--bar-neg); opacity: 0.8; }
+
+.mini-bar-container:not(.mixed) .bar-neg-area { display: none; }
+.mini-bar-container:not(.mixed) .bar-pos-area { flex: 1; }
+
+/* ── Footer ─────────────────────────────────────────────── */
+.app-footer {
+  padding: 12px 24px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-base);
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--txt-dim);
 }
 
-.bar-fill.neg {
-  background: var(--bar-neg);
+.footer-source {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
 }
 
-/* All-positive mode: use full height (no negative half wasted) */
-.mini-bar-container:not(.mixed) .bar-neg-area {
-  display: none;
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .company-bar { flex-direction: column; gap: 10px; align-items: flex-start; }
+  .stock-select { min-width: 100%; }
+  .tabs-row { flex-direction: column; gap: 8px; padding: 8px 16px; }
+  .stats-bar { flex-wrap: wrap; }
+  .th-item { min-width: 200px; }
+  .app-header { padding: 10px 16px; }
+  .company-bar { padding: 12px 16px; }
+  .app-footer { flex-direction: column; gap: 6px; }
 }
 
-.mini-bar-container:not(.mixed) .bar-pos-area {
-  flex: 1;
-}
+/* ── Scroll bar styling ─────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--txt-dim); }
