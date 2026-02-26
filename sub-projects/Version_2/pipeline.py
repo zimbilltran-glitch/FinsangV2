@@ -178,7 +178,7 @@ def cleanup_tmp(ticker: str):
     if tmp_dir.exists():
         for f in tmp_dir.iterdir():
             f.unlink()
-        print(f"  🗑️  GC: cleaned .tmp/raw/{ticker.upper()}/")
+        print(f"  GC: cleaned .tmp/raw/{ticker.upper()}/")
 
 # ─── Log to pipeline.log ──────────────────────────────────────────────────────
 def log_run(ticker: str, section: str, sheet_id: str,
@@ -187,7 +187,7 @@ def log_run(ticker: str, section: str, sheet_id: str,
     line = f"{ts} | {ticker} | Phase-T | pipeline.py | {sheet_id} | {n_periods} periods | {status} | {note}"
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(line + "\n")
-    print(f"  📋 Logged: {line}")
+    print(f"  Logged: {line}")
 
 # ─── Phase T: Supabase pipeline_runs INSERT ──────────────────────────────────
 def log_supabase(ticker: str, sheet_id: str, period_type: str,
@@ -205,13 +205,13 @@ def log_supabase(ticker: str, sheet_id: str, period_type: str,
     url = os.getenv("SUPABASE_URL")
     key = os.getenv("SUPABASE_KEY")
     if not url or not key:
-        print("  ⚠️  Supabase: SUPABASE_URL/KEY not set — skipping cloud log")
+        print(f"  Supabase: SUPABASE_URL/KEY not set - skipping cloud log")
         return False
 
     try:
         from supabase import create_client
     except ImportError:
-        print("  ⚠️  Supabase: supabase-py not installed — pip install supabase")
+        print(f"  Supabase: supabase-py not installed - pip install supabase")
         return False
 
     try:
@@ -231,10 +231,10 @@ def log_supabase(ticker: str, sheet_id: str, period_type: str,
             "phase":             "T",
         }
         sb.table("pipeline_runs").insert(payload).execute()
-        print(f"  ☁️  Supabase: logged {ticker}/{sheet_id} ({status})")
+        print(f"  Supabase: logged {ticker}/{sheet_id} ({status})")
         return True
     except Exception as e:
-        print(f"  ⚠️  Supabase insert failed (non-fatal): {e}")
+        print(f"  Supabase insert failed (non-fatal): {e}")
         return False
 
 
@@ -242,18 +242,18 @@ def log_supabase(ticker: str, sheet_id: str, period_type: str,
 def run_pipeline(ticker: str, provider: BaseProvider = None):
     provider = provider or VietcapProvider()
     schema = load_schema()
-    print(f"\n{'═'*60}")
-    print(f"  FINSANG PIPELINE v2.0 — {ticker.upper()}")
+    print(f"\n{'='*60}")
+    print(f"  FINSANG PIPELINE v2.0 - {ticker.upper()}")
     print(f"  {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"{'═'*60}\n")
+    print(f"{'='*60}\n")
 
     parquet_ok = []
 
     for section, sheet_id in SECTION_MAP.items():
-        print(f"  ▶ {section} ({sheet_id})")
+        print(f"  RUN: {section} ({sheet_id})")
         sheet_fields = schema.get(sheet_id, [])
         if not sheet_fields:
-            print(f"    ⚠️  No fields in Golden Schema for {sheet_id} — skipping")
+            print(f"    No fields in Golden Schema for {sheet_id} - skipping")
             continue
 
         # 1. Fetch via Provider
@@ -266,12 +266,12 @@ def run_pipeline(ticker: str, provider: BaseProvider = None):
         raw_path = save_raw(ticker, section, payload)
         n_years    = len(payload.get("years", []))
         n_quarters = len(payload.get("quarters", []))
-        print(f"    ✅ Fetched: {n_years}Y + {n_quarters}Q periods")
+        print(f"    Fetched: {n_years}Y + {n_quarters}Q periods")
 
         # 3. Normalize
         df = normalize(payload, section, sheet_id, sheet_fields, provider)
         mapped_pct = df["vietcap_mapped"].mean() * 100
-        print(f"    🔄 Normalized: {len(df)} rows | Mapped: {mapped_pct:.1f}%")
+        print(f"    Normalized: {len(df)} rows | Mapped: {mapped_pct:.1f}%")
 
         # 4. Write Parquet per period_type
         last_pq_path = ""
@@ -279,7 +279,7 @@ def run_pipeline(ticker: str, provider: BaseProvider = None):
             sub = df[df["period_type"] == pt].copy()
             pq_path = write_parquet(sub, ticker, pt, sheet_id)
             last_pq_path = str(pq_path.relative_to(ROOT))
-            print(f"    💾 Parquet: {last_pq_path}")
+            print(f"    Parquet: {last_pq_path}")
             parquet_ok.append((section, sheet_id, pt))
 
         n_periods = n_years + n_quarters
@@ -306,11 +306,11 @@ def run_pipeline(ticker: str, provider: BaseProvider = None):
         cleanup_tmp(ticker)
     else:
         failed = len(SECTION_MAP) - sections_ok
-        print(f"\n  ⚠️  {failed} section(s) failed — .tmp/ retained for debugging")
+        print(f"\n  {failed} section(s) failed - .tmp/ retained for debugging")
 
-    print(f"\n{'═'*60}")
+    print(f"\n{'='*60}")
     print(f"  Pipeline complete: {sections_ok}/{len(SECTION_MAP)} sections OK")
-    print(f"{'═'*60}\n")
+    print(f"{'='*60}\n")
 
 
 # ─── Tab loader utility ───────────────────────────────────────────────────────
