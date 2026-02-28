@@ -44,7 +44,7 @@ import io
 from security import get_cipher
 
 # ─── Paths ────────────────────────────────────────────────────────────────────
-ROOT       = Path(__file__).parent.parent
+ROOT       = Path(__file__).parent.parent.parent
 SCHEMA_F   = Path(__file__).parent / "golden_schema.json"
 DATA_DIR   = ROOT / "data" / "financial"
 TMP_DIR    = ROOT / ".tmp" / "raw"
@@ -126,17 +126,14 @@ def normalize(payload: dict, section: str, sheet_id: str,
 
             ticker = api_row.get("ticker", api_row.get("organCode", "?"))
 
-            for field in schema_fields:
+            for idx, field in enumerate(schema_fields, start=1):
                 field_id = field.get("field_id", "")
                 
-                # Retrieve the exact absolute index mapped in golden_schema.json
-                # This ensures if there are gaps (e.g., 122 items but max row is 130),
-                # we don't shift all subsequent bsa keys incorrectly.
-                exact_row_idx = field.get("row_number")
-                if exact_row_idx is None:
-                    continue
-                    
-                val = provider.get_api_value(api_row, section, int(exact_row_idx), field_id)
+                # The Vietcap API keys (bsa{N}) correspond to the 1-indexed position
+                # within the extracted fields list, NOT the Excel row number.
+                vietcap_idx = idx
+                
+                val = provider.get_api_value(api_row, section, vietcap_idx, field_id)
                 records.append({
                     "ticker":         ticker,
                     "period_type":    pt_tag,
@@ -147,7 +144,7 @@ def normalize(payload: dict, section: str, sheet_id: str,
                     "value":          val,
                     "unit":           field["unit"],
                     "level":          field["level"],
-                    "sheet_row_idx":  exact_row_idx,  # stored for debug/audit
+                    "sheet_row_idx":  field.get("row_number"),  # stored for debug/audit
                     "vietcap_mapped": val is not None,
                 })
 
@@ -314,6 +311,112 @@ def run_pipeline(ticker: str, provider: BaseProvider = None):
 
 
 # ─── Tab loader utility ───────────────────────────────────────────────────────
+SHEET_TO_TABLE = {
+    "cdkt": "balance_sheet",
+    "kqkd": "income_statement",
+    "lctt": "cash_flow",
+    "cstc": "financial_ratios",
+}
+
+def load_tab_from_supabase(ticker: str, period_type: str, sheet: str) -> pd.DataFrame:
+    """
+    Load filtered data from Supabase for UI tab switching.
+    Pivots long-format Supabase rows into the wide format expected by UI.
+    """
+    url = os.getenv("SUPABASE_URL")
+    key = os.getenv("SUPABASE_KEY")
+    if not url or not key:
+        raise ValueError("SUPABASE_URL or SUPABASE_KEY not found in environment.")
+
+    try:
+        from supabase import create_client
+    except ImportError:
+        raise ImportError("supabase-py not installed. Run 'pip install supabase'.")
+
+    sb = create_client(url, key)
+    table_name = SHEET_TO_TABLE.get(sheet.lower())
+    if not table_name:
+        raise ValueError(f"Invalid sheet: {sheet}")
+
+    print(f"[{ticker}] Fetching {period_type} {table_name} from Supabase...")
+    try:
+        response = sb.table(table_name).select("*").eq("stock_name", ticker).limit(10000).execute()
+        data = response.data
+    except Exception as e:
+        print(f"Supabase fetch failed (non-fatal): {e}")
+        data = [] # Assign empty list on error to allow pd.DataFrame([])
+    
+    df_long = pd.DataFrame(data)
+    
+    # Filter by period pattern (V2 convention: "2024" or "Q1/2024")
+    if period_type == "year":
+        df_long = df_long[df_long["period"].str.match(r"^\d{4}$")]
+    elif period_type == "quarter":
+        df_long = df_long[df_long["period"].str.match(r"^Q\d/\d{4}$")]
+
+    if df_long.empty:
+        return pd.DataFrame()
+
+    # Load Golden Schema to ensure order
+    schema_f = Path(__file__).parent / "golden_schema.json"
+    schema_raw = json.loads(schema_f.read_text(encoding="utf-8"))
+    ordered_fields = [f for f in schema_raw["fields"] if f["sheet"].upper() == sheet.upper()]
+
+    def sort_p(p):
+        if str(p).startswith("Q"):
+            try: return (int(p[3:]), int(p[1]))
+            except: pass
+        try: return (int(p), 0)
+        except: return (0, 0)
+
+    all_periods = sorted(df_long["period"].unique(), key=sort_p, reverse=True)
+    
+    rows = []
+    # financial_ratios table has 'ratio_name' instead of 'item'
+    item_col = "ratio_name" if table_name == "financial_ratios" else "item"
+    id_col = "id" if table_name == "financial_ratios" else "item_id"
+
+    # For standard statements, use Golden Schema order
+    if table_name != "financial_ratios":
+        for field in ordered_fields:
+            fid = field["field_id"]
+            sub = df_long[df_long["item_id"] == fid]
+            if sub.empty: continue
+            
+            row_dict = {
+                "field_id": fid,
+                "vn_name":  field["vn_name"],
+                "unit":     field["unit"],
+                "level":    field["level"],
+            }
+            for p in all_periods:
+                p_row = sub[sub["period"] == p]
+                row_dict[p] = p_row["value"].values[0] if not p_row.empty else None
+            rows.append(row_dict)
+    else:
+        # For ratios, just group by ratio_name
+        for ratio in df_long[item_col].unique():
+            sub = df_long[df_long[item_col] == ratio]
+            row_dict = {
+                "field_id": ratio,
+                "vn_name":  ratio,
+                "unit":     "%",
+                "level":    0,
+            }
+            for p in all_periods:
+                p_row = sub[sub["period"] == p]
+                row_dict[p] = p_row["value"].values[0] if not p_row.empty else None
+            rows.append(row_dict)
+
+    if not rows:
+        return pd.DataFrame()
+
+    result = pd.DataFrame(rows)
+    # Ensure columns are in order: metadata then periods (desc)
+    meta_cols = ["field_id", "vn_name", "unit", "level"]
+    period_cols = [c for c in result.columns if c not in meta_cols]
+    return result[meta_cols + sorted(period_cols, key=sort_p, reverse=True)]
+
 def load_tab(ticker: str, period_type: str, sheet: str) -> pd.DataFrame:
     """
     Load filtered Parquet for UI tab switching.

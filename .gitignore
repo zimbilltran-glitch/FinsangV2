@@ -79,3 +79,6 @@ frontend/dist/             # Built frontend assets
 # ── Large external libraries (not project source) ──────────────────────────
 Skill_Testing/             # External skill library (~3000 files)
 
+
+.tmp_stash_backup/
+

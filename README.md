@@ -32,8 +32,8 @@ Finsang/
 
 ---
 
-## 🚦 Status: Phase 2.1 Refinement
-Actively refining the **Hierarchical Table UI** in React to match Vietcap's precision and planning the **9-Tab Expansion** based on the Simply Wall St layout.
+## 🚦 Status: Phase 2.2 Enrichment & UI Polish
+Actively running background extraction (`vn30_enrichment.py`) to scrape and synchronize up to 10 years of data (8 Years + 32 Quarters) for the entire VN30 basket. Both React and Streamlit interfaces have been optimized for temporal sorting (Z-A) and focused Balance Sheet viewing (removed generic charts).
 
 *— Developed by the Finsang Engineering Team under CTO Supervision.*
 

@@ -77,5 +77,10 @@ This document serves as the centralized source of truth for the Finsang project'
 - **Legacy Cleanup:** Gắn cờ `[DEPRECATED]` cho `Version_1`, định hướng toàn bộ dev mới sang `Version_2`.
 - **Visualization:** Đưa giao diện `streamlit_app.py` ra ngoài root làm Secondary Audit UI dự phòng cho React Dashboard.
 - **Bug Fixes:** Cải thiện và tối ưu lại logic load data từ mã hóa Parquet thông qua `pipeline.py` nhằm fix các lỗi đọc sai dòng của thư viện `pyarrow`/`pandas`.
-- **UI Research:** Nghiên cứu và phân tách chuẩn bị cho việc tích hợp hệ thống 9 tab từ giao diện mẫu của Simply Wall St.
+### [v2.2.0] - 2026-02-28 (Data Enrichment & UI Refinement)
+- **Data Enrichment:** Triển khai Script `vn30_enrichment.py` chạy ngầm. Kéo thành công dữ liệu lịch sử tài chính cho toàn bộ rổ VN30 (kéo dài 10 năm với 32 quý + 8 năm/mã).
+- **Core Engine Fix:** Sửa lỗi "0.0% Mapped" kinh điển đối với nhóm VN30. Nguyên nhân do `pipeline.py` nhầm lẫn giữa định vị theo thuộc tính `row_number` của Excel format, thay vì lấy index tuần tự từ Payload Vietcap JSON API.
+- **Supabase Security:** Vô hiệu hóa tính năng (Disable) Row Level Security (RLS) để tài khoản Anon có thể Insert dữ liệu tự động mà không bị block.
+- **Streamlit UI:** Sửa lỗi hiển thị mốc thời gian ngược chiều. Viết thuật toán Parsing Custom `sort_p` để luôn luôn sắp xếp cột mốc từ MỚI NHẤT -> CŨ NHẤT (Ví dụ: Q1/2025 -> Q4/2024 -> 2023).
+- **React Frontend:** Loại bỏ cột Component `<MiniBarChart />` lỗi thời để tập trung không gian hiển thị rộng rãi hơn cho Bảng CĐKT tại UI chính. Trang bị khung Search Autocomplete thông minh lấy source từ List `TICKERS`.
 

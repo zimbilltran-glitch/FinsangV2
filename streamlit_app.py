@@ -17,7 +17,7 @@ warnings.filterwarnings("ignore")
 
 # ─── 1. Setup Environment & Imports ───────────────────────────────────────────
 # Add Version_2 to sys.path so we can import its modules directly
-sys.path.insert(0, str(Path(__file__).parent / "Version_2"))
+sys.path.insert(0, str(Path(__file__).parent / "sub-projects" / "Version_2"))
 
 # Load Secrets
 # If running on Streamlit Cloud, use st.secrets. Otherwise fallback to .env
@@ -35,7 +35,10 @@ except ImportError:
 
 
 # Now we can safely import pipeline modules
-from pipeline import load_tab
+from pipeline import load_tab, load_tab_from_supabase
+import metrics
+import importlib
+importlib.reload(metrics)
 from metrics import calc_metrics
 from audit import run_checksums
 
@@ -124,13 +127,11 @@ st.markdown(oled_dark_css, unsafe_allow_html=True)
 # ─── 3. Data Fetching & Caching ───────────────────────────────────────────────
 
 def get_financial_data(ticker: str, period_type: str, sheet: str):
-    """Fetch financial data securely, without caching errors."""
+    """Fetch financial data from Supabase Cloud / Metrics."""
     try:
         if sheet == "cstc":
-            df = calc_metrics(ticker, period_type)
-        else:
-            df = load_tab(ticker, period_type, sheet)
-        return df
+            return calc_metrics(ticker, period_type)
+        return load_tab_from_supabase(ticker, period_type, sheet)
     except Exception as e:
         return None
 
@@ -157,9 +158,9 @@ def safe_get_financial_data(ticker: str, period_type: str, sheet: str):
 
 @st.cache_data(show_spinner=False, ttl=60)
 def get_audit_status(ticker: str, period_type: str):
-    """Run CFO Audit Checksums quietly."""
+    """Run CFO Audit Checksums quietly using cloud data."""
     try:
-        cdkt_df = load_tab(ticker, period_type, "cdkt")
+        cdkt_df = load_tab_from_supabase(ticker, period_type, "cdkt")
         results = run_checksums(cdkt_df)
         if results:
             # We just take the status of the most recent period
@@ -200,18 +201,21 @@ def format_dataframe(df: pd.DataFrame, n_cols: int):
         def fmt_val(row_idx):
             val = df.iloc[row_idx][col]
             unit = df.iloc[row_idx].get("unit", "")
+            level = int(df.iloc[row_idx].get("level", 1))
             
             if pd.isna(val) or val is None:
-                return "—"
+                return "" if level == 0 else "—"
             
             try:
                 fval = float(val)
             except (ValueError, TypeError):
-                return "—"
+                return "" if level == 0 else "—"
             
             if unit in ("%", "lần"):
                 formatted = f"{fval:,.2f}"
             elif unit == "đồng/cp":
+                formatted = f"{fval:,.0f}"
+            elif unit == "cổ phiếu":
                 formatted = f"{fval:,.0f}"
             else:
                 # Value is in VND. Convert to Tỷ VNĐ
@@ -228,16 +232,26 @@ def format_dataframe(df: pd.DataFrame, n_cols: int):
 
         display_df[col] = [fmt_val(i) for i in range(len(df))]
 
-    # 3. Apply Styler for negative numbers (Soft Red)
-    def color_negative(val):
-        if not isinstance(val, str):
-            return ""
-        # Check if negative, handling formatted strings (e.g. "-1,234.5")
-        if val.startswith("-"):
-            return "color: #ff4b4b; font-weight: 500;"
-        return "color: #e0e0e0;"
+    # 3. Apply Styler for negative numbers and headers
+    def style_rows(row):
+        idx = row.name  # Use index to look up level in original df
+        level = int(df.iloc[idx].get("level", 1))
+        
+        styles = []
+        for col_name in row.index:
+            s = ""
+            val = str(row[col_name])
+            if level == 0:
+                s += "font-weight: 700; color: #ffffff; text-transform: uppercase; background-color: #2a2d34;"
+            else:
+                if val.startswith("-"):
+                    s += "color: #ff4b4b; font-weight: 500;"
+                else:
+                    s += "color: #e0e0e0;"
+            styles.append(s)
+        return styles
 
-    styled_df = display_df.style.applymap(color_negative, subset=shown_cols)
+    styled_df = display_df.style.apply(style_rows, axis=1)
     return styled_df
 
 
@@ -250,7 +264,10 @@ def main():
         st.markdown("*Terminal Viewer V2.0*")
         st.markdown("---")
         
-        ticker = st.text_input("Mã Chứng Khoán (Ticker)", value="VHC").upper()
+        VN30_TICKERS = ["ACB", "BCM", "BID", "BVH", "CTG", "FPT", "GAS", "GVR", "HDB", "HPG", 
+                        "MBB", "MSN", "MWG", "PLX", "POW", "SAB", "SHB", "SSB", "SSI", "STB", 
+                        "TCB", "TPB", "VCB", "VHC", "VHM", "VIB", "VIC", "VJC", "VNM", "VPB", "VRE"]
+        ticker = st.selectbox("Mã Chứng Khoán (Ticker)", options=VN30_TICKERS, index=VN30_TICKERS.index("VHC")).upper()
         
         st.markdown("---")
         period_type_map = {"Quý": "quarter", "Năm": "year"}

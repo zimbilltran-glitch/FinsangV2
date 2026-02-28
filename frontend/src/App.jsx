@@ -8,11 +8,15 @@ import './App.css'
 // Values stored in Tỷ VND. Display in Triệu VND (×1000).
 // ────────────────────────────────────────────────────────────────────────────
 
-const TICKERS = [
-  { code: 'VHC', name: 'CTCP Vĩnh Hoàn', exchange: 'HOSE' },
-  { code: 'FPT', name: 'CTCP Tập đoàn FPT', exchange: 'HOSE' },
-  { code: 'HPG', name: 'CTCP Tập đoàn Hoà Phát', exchange: 'HOSE' },
-]
+const VN30_SYMBOLS = ["ACB", "BCM", "BID", "BVH", "CTG", "FPT", "GAS", "GVR", "HDB", "HPG",
+  "MBB", "MSN", "MWG", "PLX", "POW", "SAB", "SHB", "SSB", "SSI", "STB",
+  "TCB", "TPB", "VCB", "VHC", "VHM", "VIB", "VIC", "VJC", "VNM", "VPB", "VRE"]
+
+const TICKERS = VN30_SYMBOLS.map(sym => ({
+  code: sym,
+  name: `CTCP ${sym}`, // Fallback quick name
+  exchange: 'HOSE'
+}))
 
 const REPORT_TABS = [
   { id: 'CDKT', label: 'Cân đối kế toán', table: 'balance_sheet_wide' },
@@ -191,30 +195,6 @@ export default function App() {
 
   const toggle = (id) => setExpandedRows(p => ({ ...p, [id]: !p[id] }))
 
-  // ── Mini Bar Chart ─────────────────────────────────────────────────────
-  const MiniBarChart = ({ values }) => {
-    if (!values || values.length === 0) return <span className="no-chart">–</span>
-    const maxVal = Math.max(...values.map(Math.abs)) || 1
-    const hasNeg = values.some(v => v < 0)
-    return (
-      <div className={`mini-bar-container${hasNeg ? ' mixed' : ''}`}>
-        {values.map((v, i) => {
-          const scale = Math.min(1, Math.max(0.04, Math.abs(v) / maxVal))
-          return (
-            <div key={i} className="bar-col" title={formatNumber(v, currentTab.id === 'CSTC')}>
-              <div className="bar-pos-area">
-                {v >= 0 && <div className="bar-fill pos" style={{ transform: `scaleY(${scale})` }} />}
-              </div>
-              <div className="bar-neg-area">
-                {v < 0 && <div className="bar-fill neg" style={{ transform: `scaleY(${scale})` }} />}
-              </div>
-            </div>
-          )
-        })}
-      </div>
-    )
-  }
-
   // ── Stat summary cards ─────────────────────────────────────────────────
   const statSummary = useMemo(() => {
     if (!data.length || !periods.length) return null
@@ -248,16 +228,22 @@ export default function App() {
           <span className="company-name">{currentTicker.name}</span>
           <span className="company-sub">Báo cáo tài chính · Đơn vị: Tỷ VND</span>
         </div>
-        <select
-          id="ticker-select"
-          className="stock-select"
-          value={ticker}
-          onChange={e => setTicker(e.target.value)}
-        >
-          {TICKERS.map(t => (
-            <option key={t.code} value={t.code}>{t.code} – {t.name}</option>
-          ))}
-        </select>
+        <div className="ticker-search-wrapper">
+          <input
+            list="ticker-list"
+            id="ticker-input"
+            className="stock-select"
+            value={ticker}
+            onChange={e => setTicker(e.target.value.toUpperCase())}
+            placeholder="Tìm mã CK..."
+            autoComplete="off"
+          />
+          <datalist id="ticker-list">
+            {TICKERS.map(t => (
+              <option key={t.code} value={t.code}>{t.name}</option>
+            ))}
+          </datalist>
+        </div>
       </div>
 
       {/* ═══ Report Tabs ═══ */}
@@ -328,7 +314,7 @@ export default function App() {
             <thead>
               <tr>
                 <th className="th-item">Chỉ tiêu</th>
-                <th className="th-chart" />
+
                 {periods.map(p => <th key={p} className="th-val">{formatPeriodLabel(p)}</th>)}
               </tr>
             </thead>
@@ -376,9 +362,7 @@ export default function App() {
                         <span className={`label${isL0 ? ' label-major' : ''}`}>{isL0 ? displayLabel.toUpperCase() : displayLabel}</span>
                       </div>
                     </td>
-                    <td className="td-chart">
-                      {!major && <MiniBarChart values={chartVals} />}
-                    </td>
+
                     {periods.map(p => {
                       const v = row.periods_data?.[p]
                       return (
