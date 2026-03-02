@@ -153,6 +153,16 @@ def fetch_company_overview(ticker: str) -> dict | None:
         "issue_share":       int(issue_share) if issue_share else None,
         "dividend_yield":    div_yield,
         "ebitda":            round(_f("ebitda") / 1_000_000_000, 1) if _f("ebitda") else None,
+        
+        # Bank Specific
+        "nim":                 _f("net_interest_margin"),
+        "loan_to_deposit":     _f("loan_to_deposit_ratio") or _f("ldr"),
+        "npl_ratio":           _f("npl_ratio") or _f("bad_loan_ratio"),
+        "provision_coverage":  _f("provision_coverage_ratio") or _f("bad_debt_coverage"),
+        "total_deposits":      _f("total_deposits"),
+        "total_loans":         _f("total_loans") or _f("customer_loans"),
+        "financial_leverage":  _f("financial_leverage") or _f("le"),
+
         # Score placeholders — filled by calc_snowflake.py
         "score_value":       None,
         "score_future":      None,
@@ -173,6 +183,8 @@ OVERVIEW_COLS = {
     "de_ratio", "le_ratio", "market_cap", "ev", "issue_share",
     "dividend_yield", "ebitda", "score_value", "score_future", "score_past",
     "score_health", "score_dividend", "current_price", "updated_at",
+    "nim", "npl_ratio", "provision_coverage", "loan_to_deposit",
+    "total_deposits", "total_loans", "financial_leverage",
 }
 
 def upsert_overview(row: dict, dry_run: bool = False) -> bool:

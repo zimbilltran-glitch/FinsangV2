@@ -32,3 +32,10 @@
 ## C-004: Windows Console CP1252 Encoding Issues
 **Challenge**: Khi chạy lệnh in tiến trình ra Windows console (PowerShell), các emoji (✅, ❌) hoặc ký hiệu mũi tên (→) làm script Python crash do lỗi `UnicodeEncodeError: 'charmap' codec can't encode character`.
 **Solution**: Thay các emoji này bằng format chữ trong CLI: `[OK]`, `[FAIL]`, `[SKIP]`, và đổi `→` thành `->` hoặc `=>`.
+
+## C-005: Vnstock API Changes & 403 Forbidden for Bank Metrics
+**Challenge**: Khi cần fetch các chỉ số chuyên sâu cho ngân hàng (NIM, NPL, Loan to Deposit) qua `vnstock.company.ratio_summary()`, source VCI trả về `403 Forbidden`, trong khi nguồn TCBS báo lỗi `AttributeError: 'Company' object has no attribute 'ratio_summary'`.
+**Solution**: Đang điều tra các nguồn thay thế:
+- Sử dụng bảng `financial_ratios` đã có (được tính toán bởi version 2, cột value có chứa NIM).
+- Lấy qua API của Fireant (yêu cầu Authorization Bearer token).
+- Quét API Note của BCTC Vietcap.

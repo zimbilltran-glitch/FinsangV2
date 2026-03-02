@@ -76,3 +76,22 @@
 | P1.4 | `calc_snowflake.py` | ✅ Calculated Value, Future, Past, Health, Dividend scores. |
 | DB | `company_overview` schema | ✅ Applied migration adding EPS, ROE, Current Ratio, etc., and enabled `anon` RLS policies. |
 | P4 | Data Verification | ✅ Verified UI correctly displaying `VHC` 61,500 VND and 54% Snowflake score. |
+
+---
+
+## 2026-03-02 23:55 — Phase 5 Data Pipeline Investigations (P7.1)
+
+**Agent**: Antigravity  
+
+### Delivered
+| Phase | Task | Result |
+|---|---|---|
+| DB | `company_overview` | ✅ Applied migration adding bank metrics: `nim`, `npl_ratio`, `provision_coverage`, `loan_to_deposit`, `total_deposits`, `total_loans`, `financial_leverage`. |
+| Docs | Control files update | ✅ `v3_task.md`, `v3_challenges.md`, `v3_findings.md` updated with API limitations and alternative DB solutions. |
+
+### Investigations
+- ❌ Probed `vnstock` sources (VCI & TCBS) cho Bank metrics: Thất bại do thay đổi phía server (VCI 403, TCBS AttributeError).
+- ❌ Probed Vietcap Note API (thuyết minh BCTC): Schema json lộn xộn, mapping string phức tạp.
+- ⚠️ Probed Fireant API: Yêu cầu Bearer token phức tạp khi chạy tự động.
+- ✅ Truy vấn bảng `financial_ratios`: Database Version 2 (CFO_CALC_V2) đã tích hợp sẵn hầu hết các chỉ tiêu NIM (`bank_4_6`), Tiền gửi (`bank_2_1`), Cho vay KH (`bank_1_2`).
+- 👉 **Hướng tới P5.1**: Dừng việc lấy dữ liệu qua vnstock API. Chúng ta sẽ điều chỉnh React Hook hoặc Backend script rút dữ liệu nội bộ từ `financial_ratios` để fill vào `company_overview` (hoặc render trực tiếp tại Component).

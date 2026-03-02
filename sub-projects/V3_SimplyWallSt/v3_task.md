@@ -104,9 +104,10 @@
 > 3. Test với `--dry-run` trước khi upsert thật
 > 4. Delay 1.0s giữa các tickers để tránh rate limit từ VCI
 
-- [ ] **P7.1**: Fetch Bank-Specific Metrics (NIM, NPL, Loan/Deposit, Financial Leverage)
-  - Mở rộng `fetch_company_overview.py` hoặc tạo script mới
-  - Migration: Thêm 7 columns vào `company_overview`
+- [x] **P7.1 (Migration)**: Thêm 7 columns bank metrics vào `company_overview` (✅ DONE)
+- [ ] **P7.1 (Script)**: Fetch Bank-Specific Metrics (NIM, NPL, Loan/Deposit, Financial Leverage)
+  - Mở rộng `fetch_company_overview.py` hoặc tạo script mới.
+  - *Lưu ý: Đang gián đoạn do api `vnstock` bị lỗi 403 (VCI) / AttributeError (TCBS).*
   - **PHẢI LÀM TRƯỚC P5.1**
 
 - [ ] **P7.2**: Historical Balance Sheet Summary View

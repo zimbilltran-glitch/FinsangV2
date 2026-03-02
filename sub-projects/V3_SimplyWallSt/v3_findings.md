@@ -28,3 +28,13 @@ Lý do:
 1. Chart kiểu SWS Snowflake là dạng Radar 5 trục tĩnh, thiết kế rất đơn giản bằng toán học SVG `<polygon>`.
 2. Bỏ hoàn toàn dependencies của Plotly (~200KB-1MB), giúp tab Overview load tức thì (0 ms trễ render).
 3. Area Chart cho OHLCV cũng dùng `<path>` SVG nội tuyến cực nhẹ, đạt tốc độ render tối đa.
+
+## F-V3-004: Bank-specific Metrics Data Sources 
+- `vnstock` hiện không ổn định cho hàm `ratio_summary()` (VCI lỗi 403, TCBS module lỗi).
+- Báo cáo tài chính Note section của Vietcap API trả về JSON cấu trúc lộn xộn, khó map cứng các field Nợ Xấu.
+- API Fireant trả dữ liệu ổn cho `/financial-indicators` nhưng cần giải quyết Bearer Token lấy từ authentication headers.
+- Bảng `financial_ratios` (CFO_CALC_V2) trong database Supabase đã chứa sẵn:
+  - "Biên lãi ròng (NIM) Ước tính" (`item_id: bank_4_6`)
+  - "Tiền gửi của khách hàng" (`item_id: bank_2_1`)
+  - "Cho vay khách hàng" (`item_id: bank_1_2`)
+- 💡 **Giải pháp**: Ưu tiên tận dụng data in-house từ `financial_ratios` để tính NIM và Loan/Deposit, kết hợp fetch thêm API Fireant cho NPL (Tỷ lệ nợ xấu) nếu cần.
