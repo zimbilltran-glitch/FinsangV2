@@ -72,7 +72,7 @@ This document serves as the centralized source of truth for the Finsang project'
 
 ### [v2.1.0] - 2026-02-26 (Project Restructuring & Deep Audit)
 - **Architecture:** Gom cụm cấu trúc thành 3 thư mục lõi: `sub-projects`, `design-themes`, `internal-skills`.
-- **Documentation:** Viết mới `Finsang_Team_Guide.md` và tái cấu trúc `README.md` thành điều hướng trung tâm.
+- **Documentation:** Viết mới `Finsang_Master_Team_Guide.md` và tái cấu trúc `README.md` thành điều hướng trung tâm.
 - **Security Review:** Rà soát `.gitignore` bảo vệ tuyệt đối file `.env`, `keys.txt` và `data/` Parquet.
 - **Legacy Cleanup:** Gắn cờ `[DEPRECATED]` cho `Version_1`, định hướng toàn bộ dev mới sang `Version_2`.
 - **Visualization:** Đưa giao diện `streamlit_app.py` ra ngoài root làm Secondary Audit UI dự phòng cho React Dashboard.
@@ -85,7 +85,7 @@ This document serves as the centralized source of truth for the Finsang project'
 - **React Frontend:** Loại bỏ cột Component `<MiniBarChart />` lỗi thời để tập trung không gian hiển thị rộng rãi hơn cho Bảng CĐKT tại UI chính. Trang bị khung Search Autocomplete thông minh lấy source từ List `TICKERS`.
 
 ### [v2.3.0-audit] - 2026-03-01 (Full Project Audit & Task Restructuring)
-- **Full Audit:** Rà soát toàn bộ codebase, phát hiện 10 findings (F-001 → F-010). Chi tiết tại `findings.md`.
+- **Full Audit:** Rà soát toàn bộ codebase, phát hiện 10 findings (F-001 → F-010). Chi tiết tại `Finsang_Master_Findings.md`.
 - **Critical Bugs Found:**
   - F-001: `load_tab_from_supabase()` crash do biến `sheet_upper` chưa định nghĩa.
   - F-002: Duplicate `FINSANG_ENCRYPTION_KEY` trong `.env` (Fernet key, không phải Supabase).
@@ -114,3 +114,9 @@ This document serves as the centralized source of truth for the Finsang project'
   - Thêm migrations để bổ sung các cột mới vào `company_overview`.
   - Configure lại RLS policy cho phép `anon` roles có quyền `INSERT/UPDATE` thông qua pipeline script chạy nội bộ.
 - **Documentation:** Chuyển đổi toàn bộ tài liệu V3 vào `sub-projects/V3_SimplyWallSt/` với `v3_changelog.md` để tách bạch rõ context.
+
+### [v4.0.0] - 2026-03-03 (Analysis Charts Integration & Data Transformation)
+- **Feature Initialization:** Khởi tạo Tab "Biểu đồ phân tích" bên cạnh tab CSTC, mục tiêu trực quan hoá dữ liệu KQKD, CĐKT, CSTC cho cả 3 phân ngành (Normal, Bank, Sec).
+- **Architecture:** Thiết kế kiến trúc sử dụng thư viện `recharts` (React-native chart library). Quyết định này thay thế Pure SVG để xử lý các biểu đồ phức tạp như Mix Line-Bar, Stacked Area.
+- **Data Layer:** Tái sử dụng dữ liệu từ các view Supabase hiện tại (`_wide`). Build `useAnalysisChartsData.js` hook để xoay trục Data thành mảng Array 1 chiều phù hợp làm input cho `recharts`.
+- **Project Governance:** Khởi tạo không gian dự án V4 độc lập tại `sub-projects/V4_Chart_Improve` kèm theo 5 file B.L.A.S.T Management Files nhằm đảm bảo quy trình dev nghiêm ngặt.

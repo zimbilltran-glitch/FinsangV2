@@ -95,3 +95,36 @@
 - ⚠️ Probed Fireant API: Yêu cầu Bearer token phức tạp khi chạy tự động.
 - ✅ Truy vấn bảng `financial_ratios`: Database Version 2 (CFO_CALC_V2) đã tích hợp sẵn hầu hết các chỉ tiêu NIM (`bank_4_6`), Tiền gửi (`bank_2_1`), Cho vay KH (`bank_1_2`).
 - 👉 **Hướng tới P5.1**: Dừng việc lấy dữ liệu qua vnstock API. Chúng ta sẽ điều chỉnh React Hook hoặc Backend script rút dữ liệu nội bộ từ `financial_ratios` để fill vào `company_overview` (hoặc render trực tiếp tại Component).
+---
+
+## 2026-03-03 16:25 — Phase 5, 6 & 7 Complete ✅
+
+**Agent**: Antigravity (CFO & Lead Dev)
+**Action**: Triển khai toàn bộ V3.1 (Financial Health Deep-Dive & Layout).
+
+### Delivered
+| Phase | Task | Result |
+|---|---|---|
+| P7.1 | `populate_bank_metrics.py` | ✅ Populate NIM, Deposits, Loans, LDR cho Top 10 Banks từ DB nội bộ. |
+| P7.2 | `useOverviewData.js` extension | ✅ Support Balance Sheet item mapping (Normal + Bank items). |
+| P5.1 | `BankKeyInfo.jsx` | ✅ Sector-aware summary (NIM/LDR cho Bank, P/E/D/E cho Normal). |
+| P5.2 | `FinancialPositionChart.jsx` | ✅ SVG Stacked Bar (Assets vs Liab+Eq) + Bank logic fallback. |
+| P5.3 | `DebtEquityHistoryChart.jsx` | ✅ SVG 8-year trend line (Nợ vs Vốn CSH) + Bank logic fallback. |
+| P5.4 | `ChecklistCards.jsx` upgrade | ✅ Expandable narratives + icon dots summary header. |
+| P6.1 | Sticky Section Navigation | ✅ Glassmorphic sub-nav bar + Smooth scroll. |
+| UI/UX | CSTC Tab Layout Fix | ✅ Thẻ bảng CSTC không còn bị tràn màn hình; sticky "Chỉ tiêu" col; adaptive formatting. |
+| Infra | Vite & Env fixes | ✅ Sửa lỗi `.env` thiếu Supabase keys và lỗi phân quyền hệ thống. |
+
+### Browser Verified
+- ✅ **Mã VHC**: Hiển thị D/E Chart, Position Chart, Health Checklist 4/5 đạt kèm narrative.
+- ✅ **Mã VCB**: Hiển thị NIM 9.61%, LDR 98.6%, và charts dùng data bank (Tổng tài sản).
+- ✅ **Section Nav**: Bám dính (sticky) top và nhảy đến đúng section khi click.
+- ✅ **CSTC Tab**: Bảng cân đối, thu nhỏ tỷ lệ cho Ngân hàng/CTCK.
+
+### Issues Resolved
+- **Horizontal Overflow**: Khống chế `table-layout: fixed` và format số "Tr CP", "Tỷ VND" nhỏ gọn.
+- **Bank BS Structure**: Map `cdkt_tai_san_ngan_han` sang `cdkt_bank_tong_tai_san` cho charts.
+
+### Next Steps
+- 🟢 Chuẩn bị Version 3.1 Release
+- 🟢 Cập nhật tài liệu hướng dẫn vận hành pipeline mới.

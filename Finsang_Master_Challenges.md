@@ -43,3 +43,4 @@ Centralized log of critical technical hurdles encountered during the development
 *Refer to sub-project challenges for local issues:*
 - [V2_CHALLENGES.md](file:///c:/Users/Admin/OneDrive/Learn%20Anything/Antigravity/1.Project%20Source/Version_2/V2_CHALLENGES.md)
 - [V1_CHALLENGES.md](file:///c:/Users/Admin/OneDrive/Learn%20Anything/Antigravity/1.Project%20Source/Version_1/V1_CHALLENGES.md)
+- [v4_challenges.md](file:///d:/Project_partial/Finsang/sub-projects/V4_Chart_Improve/v4_challenges.md)

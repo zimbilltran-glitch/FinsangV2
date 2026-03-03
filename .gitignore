@@ -55,6 +55,7 @@ Thumbs.db
 kbsv_items.tmp
 fireant_raw.md
 logs/
+*.xlsx
 
 # ── CTO Security: Never commit secrets or raw API payloads ──────────────────
 keys.txt                   # Contains intercepted Fireant Bearer token URLs

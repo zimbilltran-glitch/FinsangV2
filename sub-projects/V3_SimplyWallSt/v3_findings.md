@@ -38,3 +38,21 @@ Lý do:
   - "Tiền gửi của khách hàng" (`item_id: bank_2_1`)
   - "Cho vay khách hàng" (`item_id: bank_1_2`)
 - 💡 **Giải pháp**: Ưu tiên tận dụng data in-house từ `financial_ratios` để tính NIM và Loan/Deposit, kết hợp fetch thêm API Fireant cho NPL (Tỷ lệ nợ xấu) nếu cần.
+## F-V3-005: CSTC Tab Layout Optimization (2026-03-03)
+Phát hiện: Bảng chỉ số tài chính cho các mã Ngân hàng/Chứng khoán có giá trị hàng tỷ VND quá dài gây tràn container.
+Giải pháp:
+1. CSS: Dùng `table-layout: fixed` và `width: 80px` cho các cột giá trị.
+2. Sticky: Cố định cột "Chỉ tiêu" bên trái bằng `position: sticky`.
+3. Format: Hàm `formatNumber` thích ứng: >= 10K tỷ -> 0 decimal; chia triệu cho "Cổ phiếu".
+
+## F-V3-006: Bank Balance Sheet Mapping (2026-03-03)
+Phát hiện: Dữ liệu BS của mã Ngân hàng không dùng `cdkt_tai_san_*` mà dùng `cdkt_bank_*`.
+Mapping cho Charts:
+- Total Assets: `cdkt_bank_tong_tai_san`
+- Total Debt: `cdkt_bank_tong_no_phai_tra`
+- Equity: `cdkt_bank_von_chu_so_huu`
+- Total Liab + Eq: `cdkt_bank_no_phai_tra_va_von_chu_so_huu`
+
+## F-V3-007: Local Development Requirements
+Phát hiện: Khi chạy Vite local, web bị trắng trang nếu thiếu `.env` chứa `VITE_SUPABASE_URL` và `VITE_SUPABASE_ANON_KEY`.
+Lưu ý: Luôn kiểm tra file `.env` tồn tại trong thư mục `frontend/` trước khi dev.

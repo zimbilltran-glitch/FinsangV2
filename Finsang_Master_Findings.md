@@ -1,4 +1,4 @@
-# Finsang v2.2 — Audit Findings Report
+# Finsang Master Findings Report
 
 > **Audit Date:** 2026-03-01 | **Auditor:** Antigravity Agent
 > **Scope:** Full project review — Backend, Frontend, Data, Security, Architecture
@@ -225,5 +225,42 @@ Pipeline Fireant đã có khá hoàn chỉnh gồm:
 - Xây dựng retry mechanism hoặc error handling để log lại các requests quá hạn.
 
 ---
+
+---
+
+## F-013: Kiến trúc biểu đồ thiếu tính mở rộng cho Data Phức tạp
+
+| Field | Value |
+|---|---|
+| **Severity** | 🟡 MEDIUM |
+| **Component** | `frontend/src/App.jsx` & V3 Data Hooks |
+| **Resolution** | Đang xử lý tại Phase 4.0 (`V4_Chart_Improve`) |
+
+**Chi tiết:**
+- Việc sử dụng Pure SVG ở V3.0 tốt cho bundle size nhưng bộc lộ điểm yếu khi cần dựng biểu đồ phức tạp như Cột ghép (Grouped Bar), Miền (Stacked Area) và 2 trục tung (Dual Axis).
+- Thiếu các Tooltip tương tác có Crosshair, gây khó khăn cho CFO nhìn data chính xác.
+
+**Hành động cải thiện:**
+- Triển khai Sub-project `V4_Chart_Improve` với thư viện `recharts`.
+- Parser lại CĐKT và KQKD `_wide` data thành dạng timeseries arrays.
+
+---
+
+## F-014: Tái cấu trúc Source Code & Audit Security (CTO Level)
+
+| Field | Value |
+|---|---|
+| **Severity** | 🟢 INFO (Hoàn thành) |
+| **Component** | Toàn bộ dự án |
+| **Action** | Dọn dẹp, lưu trữ File rác và Kiểm tra bảo mật |
+
+**Chi tiết Audit & Hành động:**
+- **Codebase De-clutter:** 
+  - Đã di chuyển toàn bộ thư mục `sub-projects/Version_1` (mã nguồn cũ dựa trên Playwright) và thư mục `tools` (các script cào dữ liệu thô, không theo chuẩn B.L.A.S.T) vào thư mục `archive_legacy/`.
+  - Quét thư mục `Version_2` và phát hiện một loạt các file dump `search_raw_*.json`, `_verify_out.txt`, và các script test `check_*.py`, `test_*.py`. Toàn bộ đã được đưa vào `archive_legacy/explorations`. Hiện tại `Version_2` chỉ chứa mã nguồn Core Engine.
+- **Security Check:**
+  - Kiểm tra `.env` hiện tại không có xung đột Encryption Key (lỗi F-002 đã được giải quyết). 
+  - `frontend/.env` chỉ chứa biến môi trường an toàn (Vite Supabase Anon Key, thuộc loại Publishable Key).
+  - Tệp chứa dữ liệu nhạy cảm cực cao là `keys.txt` (chứa Fireant Bearer Tokens) đã được đưa vào danh sách đen của `.gitignore`, hoàn thành yêu cầu bảo mật mã nguồn trước khi đẩy lên Git.
 
 > **⚠️ Bản ghi cập nhật kết thúc (End of Report)**

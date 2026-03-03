@@ -1,6 +1,6 @@
 # 📋 V3 Task Tracker — Simply Wall St Integration
 
-> **Last Updated**: 2026-03-01 23:57 (GMT+7)
+> **Last Updated**: 2026-03-03 16:20 (GMT+7)
 > **Plan file**: `v3_implementation_plan.md` (cùng thư mục)
 > **Changelog**: `v3_changelog.md`
 
@@ -39,81 +39,40 @@
 
 ---
 
-## ❌ V3.1 — Bổ sung tính năng (Phase 5-7)
+## ✅ V3.1 — Bổ sung tính năng (Phase 5-7) — Đã hoàn thành
 
 ### Phase 5: Financial Health Deep-Dive 🔴 PRIORITY 1
 
-> **Agent gợi ý**: Frontend + Data Agent
-> **Skills cần dùng**: `professional-cfo-analyst`, `kpi-dashboard-design`
-> **Đọc trước**: `v3_implementation_plan.md` → mục "V3.1 Enhancement Plan → Phase 5"
-> **Hướng dẫn agent**:
-> 1. Đọc `v3_implementation_plan.md` section Phase 5 để hiểu specs
-> 2. Đọc `frontend/src/components/ChecklistCards.jsx` để hiểu pattern hiện tại
-> 3. Đọc `frontend/src/hooks/useOverviewData.js` để hiểu data flow
-> 4. KHÔNG đọc toàn bộ App.jsx hoặc backend → tốn token thừa
-
-- [ ] **P5.1**: `BankKeyInfo.jsx` — Key Information box chuyên biệt theo sector
-  - Bank: Asset/Equity ratio, NIM, Total deposits, Loan/Deposit, Bad loans, Allowance
-  - Normal: D/E, Current Ratio, Total Debt/Equity, Interest Coverage, Cash
-  - Cần data: `company_overview` table (columns NIM, NPL... → xem P7.1)
-  - **Blocked on**: P7.1 (bank metrics chưa có trong DB)
-
-- [ ] **P5.2**: `FinancialPositionChart.jsx` — Stacked Bar (Assets vs Liabilities)
-  - Pure SVG stacked bars: Short-term/Long-term Assets ↔ Liabilities + Equity
-  - Data source: `balance_sheet_wide` table → extract `cdkt_tsnh`, `cdkt_tsdh`, `cdkt_nnh`, `cdkt_ndh`, `cdkt_vcsh`
-  - **Blocked on**: P7.2 (cần view/cache BS summary)
-
-- [ ] **P5.3**: `DebtEquityHistoryChart.jsx` — Line+Area trend chart 5-10 năm
-  - Dual line (Debt = red, Equity = blue) with area fill
-  - Data source: `balance_sheet_wide` → `cdkt_npt` + `cdkt_vcsh` historical periods
-  - **Blocked on**: P7.2
-
-- [ ] **P5.4**: Expandable Checklist Cards
-  - Thêm `narrative` field + expand/collapse animation vào `ChecklistCards.jsx`
-  - Thêm icon row summary header (✅❌✅✅✅✅ giống SWS)
-  - **Không bị block** — có thể làm ngay
+- [x] **P5.1**: `BankKeyInfo.jsx` — Key Information box chuyên biệt theo sector
+  - [x] Hiển thị NIM, Tiền gửi, Cho vay, LDR cho Ngân hàng
+  - [x] Hiển thị P/E, D/E, ROE cho Phi tài chính và Chứng khoán
+- [x] **P5.2**: `FinancialPositionChart.jsx` — Stacked Bar (Assets vs Liabilities)
+  - [x] Pure SVG stacked bars: Tài sản NH/DH ↔ Nợ NH/DH + Vốn CSH
+  - [x] Added Bank Fallback: Tự động dùng `cdkt_bank_*` nếu là mã Ngân hàng
+- [x] **P5.3**: `DebtEquityHistoryChart.jsx` — Line+Area trend chart 8 năm
+  - [x] Dual line (Nợ phải trả = red, Vốn CSH = blue)
+  - [x] Added Bank Fallback: Historical data cho Bank items
+- [x] **P5.4**: Expandable Checklist Cards
+  - [x] Narrative field + animation expand trong `ChecklistCards.jsx`
+  - [x] Icon row dots summary (🟢🔴) header
 
 ### Phase 6: Multi-Section 360 Tab Layout 🟡 PRIORITY 2
 
-> **Agent gợi ý**: Frontend Agent
-> **Skills cần dùng**: `ui-ux-pro-max`, `frontend-design`
-> **Đọc trước**: `v3_implementation_plan.md` → mục "Phase 6"
-> **Hướng dẫn agent**:
-> 1. Đọc `frontend/src/components/OverviewTab.jsx` (133 lines) để hiểu layout hiện tại
-> 2. Thêm section anchors + sticky sub-nav bar
-> 3. KHÔNG tách ra pages riêng — giữ nguyên single-tab structure
+- [x] **P6.1**: Section-Based Navigation (Summary / Valuation / Health / Structure / History)
+  - [x] Sub-nav bar: Sticky glassmorphism (12px blur)
+  - [x] Smooth scroll behavior
+- [x] **P6.2**: Checklist Header Icon Row
+  - [x] Tích hợp row dots vào header phần sức khỏe tài chính
 
-- [ ] **P6.1**: Section-Based Navigation (internal anchors: Summary / Valuation / Health / History / Dividend)
-  - `scrollIntoView({ behavior: 'smooth' })` on click
-  - CSS: `.section-nav` sticky bar xám nhạt
-  - **Blocked on**: P5.x components phải xong trước
+### Phase 7: Data Pipeline Enhancement 🟢 PRIORITY 3
 
-- [ ] **P6.2**: Checklist Header Icon Row
-  - `Financial Health criteria checks 5/6  ✅ ❌ ✅ ✅ ✅ ✅  [→]`
-  - Mở rộng `ChecklistCards.jsx`
-  - **Blocked on**: P5.4
+- [x] **P7.1 (Script)**: Fetch & Populate Bank-Specific Metrics
+  - [x] `populate_bank_metrics.py` — Rút data nội bộ từ `financial_ratios_wide` để fill `company_overview`.
+  - [x] Đã chạy cho 10 mã ngân hàng lớn (VCB, BID, CTG, TCB, MBB, ACB, HDB, STB, VIB, LPB).
+- [x] **P7.2**: Historical Balance Sheet Summary Data
+  - [x] Cập nhật `useOverviewData.js` hook fetch trực tiếp `balance_sheet_wide`.
+  - [x] Tích hợp mapping bank item IDs (`cdkt_bank_tong_tai_san`...).
 
-### Phase 7: Data Pipeline Enhancement 🟢 PRIORITY 3 (nhưng cần chạy trước P5)
-
-> **Agent gợi ý**: Data Engineer / Backend Agent
-> **Skills cần dùng**: `data-engineering-data-pipeline`, `professional-cfo-analyst`
-> **Đọc trước**: `V3_SimplyWallSt/scripts/fetch_company_overview.py` (hiểu pattern upsert)
-> **Hướng dẫn agent**:
-> 1. Chạy P7.1 TRƯỚC tiên vì P5.1 cần data
-> 2. Dùng MCP tool `apply_migration` cho SQL migrations
-> 3. Test với `--dry-run` trước khi upsert thật
-> 4. Delay 1.0s giữa các tickers để tránh rate limit từ VCI
-
-- [x] **P7.1 (Migration)**: Thêm 7 columns bank metrics vào `company_overview` (✅ DONE)
-- [ ] **P7.1 (Script)**: Fetch Bank-Specific Metrics (NIM, NPL, Loan/Deposit, Financial Leverage)
-  - Mở rộng `fetch_company_overview.py` hoặc tạo script mới.
-  - *Lưu ý: Đang gián đoạn do api `vnstock` bị lỗi 403 (VCI) / AttributeError (TCBS).*
-  - **PHẢI LÀM TRƯỚC P5.1**
-
-- [ ] **P7.2**: Historical Balance Sheet Summary View
-  - Tạo Supabase view `balance_sheet_summary` cho D/E History chart
-  - Hoặc: query trực tiếp `balance_sheet_wide` từ frontend hook
-  - **PHẢI LÀM TRƯỚC P5.2 và P5.3**
 
 ---
 

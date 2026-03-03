@@ -39,3 +39,19 @@
 - Sử dụng bảng `financial_ratios` đã có (được tính toán bởi version 2, cột value có chứa NIM).
 - Lấy qua API của Fireant (yêu cầu Authorization Bearer token).
 - Quét API Note của BCTC Vietcap.
+## C-006: Horizontal Overflow in CSTC Tables
+**Challenge**: Bảng chỉ số tài chính quá nhiều cột và giá trị VND quá lớn làm giao diện bị vỡ, người dùng phải scroll ngang quá nhiều.
+**Solution**:
+- Cố định cột tiêu đề (sticky left).
+- Rút gọn tiêu đề cột năm (2025 thay vì 31/12/2025).
+- Tự động rút gọn số (ví dụ: 151,234.56 -> 151,235 Tỷ VND).
+
+## C-007: Bank Balance Sheet structure mismatch
+**Challenge**: Các charts SVG được thiết kế cho doanh nghiệp sản xuất (Assets = Current + Long-term). Ngân hàng không có sự phân chia này rõ ràng trong database thô.
+**Solution**: Viết logic "Fallback" trong Component: Nếu không tìm thấy TS ngắn hạn, tự động map "Tổng tài sản" vào thanh bar chính và ẩn các label không phù hợp.
+
+## C-008: Vite local environment configuration
+**Challenge**: Lỗi phân quyền khi chạy script npm hoặc thiếu biến môi trường làm tốn nhiều thời gian debugging.
+**Solution**:
+- Sử dụng `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` khi chạy terminal trên Windows.
+- Documentation: Ghi chú rõ yêu cầu file `.env` trong `v3_findings.md`.

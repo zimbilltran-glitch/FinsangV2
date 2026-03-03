@@ -46,11 +46,34 @@ function formatNumber(num, isRatio = false, unit = '') {
   if (num === null || num === undefined) return ''
   if (typeof num !== 'number') return '' // Handle entirely empty cells
   if (num === 0) return '–'
+
+  // Special case: share count (cổ phiếu) — display as millions (Tr CP)
+  if (unit === 'cổ phiếu') {
+    const millions = num / 1000000
+    if (millions >= 1) {
+      return new Intl.NumberFormat('en-US', {
+        maximumFractionDigits: 0,
+      }).format(Math.round(millions))
+    }
+    return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(num)
+  }
+
   // For CSTC tab: monetary items (tỷ đồng) still need division, ratios don't
   const isMonetary = unit === 'tỷ đồng' || unit === 'tỷ VND'
   const needsDivision = !isRatio || isMonetary
   const displayNum = needsDivision ? num / 1000000000 : num
-  const fractionDigits = (isRatio && !isMonetary) ? 2 : 1
+
+  // Adaptive decimal places: large numbers get fewer decimals for readability
+  let fractionDigits
+  if (isRatio && !isMonetary) {
+    fractionDigits = 2
+  } else {
+    const absNum = Math.abs(displayNum)
+    if (absNum >= 100000) fractionDigits = 0      // ≥100K Tỷ → no decimals
+    else if (absNum >= 1000) fractionDigits = 0    // ≥1K Tỷ → no decimals
+    else fractionDigits = 1
+  }
+
   return new Intl.NumberFormat('en-US', {
     maximumFractionDigits: fractionDigits,
     minimumFractionDigits: fractionDigits,

@@ -11,10 +11,10 @@ The project is strictly organized into functional groups to ensure long-term mai
 - **`/frontend`**: The production React + Vite visualization layer.
     - Uses Tailwind (if applicable) and Vanilla CSS for OLED Dark aesthetics.
     - Connects to Supabase for near real-time financial data.
-- **`/sub-projects/Version_2`**: The core "Finsang Engine".
-    - `pipeline.py`: The orchestrator for API extraction.
-    - `security.py`: Handles AES-128 encryption of data at rest.
-    - `metrics.py`: Computes CFA-grade financial ratios.
+- **`/sub-projects`**: High-level feature integrations and core engines.
+    - `Version_2/`: The core "Finsang Engine" (API extraction orchestrator `pipeline.py`, AES-128 `security.py`, and CFA-grade `metrics.py`).
+    - `V3_SimplyWallSt/`: The 360 Overview feature integration.
+    - `V4_Chart_Improve/`: Analysis Charts feature using Recharts library.
 - **`/internal-skills`**: Agent-specific capabilities and automated testing suites.
 - **`/design-themes`**: Curated UI/UX reference systems (Simply Wall St, Fireant styles).
 - **`/docs`**: Granular finding reports and historical challenges.

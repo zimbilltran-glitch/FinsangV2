@@ -334,6 +334,7 @@ body {
 .table-wrap {
   flex: 1;
   overflow-x: auto;
+  position: relative;
 }
 
 .state-msg {
@@ -368,6 +369,7 @@ body {
   width: 100%;
   border-collapse: collapse;
   font-size: 12.5px;
+  table-layout: fixed;
 }
 
 .fin-table thead tr {
@@ -392,8 +394,12 @@ body {
 
 .th-item {
   text-align: left;
-  min-width: 320px;
-  max-width: 440px;
+  width: 320px;
+  min-width: 220px;
+  position: sticky;
+  left: 0;
+  z-index: 12;
+  background: var(--bg-elevated);
 }
 
 .th-chart {
@@ -402,8 +408,11 @@ body {
 
 .th-val {
   text-align: right;
-  min-width: 96px;
+  width: 110px;
+  min-width: 85px;
   font-family: 'IBM Plex Mono', monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ── Body Rows ──────────────────────────────────────────── */
@@ -495,6 +504,10 @@ body {
 
 .td-item {
   text-align: left;
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  background: inherit;
 }
 
 .item-cell {
@@ -547,9 +560,12 @@ body {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   color: var(--txt-primary);
-  font-size: 12.5px;
+  font-size: 12px;
   font-family: 'IBM Plex Mono', monospace;
   font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
 }
 
 .td-val.neg {
@@ -1138,4 +1154,249 @@ body {
 /* ── Ticker search dropdown polish ───────────────────────── */
 .ticker-search-wrapper {
   position: relative;
+}
+
+/* ══════════════════════════════════════════════════════════
+   V3.1 — New Components CSS
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Section Navigation (P6.1) ─────────────────────────── */
+.section-nav {
+  display: flex;
+  gap: 4px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--sws-border);
+  position: sticky;
+  top: 52px;
+  z-index: 20;
+  background: rgba(17, 17, 17, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 8px;
+  margin: -4px 0 8px;
+}
+
+.section-nav-btn {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--sws-muted);
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 180ms ease;
+  white-space: nowrap;
+}
+
+.section-nav-btn:hover {
+  color: var(--txt-primary);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--sws-border);
+}
+
+/* ── Key Information Card (P5.1) ───────────────────────── */
+.key-info-card {
+  background: var(--sws-bg-card);
+  border: 1px solid var(--sws-border);
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+
+.key-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 24px;
+}
+
+.key-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.key-info-row:last-child,
+.key-info-row:nth-last-child(2) {
+  border-bottom: none;
+}
+
+.key-info-label {
+  font-size: 12px;
+  color: var(--sws-muted);
+  font-weight: 400;
+}
+
+.key-info-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--txt-primary);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.key-info-value.val-warn {
+  color: var(--sws-warn);
+}
+
+/* ── Financial Position Chart (P5.2) ──────────────────── */
+.fp-chart-card {
+  background: var(--sws-bg-card);
+  border: 1px solid var(--sws-border);
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+
+.fp-chart-svg {
+  width: 100%;
+  max-width: 600px;
+}
+
+.fp-label {
+  fill: var(--sws-muted);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.fp-val {
+  fill: var(--txt-secondary);
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.fp-legend {
+  fill: var(--sws-muted);
+  font-size: 9px;
+}
+
+/* ── Debt/Equity History Chart (P5.3) ─────────────────── */
+.de-history-card {
+  background: var(--sws-bg-card);
+  border: 1px solid var(--sws-border);
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+
+.de-chart-svg {
+  width: 100%;
+  max-width: 600px;
+}
+
+.de-axis-label {
+  fill: var(--sws-muted);
+  font-size: 9px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.de-legend-text {
+  fill: var(--sws-muted);
+  font-size: 9px;
+}
+
+/* ── Checklist Expandable (P5.4) ──────────────────────── */
+.checklist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.checklist-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.checklist-icon-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.icon-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+  transition: transform 150ms ease;
+}
+
+.icon-dot:hover {
+  transform: scale(1.3);
+}
+
+.dot-pass {
+  background: var(--sws-success);
+}
+
+.dot-fail {
+  background: var(--sws-danger);
+}
+
+.dot-neutral {
+  background: var(--txt-dim);
+}
+
+.check-expandable {
+  transition: background 180ms ease;
+}
+
+.check-expandable:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.check-label-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.check-expand-arrow {
+  font-size: 10px;
+  color: var(--txt-dim);
+  transition: color 150ms ease;
+}
+
+.check-expandable:hover .check-expand-arrow {
+  color: var(--txt-secondary);
+}
+
+.check-narrative {
+  font-size: 11.5px;
+  color: var(--sws-muted);
+  line-height: 1.5;
+  margin-top: 6px;
+  padding: 8px 0 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  animation: fadeSlideIn 200ms ease;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Responsive for new components ─────────────────────── */
+@media (max-width: 768px) {
+  .key-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-nav {
+    overflow-x: auto;
+    top: 48px;
+  }
+
+  .fp-chart-svg,
+  .de-chart-svg {
+    max-width: 100%;
+  }
 }

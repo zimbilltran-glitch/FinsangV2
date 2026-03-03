@@ -1,15 +1,35 @@
 /**
- * useOverviewData.js — V3 P2.8
- * Custom hook: Fetch company_overview + stock_ohlcv from Supabase.
+ * useOverviewData.js — V3 P2.8 + P7.2
+ * Custom hook: Fetch company_overview + stock_ohlcv + BS summary from Supabase.
  * Used by OverviewTab and all sub-components on the 360 tab.
  */
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '../supabaseClient'
+
+// Balance Sheet summary item IDs for Financial Position + D/E History charts
+// Non-bank tickers
+const BS_SUMMARY_IDS_NORMAL = [
+    'cdkt_tai_san_ngan_han',
+    'cdkt_tai_san_dai_han',
+    'cdkt_no_ngan_han',
+    'cdkt_no_dai_han',
+    'cdkt_von_chu_so_huu',
+    'cdkt_no_phai_tra',
+]
+// Bank tickers (different BS structure)
+const BS_SUMMARY_IDS_BANK = [
+    'cdkt_bank_tong_tai_san',
+    'cdkt_bank_tong_no_phai_tra',
+    'cdkt_bank_von_chu_so_huu',
+    'cdkt_bank_no_phai_tra_va_von_chu_so_huu',
+]
+const BS_ALL_IDS = [...BS_SUMMARY_IDS_NORMAL, ...BS_SUMMARY_IDS_BANK]
 
 export function useOverviewData(ticker) {
     const [overview, setOverview] = useState(null)
     const [ohlcv, setOhlcv] = useState([])
     const [ratios, setRatios] = useState([])
+    const [bsRaw, setBsRaw] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
@@ -50,10 +70,19 @@ export function useOverviewData(ticker) {
                     .limit(200)
                 if (ratioErr) throw ratioErr
 
+                // 4. Balance Sheet summary — for Financial Position + D/E History charts
+                const { data: bsData, error: bsErr } = await supabase
+                    .from('balance_sheet_wide')
+                    .select('item_id,item,periods_data')
+                    .eq('stock_name', ticker)
+                    .in('item_id', BS_ALL_IDS)
+                if (bsErr) throw bsErr
+
                 if (!cancelled) {
                     setOverview(ovData)          // null if not yet fetched by backend
                     setOhlcv(priceData || [])
                     setRatios(ratioData || [])
+                    setBsRaw(bsData || [])
                 }
             } catch (e) {
                 if (!cancelled) setError(e.message)
@@ -94,6 +123,35 @@ export function useOverviewData(ticker) {
         return key ? row.periods_data[key] : null
     }
 
+    // ── BS Summary: mapped by item_id → { label, periods_data } ─────────
+    const bsSummary = useMemo(() => {
+        const map = {}
+        bsRaw.forEach(row => {
+            map[row.item_id] = {
+                label: row.item,
+                periods_data: row.periods_data || {},
+            }
+        })
+        return map
+    }, [bsRaw])
+
+    // Helper: extract annual series from BS summary for a given item_id
+    // Returns sorted array: [{ year: '2020', value: 123456 }, ...]
+    function getBsAnnualSeries(itemId) {
+        const entry = bsSummary[itemId]
+        if (!entry?.periods_data) return []
+        return Object.entries(entry.periods_data)
+            .filter(([k]) => /^\d{4}$/.test(k))
+            .map(([year, value]) => ({ year, value: Number(value) || 0 }))
+            .sort((a, b) => a.year.localeCompare(b.year))
+    }
+
+    // Helper: get latest annual BS value (in VND đồng)
+    function getBsLatestValue(itemId) {
+        const series = getBsAnnualSeries(itemId)
+        return series.length > 0 ? series[series.length - 1].value : null
+    }
+
     return {
         overview,
         ohlcv,
@@ -104,5 +162,8 @@ export function useOverviewData(ticker) {
         priceChange,
         priceChangePct,
         getRatioValue,
+        bsSummary,
+        getBsAnnualSeries,
+        getBsLatestValue,
     }
 }

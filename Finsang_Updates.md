@@ -6,8 +6,13 @@ Traceable history of system updates, version tags, and feature deployments.
 
 ## 🚀 Version History
 
-### [v2.3.0-audit] — 2026-03-01 (Current)
-- **Audit:** Full project review — 10 findings documented → `findings.md`
+### [v4.0.0] — 2026-03-03 (Current)
+- **Feature:** Khởi tạo `sub-projects/V4_Chart_Improve` - Tab Biểu đồ phân tích (Analysis Charts).
+- **UI:** Tích hợp Data Hook biến đổi dữ liệu từ bảng CDKT/KQKD sang định dạng tương thích biểu đồ `recharts`.
+- **Docs:** Tạo bộ Management Files chuẩn B.L.A.S.T cho V4 bao gồm Plan, Task, Changelog, Challenges, Findings.
+
+### [v2.3.0-audit] — 2026-03-01
+- **Audit:** Full project review — 10 findings documented → `Finsang_Master_Findings.md`
 - **Task Restructuring:** New 6-phase task plan (v3.0) — sector-aware frontend, dynamic routing, metrics per sector
 - **Key findings:** F-001 (crash bug), F-003 (frontend sector-blind), F-004 (hardcoded sectors), F-005 (RLS disabled)
 - **Confirmed:** Supabase đã có đầy đủ 31 VN30 tickers data (source: vietcap)
@@ -21,7 +26,7 @@ Traceable history of system updates, version tags, and feature deployments.
 - **Feature:** Hierarchical Table UI (Vietcap Style) refinement in React/Vite.
 - **Fix:** Corrected index mapping bug for FPT and other tickers in `pipeline.py`.
 - **Audit:** Full project documentation rename and folder restructuring.
-- **Docs:** Implementation of `Finsang_Master_Logs.md`, `Finsang_Master_Challenges.md`, and `Finsang_Team_Guide.md`.
+- **Docs:** Implementation of `Finsang_Master_Logs.md`, `Finsang_Master_Challenges.md`, and `Finsang_Master_Team_Guide.md`.
 
 ### [v2.0.0] — 2026-02-25
 - **Feature:** React Web Dashboard with OLED Dark Theme.
@@ -61,8 +66,9 @@ Traceable history of system updates, version tags, and feature deployments.
 | 4 | 📊 Metrics per Sector | ⏳ Pending | Week 3-4 |
 | 5 | 🔍 Data Validation & Cross-ref | ⏳ Pending | Week 4 |
 | 6 | 🚀 Polish & Deploy | ⏳ Pending | Week 5 |
+| 7 | 📊 V4 Analysis Charts Integration | 🚀 Active | Week 6 |
 
-*Full details → `task_plan.md` v3.0*
+*Full details → `task_plan.md` v3.0 và `V4_Chart_Improve/v4_implementation_plan.md`*
 
 ---
 
@@ -71,7 +77,7 @@ Traceable history of system updates, version tags, and feature deployments.
 | Doc | Purpose |
 |---|---|
 | `task_plan.md` | Active task plan v3.0 — 6 phases |
-| `findings.md` | Audit findings F-001 → F-010 |
+| `Finsang_Master_Findings.md` | Audit findings F-001 → F-010 |
 | `Finsang_Master_Logs.md` | Historical audit trail |
 | `Finsang_Master_Challenges.md` | Verified engineering solutions |
-| `Finsang_Team_Guide.md` | Onboarding & standards |
+| `Finsang_Master_Team_Guide.md` | Onboarding & standards |
