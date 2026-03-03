@@ -9,6 +9,7 @@ on:
 
 jobs:
   run-data-pipeline:
+    if: false  # V5: Tạm tắt — orchestrator.py là code V1 cũ, chờ V5 sửa pipeline
     runs-on: windows-latest
     
     steps:

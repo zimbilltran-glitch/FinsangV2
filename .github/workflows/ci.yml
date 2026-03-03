@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   build-and-test:
+    if: false  # V5: Tạm tắt — chưa sử dụng, sẽ bật lại khi V5 hoàn thành
     runs-on: ubuntu-latest
 
     steps:
