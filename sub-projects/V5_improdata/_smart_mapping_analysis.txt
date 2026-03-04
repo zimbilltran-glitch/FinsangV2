@@ -1,0 +1,95 @@
+======================================================================
+GROUND TRUTH from Bank schema (bsa keys only):
+======================================================================
+  bsa2         = TIỀN MẶT, VÀNG BẠC, ĐÁ QUÝ
+  bsa210       = LỢI ÍCH CỦA CỔ ĐÔNG THIỂU SỐ
+  bsa276       = VỐN GÓP LIÊN DOANH
+  bsa277       = ĐẦU TƯ VÀO CÔNG TY LIÊN KẾT
+  bsa29        = TÀI SẢN CỐ ĐỊNH
+  bsa30        = TÀI SẢN CỐ ĐỊNH HỮU HÌNH
+  bsa31        = NGUYÊN GIÁ TSCĐ HỮU HÌNH
+  bsa32        = HAO MÒN TSCĐ HỮU HÌNH
+  bsa33        = TÀI SẢN CỐ ĐỊNH THUÊ TÀI CHÍNH
+  bsa34        = NGUYÊN GIÁ TSCĐ THUÊ TÀI CHÍNH
+  bsa35        = HAO MÒN TSCĐ THUÊ TÀI CHÍNH
+  bsa36        = TÀI SẢN CỐ ĐỊNH VÔ HÌNH
+  bsa37        = NGUYÊN GIÁ TSCĐ VÔ HÌNH
+  bsa38        = HAO MÒN TSCĐ VÔ HÌNH
+  bsa40        = BẤT ĐỘNG SẢN ĐẦU TƯ
+  bsa41        = NGUYÊN GIÁ BẤT ĐỘNG SẢN ĐẦU TƯ
+  bsa42        = HAO MÒN BẤT ĐỘNG SẢN ĐẦU TƯ
+  bsa43        = GÓP VỐN, ĐẦU TƯ DÀI HẠN
+  bsa44        = ĐẦU TƯ VÀO CÔNG TY CON
+  bsa45        = ĐẦU TƯ VÀO CÔNG TY LIÊN DOANH
+  bsa46        = ĐẦU TƯ DÀI HẠN KHÁC
+  bsa47        = DỰ PHÒNG GIẢM GIÁ ĐẦU TƯ DÀI HẠN
+  bsa53        = TỔNG TÀI SẢN
+  bsa54        = TỔNG NỢ PHẢI TRẢ
+  bsa78        = VỐN CHỦ SỞ HỮU
+  bsa80        = VỐN ĐIỀU LỆ
+  bsa81        = THẶNG DƯ VỐN CỔ PHẦN
+  bsa82        = VỐN KHÁC
+  bsa83        = CỔ PHIẾU QUỸ
+  bsa84        = CHÊNH LỆCH ĐÁNH GIÁ LẠI TÀI SẢN
+  bsa85        = CHÊNH LỆCH TỶ GIÁ HỐI ĐOÁI
+  bsa90        = LỢI NHUẬN CHƯA PHÂN PHỐI
+  bsa95        = LỢI ÍCH CỦA CỔ ĐÔNG THIỂU SỐ (TRƯỚC 2015)
+  bsa96        = NỢ PHẢI TRẢ VÀ VỐN CHỦ SỞ HỮU
+
+======================================================================
+MAPPING STRATEGY: Name matching from Bank anchors + value matching
+======================================================================
+
+Duplicate values in 2024 data: 5
+         71,999,995,678,620 → ['bsa53', 'bsa96']
+         14,710,691,830,000 → ['bsa80', 'bsa175']
+          2,559,766,724,411 → ['bsa163', 'bsa188']
+              2,750,000,000 → ['bsa92', 'bsa94']
+                          0 → ['bsa6', 'bsa7', 'bsa11', 'bsa22', 'bsa25', 'bsa26', 'bsa39', 'bsa40', 'bsa41', 'bsa42', 'bsa44', 'bsa48', 'bsa52', 'bsa62', 'bsa68', 'bsa69', 'bsa73', 'bsa75', 'bsa83', 'bsa84', 'bsa87', 'bsa88', 'bsa91', 'bsa93', 'bsa95', 'bsa160', 'bsa161', 'bsa164', 'bsa166', 'bsa168', 'bsa169', 'bsa170', 'bsa171', 'bsa172', 'bsa173', 'bsa174', 'bsa176', 'bsa211', 'bsa276', 'bsa277', 'bsa278']
+
+cdkt_tong_cong_tai_san is at field index 65 (0-based), row_number 76
+
+======================================================================
+Name-based matches from Bank schema (34 bsa keys):
+  FIX [ 35] Tài sản cố định                              : bsa36      → bsa29
+  FIX [ 37] Nguyên giá TSCĐ hữu hình                     : bsa38      → bsa31
+  FIX [ 43] Nguyên giá TSCĐ vô hình                      : bsa44      → bsa37
+  FIX [ 55] Đầu tư dài hạn khác                          : bsa56      → bsa46
+  FIX [ 56] Dự phòng giảm giá đầu tư dài hạn             : bsa57      → bsa47
+  FIX [102] Thặng dư vốn cổ phần                         : bsa165     → bsa81
+  FIX [104] Vốn khác                                     : bsa167     → bsa82
+  FIX [106] Chênh lệch đánh giá lại tài sản              : bsa169     → bsa84
+  FIX [120] Lợi ích của cổ đông thiểu số                 : bsa276     → bsa210
+
+  Matched: 9/122
+  Unmatched: 113
+    [  0] TÀI SẢN NGẮN HẠN                                   (current: bsa1)
+    [  1] Tiền và tương đương tiền                           (current: bsa2)
+    [  2] Tiền                                               (current: bsa3)
+    [  3] Các khoản tương đương tiền                         (current: bsa4)
+    [  4] Đầu tư ngắn hạn                                    (current: bsa5)
+    [  5] Đầu tư ngắn hạn                                    (current: bsa6)
+    [  6] Dự phòng giảm giá                                  (current: bsa7)
+    [  7] Đầu tư nắm giữ đến ngày đáo hạn                    (current: bsa8)
+    [  8] Các khoản phải thu                                 (current: bsa9)
+    [  9] Phải thu khách hàng                                (current: bsa10)
+    [ 10] Trả trước người bán                                (current: bsa11)
+    [ 11] Phải thu nội bộ                                    (current: bsa12)
+    [ 12] Phải thu hợp đồng xây dựng đang thực hiện          (current: bsa13)
+    [ 13] Phải thu cho vay ngắn hạn                          (current: bsa14)
+    [ 14] Phải thu khác                                      (current: bsa15)
+    [ 15] Dự phòng nợ khó đòi                                (current: bsa16)
+    [ 16] Tài sản thiếu cần xử lý                            (current: bsa17)
+    [ 17] Hàng tồn kho, ròng                                 (current: bsa18)
+    [ 18] Hàng tồn kho                                       (current: bsa19)
+    [ 19] Dự phòng giảm giá hàng tồn kho                     (current: bsa20)
+    [ 20] Tài sản lưu động khác                              (current: bsa21)
+    [ 21] Chi phí trả trước ngắn hạn                         (current: bsa22)
+    [ 22] Thuế GTGT được khấu trừ                            (current: bsa23)
+    [ 23] Phải thu thuế khác                                 (current: bsa24)
+    [ 24] Giao dịch mua bán lại trái phiếu Chính phủ         (current: bsa25)
+    [ 25] Tài sản lưu động khác                              (current: bsa26)
+    [ 26] TÀI SẢN DÀI HẠN                                    (current: bsa27)
+    [ 27] Phải thu dài hạn                                   (current: bsa28)
+    [ 28] Phải thu khách hàng dài hạn                        (current: bsa29)
+    [ 29] Trả trước người bán dài hạn                        (current: bsa30)

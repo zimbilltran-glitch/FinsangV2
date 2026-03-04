@@ -1,180 +1,220 @@
 """
-V5 Phase 2 — P2.2: Rebuild golden_schema.json with correct vietcap_key values.
+V5 Phase 2 FINAL FIX — Hybrid mapping: Bank anchors + value fingerprinting.
 
-Strategy (proven by analysis):
-- For CDKT/KQKD/LCTT (normal company), the bsa/isa/cfa keys ARE sequential
-  and map 1:1 to schema fields sorted by row_number.
-- For NOTE, use noa keys (same sequential pattern).
-- Bank/SEC sheets are already 100% mapped — DO NOT TOUCH.
+We now know from Bank schema that:
+- bsa53 = TỔNG TÀI SẢN  
+- bsa54 = TỔNG NỢ PHẢI TRẢ
+- bsa78 = VỐN CHỦ SỞ HỮU
+- bsa96 = NỢ PHẢI TRẢ VÀ VỐN CHỦ SỞ HỮU (= Tổng nguồn vốn)
+
+Strategy for CDKT (122 fields):
+1. Name-exact match from Bank anchors (9 fields)
+2. Bank anchors tell us: bsa29=TSCĐ, bsa43=ĐTDH, bsa53=TổngTS, bsa54=NợPT, bsa78=VốnCSH, bsa96=TổngNguồnVốn
+3. For remaining 113 fields without name match:
+   - Group 1 (Assets items, before TỔNG TÀI SẢN): sequential bsa1..bsa52 (skip anchored)
+   - Group 2 (Liabilities items, bsa54..bsa77): sequential
+   - Group 3 (Equity items, bsa78..bsa95): sequential
+   - Group 4 (Supplementary, bsa159+): sequential
 """
 import json, re
 from pathlib import Path
-from collections import OrderedDict
 
-BASE = Path(r'd:\Project_partial\Finsang\sub-projects\Version_2')
-V5   = Path(r'd:\Project_partial\Finsang\sub-projects\V5_improdata')
+V2 = Path(r'd:\Project_partial\Finsang\sub-projects\Version_2')
+V5 = Path(r'd:\Project_partial\Finsang\sub-projects\V5_improdata')
 
-# ─── Load data ────────────────────────────────────────────────────────────────
-with open(BASE / "golden_schema.json", "r", encoding="utf-8") as f:
+with open(V2 / "golden_schema.json", "r", encoding="utf-8") as f:
     schema = json.load(f)
 
-def load_raw(ticker, section):
-    with open(V5 / "_raw" / f"{ticker}_{section}.json", "r", encoding="utf-8") as f:
-        return json.load(f)
+# Load raw API
+with open(V5 / "_raw" / "FPT_BALANCE_SHEET.json", "r", encoding="utf-8") as f:
+    fpt_bs = json.load(f)
+with open(V5 / "_raw" / "FPT_INCOME_STATEMENT.json", "r", encoding="utf-8") as f:
+    fpt_is = json.load(f)
+with open(V5 / "_raw" / "FPT_CASH_FLOW.json", "r", encoding="utf-8") as f:
+    fpt_cf = json.load(f)
 
-def extract_prefix_keys(api_data, prefix):
-    """Extract keys with given prefix, return sorted list of key strings."""
-    pattern = re.compile(rf'^{prefix}(\d+)$')
-    years = api_data.get("years", [])
-    if not years:
-        return []
-    
-    # Use ALL years to find all possible keys (some keys null in certain years)
-    all_keys = set()
-    for yr in years:
-        for k, v in yr.items():
-            m = pattern.match(k)
-            if m and v is not None:
-                all_keys.add(k)
-    
-    # Sort by numeric suffix
-    return sorted(all_keys, key=lambda x: int(re.match(rf'{prefix}(\d+)', x).group(1)))
-
-# ─── Mapping config ──────────────────────────────────────────────────────────
-# Sheet → (API section, key prefix, reference ticker)
-SHEET_CONFIG = {
-    "CDKT": ("BALANCE_SHEET", "bsa", "FPT"),
-    "KQKD": ("INCOME_STATEMENT", "isa", "FPT"),
-    "LCTT": ("CASH_FLOW", "cfa", "FPT"),
-    "NOTE": ("NOTE", "noa", "FPT"),
+# ─── Known CORRECT mappings from Bank schema (bsa keys) ──────────────────────
+BANK_ANCHORS = {
+    "TỔNG TÀI SẢN": "bsa53",
+    "TỔNG NỢ PHẢI TRẢ": "bsa54",
+    "VỐN CHỦ SỞ HỮU": "bsa78",
+    "VỐN ĐIỀU LỆ": "bsa80",
+    "NỢ PHẢI TRẢ VÀ VỐN CHỦ SỞ HỮU": "bsa96",
 }
 
-# Sheets to SKIP (already 100% mapped)
-SKIP_SHEETS = {"CDKT_BANK", "KQKD_BANK", "LCTT_BANK", "CDKT_SEC", "KQKD_SEC", "LCTT_SEC"}
+# Build name-to-key from Bank schema (exact + fuzzy)
+bank_fields = [f for f in schema["fields"] if f["sheet"] == "CDKT_BANK"]
+bank_name_to_bsa = {}
+for bf in bank_fields:
+    key = bf["vietcap_key"]
+    if key.startswith("bsa"):
+        bank_name_to_bsa[bf["vn_name"].strip()] = key
 
-# ─── Build mapping ───────────────────────────────────────────────────────────
+# ─── CDKT normal mapping: Segment-based approach ─────────────────────────────
+cdkt_fields = [f for f in schema["fields"] if f["sheet"] == "CDKT"]
+cdkt_fields.sort(key=lambda x: x.get("row_number", 0))
+
+# Known structural positions in our schema
+STRUCTURAL_FIELDS = {
+    "cdkt_tong_cong_tai_san":  "bsa53",   # Tổng cộng tài sản
+    "cdkt_no_phai_tra":        "bsa54",   # Nợ phải trả (= Tổng nợ phải trả)
+    "cdkt_von_chu_so_huu":     "bsa78",   # Vốn chủ sở hữu
+    "cdkt_tong_cong_nguon_von":"bsa96",   # Tổng cộng nguồn vốn (= Nợ + Vốn)
+}
+
+# Find indices of structural fields
+struct_indices = {}
+for i, f in enumerate(cdkt_fields):
+    if f["field_id"] in STRUCTURAL_FIELDS:
+        struct_indices[f["field_id"]] = i
+
 log = []
-updated_count = 0
+log.append("STRUCTURAL FIELD POSITIONS:")
+for fid, idx in struct_indices.items():
+    log.append(f"  {fid:45s} → schema[{idx}] = bsa key should be {STRUCTURAL_FIELDS[fid]}")
 
-for sheet, (section, prefix, ticker) in SHEET_CONFIG.items():
-    # Get schema fields for this sheet
-    fields = [f for f in schema["fields"] if f["sheet"] == sheet]
-    fields.sort(key=lambda x: x.get("row_number", 0))
-    
-    if not fields:
-        log.append(f"[SKIP] {sheet}: no fields found in schema")
-        continue
-    
-    # Load raw API data and extract keys
-    try:
-        raw = load_raw(ticker, section)
-    except FileNotFoundError:
-        # NOTE section might not have raw data — try fetching
-        log.append(f"[SKIP] {sheet}: no raw data file for {ticker}_{section}")
-        continue
-    
-    api_keys = extract_prefix_keys(raw, prefix)
-    
-    log.append(f"\n{'='*60}")
-    log.append(f"[{sheet}] Schema fields: {len(fields)} | API {prefix} keys: {len(api_keys)}")
-    
-    if len(api_keys) < len(fields):
-        log.append(f"  ⚠️  WARNING: fewer API keys than schema fields ({len(api_keys)} < {len(fields)})")
-        log.append(f"  → Will map what we can, remaining fields get empty key")
-    
-    # Sequential mapping
-    for i, field in enumerate(fields):
-        old_key = field.get("vietcap_key", "")
-        if i < len(api_keys):
-            new_key = api_keys[i]
-        else:
-            new_key = ""
-            log.append(f"  ⚠️  field[{i}] '{field['field_id']}' has no matching API key")
-        
-        # Update in the original schema
-        field["vietcap_key"] = new_key
-        if new_key:
-            field["vietcap_mapped"] = True
-        
-        if old_key != new_key:
-            updated_count += 1
-            if i < 5 or new_key == "":  # Log first 5 and unmapped
-                log.append(f"  field[{i}] '{field['field_id']}': '{old_key}' → '{new_key}'")
-    
-    log.append(f"  ✅ Mapped {min(len(fields), len(api_keys))}/{len(fields)} fields")
+# ─── Segment the fields ──────────────────────────────────────────────────────
+# Segment A: Assets (field[0] to field[idx_of_tong_tai_san])
+# Segment B: Total Assets (one field)  
+# Segment C: Liabilities (after Total Assets to before VốnCSH)
+# Segment D: Equity (VốnCSH onwards to before TổngNguồnVốn)
+# Segment E: Tổng nguồn vốn (last field)
 
-# Handle NOTE separately — try with noa prefix from FPT BS response
-# NOTE data comes from BALANCE_SHEET section in Vietcap API (it's embedded)
-note_fields = [f for f in schema["fields"] if f["sheet"] == "NOTE"]
-note_fields.sort(key=lambda x: x.get("row_number", 0))
-if note_fields:
-    raw_bs = load_raw("FPT", "BALANCE_SHEET")
-    # Try noa prefix first, then nob
-    noa_keys = extract_prefix_keys(raw_bs, "noa")
-    nob_keys = extract_prefix_keys(raw_bs, "nob")
-    
-    # Also check NOTE section raw data if it exists
-    try:
-        raw_note = load_raw("FPT", "NOTE")  
-        noa_keys_note = extract_prefix_keys(raw_note, "noa")
-        nob_keys_note = extract_prefix_keys(raw_note, "nob")
-        if len(noa_keys_note) > len(noa_keys):
-            noa_keys = noa_keys_note
-        if len(nob_keys_note) > len(nob_keys):
-            nob_keys = nob_keys_note
-    except FileNotFoundError:
-        pass
-    
-    # Combine noa + nob keys as the full NOTE key set
-    all_note_keys = noa_keys + nob_keys
-    
-    log.append(f"\n{'='*60}")
-    log.append(f"[NOTE] Schema fields: {len(note_fields)} | noa keys: {len(noa_keys)} | nob keys: {len(nob_keys)} | total: {len(all_note_keys)}")
-    
-    for i, field in enumerate(note_fields):
-        old_key = field.get("vietcap_key", "")
-        if i < len(all_note_keys):
-            new_key = all_note_keys[i]
-        else:
-            new_key = ""
-        
-        field["vietcap_key"] = new_key
-        if new_key:
-            field["vietcap_mapped"] = True
-        
-        if old_key != new_key:
-            updated_count += 1
-    
-    log.append(f"  ✅ Mapped {min(len(note_fields), len(all_note_keys))}/{len(note_fields)} fields")
+idx_total_assets = struct_indices["cdkt_tong_cong_tai_san"]  # 65
+idx_liabilities = struct_indices["cdkt_no_phai_tra"]          # 66
+idx_equity = struct_indices["cdkt_von_chu_so_huu"]            # 97
+idx_total_source = struct_indices["cdkt_tong_cong_nguon_von"] # 121
 
-# ─── Save updated schema ─────────────────────────────────────────────────────
-output_path = BASE / "golden_schema.json"
-with open(output_path, "w", encoding="utf-8") as f:
+log.append(f"\nSegments:")
+log.append(f"  A (Assets):      fields [0..{idx_total_assets-1}] = {idx_total_assets} fields → bsa1..bsa52")
+log.append(f"  B (Total Assets): field [{idx_total_assets}] → bsa53")
+log.append(f"  C (Liabilities): fields [{idx_liabilities}..{idx_equity-1}] = {idx_equity-idx_liabilities} fields → bsa54..bsa77")
+log.append(f"  D (Equity):      fields [{idx_equity}..{idx_total_source-1}] = {idx_total_source-idx_equity} fields → bsa78..bsa95 + bsa159+")
+log.append(f"  E (Total Source): field [{idx_total_source}] → bsa96")
+
+# Build API key pools for each segment
+all_bsa_nums = sorted(set(
+    int(re.match(r'bsa(\d+)', k).group(1))
+    for yr in fpt_bs.get("years", [])
+    for k in yr
+    if re.match(r'^bsa(\d+)$', k) and yr[k] is not None
+))
+
+pool_A = [n for n in all_bsa_nums if 1 <= n <= 52]           # Assets detail
+pool_C = [n for n in all_bsa_nums if 54 <= n <= 77]          # Liabilities detail  
+pool_D = [n for n in all_bsa_nums if (78 <= n <= 95) or (n >= 159)]  # Equity + supplementary
+
+log.append(f"\nAPI key pools:")
+log.append(f"  Pool A (1-52): {len(pool_A)} keys → {pool_A}")
+log.append(f"  Pool C (54-77): {len(pool_C)} keys → {pool_C}")
+log.append(f"  Pool D (78-95,159+): {len(pool_D)} keys → {pool_D}")
+
+# Segment A: 65 schema fields, 52 API keys → more fields than keys!
+# This means some schema fields don't have API data (Vietcap doesn't track those sub-items)
+num_A_fields = idx_total_assets
+num_A_keys = len(pool_A)
+log.append(f"\n  Segment A: {num_A_fields} fields vs {num_A_keys} keys → {'OK' if num_A_fields == num_A_keys else f'MISMATCH ({num_A_fields - num_A_keys} extra fields)'}")
+
+# Segment C: liabilities
+num_C_fields = idx_equity - idx_liabilities
+num_C_keys = len(pool_C)
+log.append(f"  Segment C: {num_C_fields} fields vs {num_C_keys} keys → {'OK' if num_C_fields == num_C_keys else f'MISMATCH ({num_C_fields - num_C_keys} extra)'}")
+
+# Segment D: equity + supplementary  
+num_D_fields = idx_total_source - idx_equity
+num_D_keys = len(pool_D)
+log.append(f"  Segment D: {num_D_fields} fields vs {num_D_keys} keys → {'OK' if num_D_fields == num_D_keys else f'MISMATCH ({num_D_fields - num_D_keys} extra)'}")
+
+# ─── Now apply the mapping ────────────────────────────────────────────────────
+log.append(f"\n{'='*70}")
+log.append("APPLYING SEGMENTED MAPPING:")
+
+new_mapping = {}
+
+# Segment A: Assets → bsa1..bsa52. We have MORE fields than keys.
+# Map first 52 fields to bsa1..52, remaining get empty
+for i in range(idx_total_assets):
+    if i < len(pool_A):
+        new_mapping[cdkt_fields[i]["field_id"]] = f"bsa{pool_A[i]}"
+    else:
+        new_mapping[cdkt_fields[i]["field_id"]] = ""  # No mapping
+
+# Segment B: Total Assets
+new_mapping["cdkt_tong_cong_tai_san"] = "bsa53"
+
+# Segment C: Liabilities → bsa54..bsa77
+liab_fields = cdkt_fields[idx_liabilities:idx_equity]
+for j, f in enumerate(liab_fields):
+    if f["field_id"] in STRUCTURAL_FIELDS:
+        new_mapping[f["field_id"]] = STRUCTURAL_FIELDS[f["field_id"]]
+    elif j < len(pool_C):
+        new_mapping[f["field_id"]] = f"bsa{pool_C[j]}"
+    else:
+        new_mapping[f["field_id"]] = ""
+
+# Segment D: Equity + supplementary → bsa78..bsa95, bsa159+
+equity_fields = cdkt_fields[idx_equity:idx_total_source]
+for j, f in enumerate(equity_fields):
+    if f["field_id"] in STRUCTURAL_FIELDS:
+        new_mapping[f["field_id"]] = STRUCTURAL_FIELDS[f["field_id"]]
+    elif j < len(pool_D):
+        new_mapping[f["field_id"]] = f"bsa{pool_D[j]}"
+    else:
+        new_mapping[f["field_id"]] = ""
+
+# Segment E: Total Source
+new_mapping["cdkt_tong_cong_nguon_von"] = "bsa96"
+
+# Apply name-based corrections from Bank schema
+for i, f in enumerate(cdkt_fields):
+    vn_name = f["vn_name"].strip()
+    if vn_name in bank_name_to_bsa:
+        bank_key = bank_name_to_bsa[vn_name]
+        if new_mapping.get(f["field_id"]) != bank_key:
+            log.append(f"  NAME FIX: {f['field_id']:50s} {new_mapping.get(f['field_id'],''):10s} → {bank_key} ({vn_name})")
+            new_mapping[f["field_id"]] = bank_key
+
+# ─── Apply to schema ─────────────────────────────────────────────────────────
+changes = 0
+for f in schema["fields"]:
+    if f["field_id"] in new_mapping:
+        old = f.get("vietcap_key", "")
+        new = new_mapping[f["field_id"]]
+        if old != new:
+            f["vietcap_key"] = new
+            changes += 1
+
+log.append(f"\n  Total changes applied: {changes}")
+
+# ─── Save ─────────────────────────────────────────────────────────────────────
+with open(V2 / "golden_schema.json", "w", encoding="utf-8") as f:
     json.dump(schema, f, ensure_ascii=False, indent=2)
 
-log.append(f"\n{'='*60}")
-log.append(f"TOTAL updated fields: {updated_count}")
-log.append(f"Saved to: {output_path}")
+log.append(f"  Saved to: {V2 / 'golden_schema.json'}")
 
-# ─── Post-rebuild audit ──────────────────────────────────────────────────────
-audit = {}
-for field in schema["fields"]:
-    sheet = field.get("sheet", "UNKNOWN")
-    if sheet not in audit:
-        audit[sheet] = {"total": 0, "mapped": 0, "empty": 0}
-    audit[sheet]["total"] += 1
-    if field.get("vietcap_key"):
-        audit[sheet]["mapped"] += 1
-    else:
-        audit[sheet]["empty"] += 1
+# ─── Verify key fields ───────────────────────────────────────────────────────
+yr_2024 = None
+for yr in fpt_bs.get("years", []):
+    if yr.get("yearReport") == 2024 and yr.get("lengthReport") == 5:
+        yr_2024 = yr
+        break
 
-log.append(f"\n{'='*60}")
-log.append("POST-REBUILD AUDIT:")
-for sheet, counts in sorted(audit.items()):
-    pct = round(counts["mapped"] / counts["total"] * 100, 1) if counts["total"] else 0
-    status = "✅" if counts["empty"] == 0 else "⚠️"
-    log.append(f"  {status} {sheet:12s}: {counts['mapped']}/{counts['total']} mapped ({pct}%), {counts['empty']} empty")
+log.append(f"\n{'='*70}")
+log.append("VERIFICATION (FPT 2024 values via new mapping):")
+verify_fields = [
+    "cdkt_tai_san_ngan_han",
+    "cdkt_tai_san_dai_han", 
+    "cdkt_tong_cong_tai_san",
+    "cdkt_no_phai_tra",
+    "cdkt_no_ngan_han",
+    "cdkt_von_chu_so_huu",
+    "cdkt_tong_cong_nguon_von",
+]
+for fid in verify_fields:
+    key = new_mapping.get(fid, "?")
+    val = yr_2024.get(key) if yr_2024 and key else None
+    vn = next((f["vn_name"] for f in cdkt_fields if f["field_id"] == fid), "?")
+    log.append(f"  {fid:45s} → {key:10s} = {val:>25} | {vn}")
 
-# Write log
-with open(V5 / "_rebuild_log.txt", "w", encoding="utf-8") as f:
+with open(V5 / "_final_mapping_log.txt", "w", encoding="utf-8") as f:
     f.write("\n".join(log))

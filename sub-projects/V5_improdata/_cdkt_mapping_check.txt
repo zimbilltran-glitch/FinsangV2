@@ -1,0 +1,122 @@
+  0 | row= 11 | key=bsa1       | cdkt_tai_san_ngan_han
+  1 | row= 12 | key=bsa2       | cdkt_tien_va_tuong_duong_tien
+  2 | row= 13 | key=bsa3       | cdkt_tien
+  3 | row= 14 | key=bsa4       | cdkt_cac_khoan_tuong_duong_tien
+  4 | row= 15 | key=bsa5       | cdkt_dau_tu_ngan_han
+  5 | row= 16 | key=bsa6       | cdkt_dau_tu_ngan_han_1
+  6 | row= 17 | key=bsa7       | cdkt_du_phong_giam_gia
+  7 | row= 18 | key=bsa8       | cdkt_dau_tu_nam_giu_den_ngay_dao_han
+  8 | row= 19 | key=bsa9       | cdkt_cac_khoan_phai_thu
+  9 | row= 20 | key=bsa10      | cdkt_phai_thu_khach_hang
+ 10 | row= 21 | key=bsa11      | cdkt_tra_truoc_nguoi_ban
+ 11 | row= 22 | key=bsa12      | cdkt_phai_thu_noi_bo
+ 12 | row= 23 | key=bsa13      | cdkt_phai_thu_hop_dong_xay_dung_dang_thuc_hien
+ 13 | row= 24 | key=bsa14      | cdkt_phai_thu_cho_vay_ngan_han
+ 14 | row= 25 | key=bsa15      | cdkt_phai_thu_khac
+ 15 | row= 26 | key=bsa16      | cdkt_du_phong_no_kho_doi
+ 16 | row= 27 | key=bsa17      | cdkt_tai_san_thieu_can_xu_ly
+ 17 | row= 28 | key=bsa18      | cdkt_hang_ton_kho_rong
+ 18 | row= 29 | key=bsa19      | cdkt_hang_ton_kho
+ 19 | row= 30 | key=bsa20      | cdkt_du_phong_giam_gia_hang_ton_kho
+ 20 | row= 31 | key=bsa21      | cdkt_tai_san_luu_dong_khac
+ 21 | row= 32 | key=bsa22      | cdkt_chi_phi_tra_truoc_ngan_han
+ 22 | row= 33 | key=bsa23      | cdkt_thue_gtgt_duoc_khau_tru
+ 23 | row= 34 | key=bsa24      | cdkt_phai_thu_thue_khac
+ 24 | row= 35 | key=bsa25      | cdkt_giao_dich_mua_ban_lai_trai_phieu_chinh_phu
+ 25 | row= 36 | key=bsa26      | cdkt_tai_san_luu_dong_khac_1
+ 26 | row= 37 | key=bsa27      | cdkt_tai_san_dai_han
+ 27 | row= 38 | key=bsa28      | cdkt_phai_thu_dai_han
+ 28 | row= 39 | key=bsa29      | cdkt_phai_thu_khach_hang_dai_han
+ 29 | row= 40 | key=bsa30      | cdkt_tra_truoc_nguoi_ban_dai_han
+ 30 | row= 41 | key=bsa31      | cdkt_von_kinh_doanh_o_cac_don_vi_truc_thuoc
+ 31 | row= 42 | key=bsa32      | cdkt_phai_thu_noi_bo_dai_han
+ 32 | row= 43 | key=bsa33      | cdkt_phai_thu_cho_vay_dai_han
+ 33 | row= 44 | key=bsa34      | cdkt_phai_thu_dai_han_khac
+ 34 | row= 45 | key=bsa35      | cdkt_du_phong_phai_thu_dai_han
+ 35 | row= 46 | key=bsa36      | cdkt_tai_san_co_dinh
+ 36 | row= 47 | key=bsa37      | cdkt_gtcl_tscd_huu_hinh
+ 37 | row= 48 | key=bsa38      | cdkt_nguyen_gia_tscd_huu_hinh
+ 38 | row= 49 | key=bsa39      | cdkt_khau_hao_luy_ke_tscd_huu_hinh
+ 39 | row= 50 | key=bsa40      | cdkt_gtcl_tai_san_thue_tai_chinh
+ 40 | row= 51 | key=bsa41      | cdkt_nguyen_gia_tai_san_thue_tai_chinh
+ 41 | row= 52 | key=bsa42      | cdkt_khau_hao_luy_ke_tai_san_thue_tai_chinh
+ 42 | row= 53 | key=bsa43      | cdkt_gtcl_tai_san_co_dinh_vo_hinh
+ 43 | row= 54 | key=bsa44      | cdkt_nguyen_gia_tscd_vo_hinh
+ 44 | row= 55 | key=bsa45      | cdkt_khau_hao_luy_ke_tscd_vo_hinh
+ 45 | row= 56 | key=bsa46      | cdkt_xay_dung_co_ban_dang_dang_do
+ 46 | row= 57 | key=bsa47      | cdkt_gia_tri_rong_tai_san_dau_tu
+ 47 | row= 58 | key=bsa48      | cdkt_nguyen_gia_tai_san_dau_tu
+ 48 | row= 59 | key=bsa49      | cdkt_khau_hao_luy_ke_tai_san_dau_tu
+ 49 | row= 60 | key=bsa50      | cdkt_tai_san_do_dang_dai_han
+ 50 | row= 61 | key=bsa51      | cdkt_chi_phi_san_xuat_kinh_doanh_do_dang_dai_han
+ 51 | row= 62 | key=bsa52      | cdkt_xay_dung_co_ban_dang_do_dang
+ 52 | row= 63 | key=bsa53      | cdkt_dau_tu_dai_han
+ 53 | row= 64 | key=bsa54      | cdkt_dau_tu_vao_cac_cong_ty_con
+ 54 | row= 65 | key=bsa55      | cdkt_dau_tu_vao_cac_cong_ty_lien_ket
+ 55 | row= 66 | key=bsa56      | cdkt_dau_tu_dai_han_khac
+ 56 | row= 67 | key=bsa57      | cdkt_du_phong_giam_gia_dau_tu_dai_han
+ 57 | row= 68 | key=bsa58      | cdkt_dau_tu_nam_giu_den_ngay_dao_han_1
+ 58 | row= 69 | key=bsa59      | cdkt_loi_the_thuong_mai
+ 59 | row= 70 | key=bsa60      | cdkt_tai_san_dai_han_khac
+ 60 | row= 71 | key=bsa61      | cdkt_tra_truoc_dai_han
+ 61 | row= 72 | key=bsa62      | cdkt_thue_thu_nhap_hoan_lai
+ 62 | row= 73 | key=bsa63      | cdkt_thiet_bi_vat_tu_phu_tung_thay_the_dai_han
+ 63 | row= 74 | key=bsa64      | cdkt_cac_tai_san_dai_han_khac
+ 64 | row= 75 | key=bsa65      | cdkt_loi_the_thuong_mai_1
+ 65 | row= 76 | key=bsa66      | cdkt_tong_cong_tai_san
+ 66 | row= 77 | key=bsa67      | cdkt_no_phai_tra
+ 67 | row= 78 | key=bsa68      | cdkt_no_ngan_han
+ 68 | row= 79 | key=bsa69      | cdkt_phai_tra_nguoi_ban
+ 69 | row= 80 | key=bsa70      | cdkt_nguoi_mua_tra_tien_truoc
+ 70 | row= 81 | key=bsa71      | cdkt_thue_va_cac_khoan_phai_tra_nha_nuoc
+ 71 | row= 82 | key=bsa72      | cdkt_phai_tra_nguoi_lao_dong
+ 72 | row= 83 | key=bsa73      | cdkt_chi_phi_phai_tra
+ 73 | row= 84 | key=bsa74      | cdkt_phai_tra_noi_bo
+ 74 | row= 85 | key=bsa75      | cdkt_phai_tra_ve_xay_dung_co_ban
+ 75 | row= 86 | key=bsa76      | cdkt_doanh_thu_chua_thuc_hien_ngan_han
+ 76 | row= 87 | key=bsa77      | cdkt_phai_tra_khac
+ 77 | row= 88 | key=bsa78      | cdkt_vay_ngan_han
+ 78 | row= 89 | key=bsa79      | cdkt_du_phong_cac_khoan_phai_tra_ngan_han
+ 79 | row= 90 | key=bsa80      | cdkt_quy_khen_thuong_phuc_loi
+ 80 | row= 91 | key=bsa81      | cdkt_quy_binh_on_gia
+ 81 | row= 92 | key=bsa82      | cdkt_giao_dich_mua_ban_lai_trai_phieu_chinh_phu_1
+ 82 | row= 93 | key=bsa83      | cdkt_no_dai_han
+ 83 | row= 94 | key=bsa84      | cdkt_phai_tra_nha_cung_cap_dai_han
+ 84 | row= 95 | key=bsa85      | cdkt_nguoi_mua_tra_tien_truoc_dai_han
+ 85 | row= 96 | key=bsa86      | cdkt_chi_phi_phai_tra_dai_han
+ 86 | row= 97 | key=bsa87      | cdkt_phai_tra_noi_bo_ve_von_kinh_doanh
+ 87 | row= 98 | key=bsa88      | cdkt_phai_tra_noi_bo_dai_han
+ 88 | row= 99 | key=bsa89      | cdkt_doanh_thu_chua_thuc_hien
+ 89 | row=100 | key=bsa90      | cdkt_phai_tra_dai_han_khac
+ 90 | row=101 | key=bsa91      | cdkt_vay_dai_han
+ 91 | row=102 | key=bsa92      | cdkt_trai_phieu_chuyen_doi
+ 92 | row=103 | key=bsa93      | cdkt_co_phieu_uu_dai
+ 93 | row=104 | key=bsa94      | cdkt_thue_thu_nhap_hoan_lai_1
+ 94 | row=105 | key=bsa95      | cdkt_du_phong_tro_cap_thoi_viec
+ 95 | row=106 | key=bsa96      | cdkt_du_phong_cac_khoan_no_dai_han
+ 96 | row=107 | key=bsa159     | cdkt_quy_phat_trien_khoa_hoc_cong_nghe
+ 97 | row=108 | key=bsa160     | cdkt_von_chu_so_huu
+ 98 | row=109 | key=bsa161     | cdkt_von_va_cac_quy
+ 99 | row=110 | key=bsa162     | cdkt_von_gop
+100 | row=111 | key=bsa163     | cdkt_co_phieu_pho_thong
+101 | row=112 | key=bsa164     | cdkt_co_phieu_uu_dai_1
+102 | row=113 | key=bsa165     | cdkt_thang_du_von_co_phan
+103 | row=114 | key=bsa166     | cdkt_quyen_chon_chuyen_doi_trai_phieu
+104 | row=115 | key=bsa167     | cdkt_von_khac
+105 | row=116 | key=bsa168     | cdkt_co_phieu_quy
+106 | row=117 | key=bsa169     | cdkt_chenh_lech_danh_gia_lai_tai_san
+107 | row=118 | key=bsa170     | cdkt_chenh_lech_ty_gia
+108 | row=119 | key=bsa171     | cdkt_quy_dau_tu_va_phat_trien
+109 | row=120 | key=bsa172     | cdkt_quy_ho_tro_sap_xep_doanh_nghiep
+110 | row=121 | key=bsa173     | cdkt_quy_du_phong_tai_chinh
+111 | row=122 | key=bsa174     | cdkt_quy_khac
+112 | row=123 | key=bsa175     | cdkt_lai_chua_phan_phoi
+113 | row=124 | key=bsa176     | cdkt_lnst_chua_phan_phoi_luy_ke_den_cuoi_ky_truoc
+114 | row=125 | key=bsa177     | cdkt_lnst_chua_phan_phoi_ky_nay
+115 | row=126 | key=bsa178     | cdkt_loi_ich_co_dong_khong_kiem_soat
+116 | row=127 | key=bsa188     | cdkt_von_ngan_sach_nha_nuoc_va_quy_khac
+117 | row=128 | key=bsa209     | cdkt_quy_khen_thuong_phuc_loi_1
+118 | row=129 | key=bsa210     | cdkt_von_ngan_sach_nha_nuoc_va_quy_khac_1
+119 | row=130 | key=bsa211     | cdkt_nguon_kinh_phi_da_hinh_thanh_tscd
+120 | row=131 | key=bsa276     | cdkt_loi_ich_cua_co_dong_thieu_so
+121 | row=132 | key=bsa277     | cdkt_tong_cong_nguon_von

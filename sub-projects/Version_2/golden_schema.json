@@ -2489,7 +2489,7 @@
         "quý:Q4 2025": 3310448156856.0
       },
       "notes": "",
-      "vietcap_key": "bsa36"
+      "vietcap_key": "bsa29"
     },
     {
       "field_id": "cdkt_gtcl_tscd_huu_hinh",
@@ -2603,7 +2603,7 @@
         "quý:Q4 2025": 5544695185904.0
       },
       "notes": "",
-      "vietcap_key": "bsa38"
+      "vietcap_key": "bsa31"
     },
     {
       "field_id": "cdkt_khau_hao_luy_ke_tscd_huu_hinh",
@@ -2945,7 +2945,7 @@
         "quý:Q4 2025": 700621098744.0
       },
       "notes": "",
-      "vietcap_key": "bsa44"
+      "vietcap_key": "bsa37"
     },
     {
       "field_id": "cdkt_khau_hao_luy_ke_tscd_vo_hinh",
@@ -3458,7 +3458,7 @@
         "quý:Q4 2025": 55942429978.0
       },
       "notes": "",
-      "vietcap_key": "bsa53"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_dau_tu_vao_cac_cong_ty_con",
@@ -3515,7 +3515,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa54"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_dau_tu_vao_cac_cong_ty_lien_ket",
@@ -3572,7 +3572,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa55"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_dau_tu_dai_han_khac",
@@ -3629,7 +3629,7 @@
         "quý:Q4 2025": 5942429978.0
       },
       "notes": "",
-      "vietcap_key": "bsa56"
+      "vietcap_key": "bsa46"
     },
     {
       "field_id": "cdkt_du_phong_giam_gia_dau_tu_dai_han",
@@ -3686,7 +3686,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa57"
+      "vietcap_key": "bsa47"
     },
     {
       "field_id": "cdkt_dau_tu_nam_giu_den_ngay_dao_han_1",
@@ -3743,7 +3743,7 @@
         "quý:Q4 2025": 50000000000.0
       },
       "notes": "",
-      "vietcap_key": "bsa58"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_loi_the_thuong_mai",
@@ -3800,7 +3800,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa59"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_tai_san_dai_han_khac",
@@ -3857,7 +3857,7 @@
         "quý:Q4 2025": 379752909486.0
       },
       "notes": "",
-      "vietcap_key": "bsa60"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_tra_truoc_dai_han",
@@ -3914,7 +3914,7 @@
         "quý:Q4 2025": 218250251971.0
       },
       "notes": "",
-      "vietcap_key": "bsa61"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_thue_thu_nhap_hoan_lai",
@@ -3971,7 +3971,7 @@
         "quý:Q4 2025": 6263037682.0
       },
       "notes": "",
-      "vietcap_key": "bsa62"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_thiet_bi_vat_tu_phu_tung_thay_the_dai_han",
@@ -4028,7 +4028,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa63"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_cac_tai_san_dai_han_khac",
@@ -4085,7 +4085,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa64"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_loi_the_thuong_mai_1",
@@ -4142,7 +4142,7 @@
         "quý:Q4 2025": 155239619833.0
       },
       "notes": "",
-      "vietcap_key": "bsa65"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_tong_cong_tai_san",
@@ -4199,7 +4199,7 @@
         "quý:Q4 2025": 13421614624845.0
       },
       "notes": "",
-      "vietcap_key": "bsa66"
+      "vietcap_key": "bsa53"
     },
     {
       "field_id": "cdkt_no_phai_tra",
@@ -4256,7 +4256,7 @@
         "quý:Q4 2025": 3434638919097.0
       },
       "notes": "",
-      "vietcap_key": "bsa67"
+      "vietcap_key": "bsa54"
     },
     {
       "field_id": "cdkt_no_ngan_han",
@@ -4313,7 +4313,7 @@
         "quý:Q4 2025": 3382318690117.0
       },
       "notes": "",
-      "vietcap_key": "bsa68"
+      "vietcap_key": "bsa55"
     },
     {
       "field_id": "cdkt_phai_tra_nguoi_ban",
@@ -4370,7 +4370,7 @@
         "quý:Q4 2025": 336500319603.0
       },
       "notes": "",
-      "vietcap_key": "bsa69"
+      "vietcap_key": "bsa56"
     },
     {
       "field_id": "cdkt_nguoi_mua_tra_tien_truoc",
@@ -4427,7 +4427,7 @@
         "quý:Q4 2025": 190433658036.0
       },
       "notes": "",
-      "vietcap_key": "bsa70"
+      "vietcap_key": "bsa57"
     },
     {
       "field_id": "cdkt_thue_va_cac_khoan_phai_tra_nha_nuoc",
@@ -4484,7 +4484,7 @@
         "quý:Q4 2025": 228913691808.0
       },
       "notes": "",
-      "vietcap_key": "bsa71"
+      "vietcap_key": "bsa58"
     },
     {
       "field_id": "cdkt_phai_tra_nguoi_lao_dong",
@@ -4541,7 +4541,7 @@
         "quý:Q4 2025": 345282501796.0
       },
       "notes": "",
-      "vietcap_key": "bsa72"
+      "vietcap_key": "bsa59"
     },
     {
       "field_id": "cdkt_chi_phi_phai_tra",
@@ -4598,7 +4598,7 @@
         "quý:Q4 2025": 32230785311.0
       },
       "notes": "",
-      "vietcap_key": "bsa73"
+      "vietcap_key": "bsa60"
     },
     {
       "field_id": "cdkt_phai_tra_noi_bo",
@@ -4655,7 +4655,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa74"
+      "vietcap_key": "bsa61"
     },
     {
       "field_id": "cdkt_phai_tra_ve_xay_dung_co_ban",
@@ -4712,7 +4712,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa75"
+      "vietcap_key": "bsa62"
     },
     {
       "field_id": "cdkt_doanh_thu_chua_thuc_hien_ngan_han",
@@ -4769,7 +4769,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa76"
+      "vietcap_key": "bsa63"
     },
     {
       "field_id": "cdkt_phai_tra_khac",
@@ -4826,7 +4826,7 @@
         "quý:Q4 2025": 80242543444.0
       },
       "notes": "",
-      "vietcap_key": "bsa77"
+      "vietcap_key": "bsa64"
     },
     {
       "field_id": "cdkt_vay_ngan_han",
@@ -4883,7 +4883,7 @@
         "quý:Q4 2025": 2046146063429.0
       },
       "notes": "",
-      "vietcap_key": "bsa78"
+      "vietcap_key": "bsa65"
     },
     {
       "field_id": "cdkt_du_phong_cac_khoan_phai_tra_ngan_han",
@@ -4940,7 +4940,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa79"
+      "vietcap_key": "bsa66"
     },
     {
       "field_id": "cdkt_quy_khen_thuong_phuc_loi",
@@ -4997,7 +4997,7 @@
         "quý:Q4 2025": 122569126690.0
       },
       "notes": "",
-      "vietcap_key": "bsa80"
+      "vietcap_key": "bsa67"
     },
     {
       "field_id": "cdkt_quy_binh_on_gia",
@@ -5054,7 +5054,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa81"
+      "vietcap_key": "bsa68"
     },
     {
       "field_id": "cdkt_giao_dich_mua_ban_lai_trai_phieu_chinh_phu_1",
@@ -5111,7 +5111,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa82"
+      "vietcap_key": "bsa69"
     },
     {
       "field_id": "cdkt_no_dai_han",
@@ -5168,7 +5168,7 @@
         "quý:Q4 2025": 52320228980.0
       },
       "notes": "",
-      "vietcap_key": "bsa83"
+      "vietcap_key": "bsa70"
     },
     {
       "field_id": "cdkt_phai_tra_nha_cung_cap_dai_han",
@@ -5225,7 +5225,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa84"
+      "vietcap_key": "bsa71"
     },
     {
       "field_id": "cdkt_nguoi_mua_tra_tien_truoc_dai_han",
@@ -5282,7 +5282,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa85"
+      "vietcap_key": "bsa72"
     },
     {
       "field_id": "cdkt_chi_phi_phai_tra_dai_han",
@@ -5339,7 +5339,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa86"
+      "vietcap_key": "bsa73"
     },
     {
       "field_id": "cdkt_phai_tra_noi_bo_ve_von_kinh_doanh",
@@ -5396,7 +5396,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa87"
+      "vietcap_key": "bsa74"
     },
     {
       "field_id": "cdkt_phai_tra_noi_bo_dai_han",
@@ -5453,7 +5453,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa88"
+      "vietcap_key": "bsa75"
     },
     {
       "field_id": "cdkt_doanh_thu_chua_thuc_hien",
@@ -5510,7 +5510,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa89"
+      "vietcap_key": "bsa76"
     },
     {
       "field_id": "cdkt_phai_tra_dai_han_khac",
@@ -5567,7 +5567,7 @@
         "quý:Q4 2025": 549896500.0
       },
       "notes": "",
-      "vietcap_key": "bsa90"
+      "vietcap_key": "bsa77"
     },
     {
       "field_id": "cdkt_vay_dai_han",
@@ -5624,7 +5624,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa91"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_trai_phieu_chuyen_doi",
@@ -5681,7 +5681,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa92"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_co_phieu_uu_dai",
@@ -5738,7 +5738,7 @@
         "quý:Q4 2025": null
       },
       "notes": "",
-      "vietcap_key": "bsa93"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_thue_thu_nhap_hoan_lai_1",
@@ -5795,7 +5795,7 @@
         "quý:Q4 2025": 2309104310.0
       },
       "notes": "",
-      "vietcap_key": "bsa94"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_du_phong_tro_cap_thoi_viec",
@@ -5852,7 +5852,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa95"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_du_phong_cac_khoan_no_dai_han",
@@ -5909,7 +5909,7 @@
         "quý:Q4 2025": 24173737620.0
       },
       "notes": "",
-      "vietcap_key": "bsa96"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_quy_phat_trien_khoa_hoc_cong_nghe",
@@ -5966,7 +5966,7 @@
         "quý:Q4 2025": 25287490550.0
       },
       "notes": "",
-      "vietcap_key": "bsa159"
+      "vietcap_key": ""
     },
     {
       "field_id": "cdkt_von_chu_so_huu",
@@ -6023,7 +6023,7 @@
         "quý:Q4 2025": 9986975705748.0
       },
       "notes": "",
-      "vietcap_key": "bsa160"
+      "vietcap_key": "bsa78"
     },
     {
       "field_id": "cdkt_von_va_cac_quy",
@@ -6080,7 +6080,7 @@
         "quý:Q4 2025": 9986975705748.0
       },
       "notes": "",
-      "vietcap_key": "bsa161"
+      "vietcap_key": "bsa79"
     },
     {
       "field_id": "cdkt_von_gop",
@@ -6137,7 +6137,7 @@
         "quý:Q4 2025": 2244531590000.0
       },
       "notes": "",
-      "vietcap_key": "bsa162"
+      "vietcap_key": "bsa80"
     },
     {
       "field_id": "cdkt_co_phieu_pho_thong",
@@ -6194,7 +6194,7 @@
         "quý:Q4 2025": 2244531590000.0
       },
       "notes": "",
-      "vietcap_key": "bsa163"
+      "vietcap_key": "bsa81"
     },
     {
       "field_id": "cdkt_co_phieu_uu_dai_1",
@@ -6251,7 +6251,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa164"
+      "vietcap_key": "bsa82"
     },
     {
       "field_id": "cdkt_thang_du_von_co_phan",
@@ -6308,7 +6308,7 @@
         "quý:Q4 2025": 263561289678.0
       },
       "notes": "",
-      "vietcap_key": "bsa165"
+      "vietcap_key": "bsa81"
     },
     {
       "field_id": "cdkt_quyen_chon_chuyen_doi_trai_phieu",
@@ -6365,7 +6365,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa166"
+      "vietcap_key": "bsa84"
     },
     {
       "field_id": "cdkt_von_khac",
@@ -6422,7 +6422,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa167"
+      "vietcap_key": "bsa82"
     },
     {
       "field_id": "cdkt_co_phieu_quy",
@@ -6479,7 +6479,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa168"
+      "vietcap_key": "bsa86"
     },
     {
       "field_id": "cdkt_chenh_lech_danh_gia_lai_tai_san",
@@ -6536,7 +6536,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa169"
+      "vietcap_key": "bsa84"
     },
     {
       "field_id": "cdkt_chenh_lech_ty_gia",
@@ -6593,7 +6593,7 @@
         "quý:Q4 2025": -235366111.0
       },
       "notes": "",
-      "vietcap_key": "bsa170"
+      "vietcap_key": "bsa88"
     },
     {
       "field_id": "cdkt_quy_dau_tu_va_phat_trien",
@@ -6650,7 +6650,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa171"
+      "vietcap_key": "bsa89"
     },
     {
       "field_id": "cdkt_quy_ho_tro_sap_xep_doanh_nghiep",
@@ -6707,7 +6707,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa172"
+      "vietcap_key": "bsa90"
     },
     {
       "field_id": "cdkt_quy_du_phong_tai_chinh",
@@ -6764,7 +6764,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa173"
+      "vietcap_key": "bsa91"
     },
     {
       "field_id": "cdkt_quy_khac",
@@ -6821,7 +6821,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa174"
+      "vietcap_key": "bsa92"
     },
     {
       "field_id": "cdkt_lai_chua_phan_phoi",
@@ -6878,7 +6878,7 @@
         "quý:Q4 2025": 7047898097246.0
       },
       "notes": "",
-      "vietcap_key": "bsa175"
+      "vietcap_key": "bsa93"
     },
     {
       "field_id": "cdkt_lnst_chua_phan_phoi_luy_ke_den_cuoi_ky_truoc",
@@ -6935,7 +6935,7 @@
         "quý:Q4 2025": 5684863342225.0
       },
       "notes": "",
-      "vietcap_key": "bsa176"
+      "vietcap_key": "bsa94"
     },
     {
       "field_id": "cdkt_lnst_chua_phan_phoi_ky_nay",
@@ -6992,7 +6992,7 @@
         "quý:Q4 2025": 1363034755021.0
       },
       "notes": "",
-      "vietcap_key": "bsa177"
+      "vietcap_key": "bsa95"
     },
     {
       "field_id": "cdkt_loi_ich_co_dong_khong_kiem_soat",
@@ -7049,7 +7049,7 @@
         "quý:Q4 2025": 431220094935.0
       },
       "notes": "",
-      "vietcap_key": "bsa178"
+      "vietcap_key": "bsa159"
     },
     {
       "field_id": "cdkt_von_ngan_sach_nha_nuoc_va_quy_khac",
@@ -7106,7 +7106,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa188"
+      "vietcap_key": "bsa160"
     },
     {
       "field_id": "cdkt_quy_khen_thuong_phuc_loi_1",
@@ -7163,7 +7163,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa209"
+      "vietcap_key": "bsa161"
     },
     {
       "field_id": "cdkt_von_ngan_sach_nha_nuoc_va_quy_khac_1",
@@ -7220,7 +7220,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa210"
+      "vietcap_key": "bsa162"
     },
     {
       "field_id": "cdkt_nguon_kinh_phi_da_hinh_thanh_tscd",
@@ -7277,7 +7277,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa211"
+      "vietcap_key": "bsa163"
     },
     {
       "field_id": "cdkt_loi_ich_cua_co_dong_thieu_so",
@@ -7334,7 +7334,7 @@
         "quý:Q4 2025": 0.0
       },
       "notes": "",
-      "vietcap_key": "bsa276"
+      "vietcap_key": "bsa210"
     },
     {
       "field_id": "cdkt_tong_cong_nguon_von",
@@ -7391,7 +7391,7 @@
         "quý:Q4 2025": 13421614624845.0
       },
       "notes": "",
-      "vietcap_key": "bsa277"
+      "vietcap_key": "bsa96"
     },
     {
       "field_id": "kqkd_doanh_thu_ban_hang_va_cung_cap_dich_vu",
