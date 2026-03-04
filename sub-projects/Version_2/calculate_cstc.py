@@ -5,19 +5,25 @@ from pathlib import Path
 from dotenv import load_dotenv
 from supabase import create_client
 
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+
 # Define paths
 ROOT = Path(__file__).parent.parent.parent
 DATA_DIR = ROOT / "data" / "financial"
-ENV_PATH = ROOT / ".env"
+ENV_PATH = ROOT / "frontend" / ".env"
 
 # Load Supabase credentials
 load_dotenv(dotenv_path=ENV_PATH)
-URL = os.getenv("SUPABASE_URL")
-KEY = os.getenv("SUPABASE_KEY")
+URL = os.getenv("VITE_SUPABASE_URL")
+KEY = os.getenv("VITE_SUPABASE_ANON_KEY")
+
+os.environ["SUPABASE_URL"] = URL
+os.environ["SUPABASE_KEY"] = KEY
 
 if not URL or not KEY:
-    print("Critical: Supabase URL or KEY missing from root .env")
-    exit(1)
+    print("Critical: Supabase URL or KEY missing from frontend/.env")
+    sys.exit(1)
 
 sb = create_client(URL, KEY)
 
@@ -35,10 +41,14 @@ def get_parquet_df(ticker, sheet_id, period_type="year"):
             with open(pq_path, "rb") as f:
                 decrypted = cipher.decrypt(f.read())
             return pd.read_parquet(io.BytesIO(decrypted))
-    except:
-        pass
+    except Exception as e:
+        print(f"Decryption failed for {pq_path}: {e}")
     
-    return pd.read_parquet(pq_path)
+    try:
+        return pd.read_parquet(pq_path)
+    except Exception as e:
+        print(f"Read parquet directly failed for {pq_path}: {e}")
+        return None
 def calculate_ratios(ticker):
     print(f"Calculating Financial Ratios (CSTC) for {ticker}...")
     
@@ -54,9 +64,15 @@ def calculate_ratios(ticker):
 
     payloads = []
 
+    from sector import get_sector
+    
     for pt in ["year", "quarter"]:
-        bs_df = get_parquet_df(ticker, "cdkt", pt)
-        is_df = get_parquet_df(ticker, "kqkd", pt)
+        sector = get_sector(ticker)
+        sheet_bs = "cdkt" if sector == "normal" else f"cdkt_{sector}"
+        sheet_is = "kqkd" if sector == "normal" else f"kqkd_{sector}"
+        
+        bs_df = get_parquet_df(ticker, sheet_bs, pt)
+        is_df = get_parquet_df(ticker, sheet_is, pt)
         
         if bs_df is None or is_df is None:
             print(f"Skipping {pt} for {ticker} - missing data")
@@ -73,17 +89,18 @@ def calculate_ratios(ticker):
             def val(df, key): return float(df.get(key, 0) or 0)
             
             # Balance Sheet metrics
+            # Normal
             current_assets = val(bs_p, "cdkt_tai_san_ngan_han")
             inventory = val(bs_p, "cdkt_hang_ton_kho")
             current_liab = val(bs_p, "cdkt_no_ngan_han")
-            total_liab = val(bs_p, "cdkt_no_phai_tra")
-            total_equity = val(bs_p, "cdkt_von_chu_so_huu")
-            total_assets = val(bs_p, "cdkt_tong_cong_tai_san")
+            total_liab = val(bs_p, "cdkt_no_phai_tra") or val(bs_p, "cdkt_bank_no_phai_tra") or val(bs_p, "cdkt_sec_no_phai_tra")
+            total_equity = val(bs_p, "cdkt_von_chu_so_huu") or val(bs_p, "cdkt_bank_von_chu_so_huu") or val(bs_p, "cdkt_sec_von_chu_so_huu_1") or val(bs_p, "cdkt_sec_von_chu_so_huu")
+            total_assets = val(bs_p, "cdkt_tong_cong_tai_san") or val(bs_p, "cdkt_bank_tong_cong_tai_san") or val(bs_p, "cdkt_sec_tong_tai_san")
             
             # Income Statement metrics
-            net_revenue = val(is_p, "kqkd_doanh_thu_thuan")
+            net_revenue = val(is_p, "kqkd_doanh_thu_thuan") or val(is_p, "kqkd_sec_doanh_thu_hoat_dong") or val(is_p, "kqkd_bank_thu_nhap_lai_thuan")
             gross_profit = val(is_p, "kqkd_loi_nhuan_gop")
-            net_income = val(is_p, "kqkd_loi_nhuan_cua_co_dong_cua_cong_ty_me")
+            net_income = val(is_p, "kqkd_loi_nhuan_cua_co_dong_cua_cong_ty_me") or val(is_p, "kqkd_bank_co_dong_cua_cong_ty_me") or val(is_p, "kqkd_sec_loi_nhuan_sau_thue_phan_bo_cho_chu_so_huu")
             
             # Calculate values
             vals = {
@@ -102,6 +119,7 @@ def calculate_ratios(ticker):
                         "stock_name": ticker,
                         "asset_type": "STOCK",
                         "ratio_name": name,
+                        "item_id": key,
                         "period": p,
                         "value": vals[key],
                         "source": "CFO_CALC_V2"
@@ -123,5 +141,10 @@ def calculate_ratios(ticker):
     print(f"Successfully calculated and pushed CSTC for {ticker}.")
 
 if __name__ == "__main__":
-    for t in ["VHC", "FPT", "HPG"]:
+    TICKERS = [
+        'ACB', 'BCM', 'BID', 'BVH', 'CTG', 'FPT', 'GAS', 'GVR', 'HDB', 'HPG',
+        'MBB', 'MSN', 'MWG', 'PLX', 'POW', 'SAB', 'SHB', 'SSB', 'SSI', 'STB',
+        'TCB', 'TPB', 'VCB', 'VHM', 'VIB', 'VIC', 'VJC', 'VNM', 'VPB', 'VRE'
+    ]
+    for t in TICKERS:
         calculate_ratios(t)

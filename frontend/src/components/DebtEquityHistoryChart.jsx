@@ -16,12 +16,19 @@ export default function DebtEquityHistoryChart({ getBsAnnualSeries, sector }) {
     let debtSeries = getBsAnnualSeries?.('cdkt_no_phai_tra') || []
     let equitySeries = getBsAnnualSeries?.('cdkt_von_chu_so_huu') || []
 
-    // Bank fallback
-    if (debtSeries.length === 0 && (sector === 'bank' || true)) {
-        const bankDebt = getBsAnnualSeries?.('cdkt_bank_tong_no_phai_tra') || []
+    if (sector === 'bank' || debtSeries.length === 0) {
+        const bankDebt = getBsAnnualSeries?.('cdkt_bank_tong_no_phai_tra') || getBsAnnualSeries?.('cdkt_bank_no_phai_tra') || []
         const bankEq = getBsAnnualSeries?.('cdkt_bank_von_chu_so_huu') || []
         if (bankDebt.length > 0) debtSeries = bankDebt
         if (bankEq.length > 0) equitySeries = bankEq
+    }
+
+    // Sec fallback
+    if (sector === 'sec' || debtSeries.length === 0) {
+        const secDebt = getBsAnnualSeries?.('cdkt_sec_no_phai_tra') || []
+        const secEq = getBsAnnualSeries?.('cdkt_sec_von_chu_so_huu_1') || getBsAnnualSeries?.('cdkt_sec_von_chu_so_huu') || []
+        if (secDebt.length > 0) debtSeries = secDebt
+        if (secEq.length > 0) equitySeries = secEq
     }
 
     if (debtSeries.length === 0 && equitySeries.length === 0) return null

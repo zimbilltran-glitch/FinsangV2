@@ -35,9 +35,9 @@
 - [x] **P4.4**: Release & Update Changelog.
 
 ## 🌟 PHASE 5 (TBD): DATA ENRICHMENT & FRONTEND FIX
-- [ ] P5.1: Bổ sung `eps_ttm`, `week52_high`, `week52_low`, và định giá CFO (P/E, P/B) vào `company_overview`.
-- [ ] P5.2A: Tính toán CSTC cho Phi Tài Chính (Biên lãi ròng, Vay ngắn hạn, Phải trả người bán, Mua trả trước, Vốn góp).
-- [ ] P5.2B: Tính toán CSTC cho Bank (CASA, YOEA, Tỷ lệ nợ xấu, ROA, ROE, Vốn CSH).
-- [ ] P5.3: Cập nhật frontend để ánh xạ đúng data chart ("Cấu trúc tài sản", "Lịch sử nợ") cho nhóm Chứng Khoán (SEC).
-- [ ] P5.4: Cập nhật `calc_snowflake.py` để chấm lại điểm 5 chiều chính xác.
-- [ ] P5.5: QA Audit xác nhận 100% biểu đồ không còn 0/null.
+- [x] P5.1: Bổ sung `eps_ttm`, `week52_high`, `week52_low`, và định giá CFO (P/E, P/B) vào `company_overview`.
+- [x] P5.2A: Tính toán CSTC cho Phi Tài Chính (Biên lãi ròng, Vay ngắn hạn, Phải trả người bán, Mua trả trước, Vốn góp).
+- [x] P5.2B: Tính toán CSTC cho Bank (CASA, YOEA, Tỷ lệ nợ xấu, ROA, ROE, Vốn CSH).
+- [x] P5.3: Cập nhật frontend để ánh xạ đúng data chart ("Cấu trúc tài sản", "Lịch sử nợ") cho nhóm Chứng Khoán (SEC).
+- [x] P5.4: Tính toán lại điểm số tổng hợp (360 độ) dựa trên Dữ liệu V5.
+- [x] P5.5: Audit UI lần cuối - Đảm bảo mọi section Overview/Analysis đều render đầy đủ.

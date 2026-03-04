@@ -27,7 +27,7 @@ from pathlib import Path
 
 try:
     from dotenv import load_dotenv
-    load_dotenv(dotenv_path=Path(__file__).parent.parent.parent.parent / ".env")
+    load_dotenv(dotenv_path=Path(__file__).parent.parent.parent.parent / "frontend" / ".env")
 except ImportError:
     pass
 
@@ -299,8 +299,8 @@ def calc_snowflake_scores(row: dict, sector: str) -> dict:
 
 # ── Supabase helpers ──────────────────────────────────────────────────────────
 def get_sb():
-    url = os.getenv("SUPABASE_URL")
-    key = os.getenv("SUPABASE_KEY")
+    url = os.getenv("VITE_SUPABASE_URL") or os.getenv("SUPABASE_URL")
+    key = os.getenv("VITE_SUPABASE_ANON_KEY") or os.getenv("SUPABASE_KEY")
     if not url or not key:
         raise ValueError("SUPABASE_URL / SUPABASE_KEY missing")
     from supabase import create_client

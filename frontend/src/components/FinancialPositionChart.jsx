@@ -21,17 +21,29 @@ export default function FinancialPositionChart({ getBsLatestValue, sector }) {
 
     // Bank fallback: use bank-specific BS items
     const isBank = sector === 'bank'
-    if (isBank || (tsnh === 0 && tsdh === 0)) {
-        const bankTotalAssets = getBsLatestValue?.('cdkt_bank_tong_tai_san') || 0
-        const bankTotalDebt = getBsLatestValue?.('cdkt_bank_tong_no_phai_tra') || 0
+    const isSec = sector === 'sec'
+
+    if (isBank) {
+        const bankTotalAssets = getBsLatestValue?.('cdkt_bank_tong_cong_tai_san') || getBsLatestValue?.('cdkt_bank_tong_tai_san') || 0
+        const bankTotalDebt = getBsLatestValue?.('cdkt_bank_tong_no_phai_tra') || getBsLatestValue?.('cdkt_bank_no_phai_tra') || 0
         const bankVCSH = getBsLatestValue?.('cdkt_bank_von_chu_so_huu') || 0
         if (bankTotalAssets > 0) {
-            // For banks: show total assets as single bar, debt+VCSH as split bar
-            tsnh = bankTotalAssets  // Use total as "current assets" for display
+            tsnh = bankTotalAssets
             tsdh = 0
             nnh = bankTotalDebt
             ndh = 0
             vcsh = bankVCSH
+        }
+    } else if (isSec) {
+        const secTotalAssets = getBsLatestValue?.('cdkt_sec_tong_tai_san') || 0
+        const secTotalDebt = getBsLatestValue?.('cdkt_sec_no_phai_tra') || 0
+        const secVCSH = getBsLatestValue?.('cdkt_sec_von_chu_so_huu_1') || getBsLatestValue?.('cdkt_sec_von_chu_so_huu') || 0
+        if (secTotalAssets > 0) {
+            tsnh = secTotalAssets // To show total asset bar
+            tsdh = 0
+            nnh = secTotalDebt
+            ndh = 0
+            vcsh = secVCSH
         }
     }
 
