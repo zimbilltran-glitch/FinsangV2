@@ -1,0 +1,352 @@
+[
+  {
+    "row": 1,
+    "field_id": "cdkt_tai_san_ngan_han",
+    "vn_name": "TÀI SẢN NGẮN HẠN",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 2,
+    "field_id": "cdkt_tien_va_tuong_duong_tien",
+    "vn_name": "Tiền và tương đương tiền",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 3,
+    "field_id": "cdkt_tien",
+    "vn_name": "Tiền",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 4,
+    "field_id": "cdkt_cac_khoan_tuong_duong_tien",
+    "vn_name": "Các khoản tương đương tiền",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 5,
+    "field_id": "cdkt_dau_tu_ngan_han",
+    "vn_name": "Đầu tư ngắn hạn",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 6,
+    "field_id": "cdkt_dau_tu_ngan_han_1",
+    "vn_name": "Đầu tư ngắn hạn",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 7,
+    "field_id": "cdkt_du_phong_giam_gia",
+    "vn_name": "Dự phòng giảm giá",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 8,
+    "field_id": "cdkt_dau_tu_nam_giu_den_ngay_dao_han",
+    "vn_name": "Đầu tư nắm giữ đến ngày đáo hạn",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 9,
+    "field_id": "cdkt_cac_khoan_phai_thu",
+    "vn_name": "Các khoản phải thu",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 10,
+    "field_id": "cdkt_phai_thu_khach_hang",
+    "vn_name": "Phải thu khách hàng",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 11,
+    "field_id": "cdkt_tra_truoc_nguoi_ban",
+    "vn_name": "Trả trước người bán",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 12,
+    "field_id": "cdkt_phai_thu_noi_bo",
+    "vn_name": "Phải thu nội bộ",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 13,
+    "field_id": "cdkt_phai_thu_hop_dong_xay_dung_dang_thuc_hien",
+    "vn_name": "Phải thu hợp đồng xây dựng đang thực hiện",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 14,
+    "field_id": "cdkt_phai_thu_cho_vay_ngan_han",
+    "vn_name": "Phải thu cho vay ngắn hạn",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 15,
+    "field_id": "cdkt_phai_thu_khac",
+    "vn_name": "Phải thu khác",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 16,
+    "field_id": "cdkt_du_phong_no_kho_doi",
+    "vn_name": "Dự phòng nợ khó đòi",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 17,
+    "field_id": "cdkt_tai_san_thieu_can_xu_ly",
+    "vn_name": "Tài sản thiếu cần xử lý",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 18,
+    "field_id": "cdkt_hang_ton_kho_rong",
+    "vn_name": "Hàng tồn kho, ròng",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 19,
+    "field_id": "cdkt_hang_ton_kho",
+    "vn_name": "Hàng tồn kho",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 20,
+    "field_id": "cdkt_du_phong_giam_gia_hang_ton_kho",
+    "vn_name": "Dự phòng giảm giá hàng tồn kho",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 21,
+    "field_id": "cdkt_tai_san_luu_dong_khac",
+    "vn_name": "Tài sản lưu động khác",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 22,
+    "field_id": "cdkt_chi_phi_tra_truoc_ngan_han",
+    "vn_name": "Chi phí trả trước ngắn hạn",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 23,
+    "field_id": "cdkt_thue_gtgt_duoc_khau_tru",
+    "vn_name": "Thuế GTGT được khấu trừ",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 24,
+    "field_id": "cdkt_phai_thu_thue_khac",
+    "vn_name": "Phải thu thuế khác",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 25,
+    "field_id": "cdkt_giao_dich_mua_ban_lai_trai_phieu_chinh_phu",
+    "vn_name": "Giao dịch mua bán lại trái phiếu Chính phủ",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 26,
+    "field_id": "cdkt_tai_san_luu_dong_khac_1",
+    "vn_name": "Tài sản lưu động khác",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 27,
+    "field_id": "cdkt_tai_san_dai_han",
+    "vn_name": "TÀI SẢN DÀI HẠN",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 28,
+    "field_id": "cdkt_phai_thu_dai_han",
+    "vn_name": "Phải thu dài hạn",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 29,
+    "field_id": "cdkt_phai_thu_khach_hang_dai_han",
+    "vn_name": "Phải thu khách hàng dài hạn",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 30,
+    "field_id": "cdkt_tra_truoc_nguoi_ban_dai_han",
+    "vn_name": "Trả trước người bán dài hạn",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 31,
+    "field_id": "cdkt_von_kinh_doanh_o_cac_don_vi_truc_thuoc",
+    "vn_name": "Vốn kinh doanh ở các đơn vị trực thuộc",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 32,
+    "field_id": "cdkt_phai_thu_noi_bo_dai_han",
+    "vn_name": "Phải thu nội bộ dài hạn",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 33,
+    "field_id": "cdkt_phai_thu_cho_vay_dai_han",
+    "vn_name": "Phải thu cho vay dài hạn",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 34,
+    "field_id": "cdkt_phai_thu_dai_han_khac",
+    "vn_name": "Phải thu dài hạn khác",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 35,
+    "field_id": "cdkt_du_phong_phai_thu_dai_han",
+    "vn_name": "Dự phòng phải thu dài hạn",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 36,
+    "field_id": "cdkt_tai_san_co_dinh",
+    "vn_name": "Tài sản cố định",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 37,
+    "field_id": "cdkt_gtcl_tscd_huu_hinh",
+    "vn_name": "GTCL TSCĐ hữu hình",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 38,
+    "field_id": "cdkt_nguyen_gia_tscd_huu_hinh",
+    "vn_name": "Nguyên giá TSCĐ hữu hình",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 39,
+    "field_id": "cdkt_khau_hao_luy_ke_tscd_huu_hinh",
+    "vn_name": "Khấu hao lũy kế TSCĐ hữu hình",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 40,
+    "field_id": "cdkt_gtcl_tai_san_thue_tai_chinh",
+    "vn_name": "GTCL tài sản thuê tài chính",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 41,
+    "field_id": "cdkt_nguyen_gia_tai_san_thue_tai_chinh",
+    "vn_name": "Nguyên giá tài sản thuê tài chính",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 42,
+    "field_id": "cdkt_khau_hao_luy_ke_tai_san_thue_tai_chinh",
+    "vn_name": "Khấu hao lũy kế tài sản thuê tài chính",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 43,
+    "field_id": "cdkt_gtcl_tai_san_co_dinh_vo_hinh",
+    "vn_name": "GTCL tài sản cố định vô hình",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 44,
+    "field_id": "cdkt_nguyen_gia_tscd_vo_hinh",
+    "vn_name": "Nguyên giá TSCĐ vô hình",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 45,
+    "field_id": "cdkt_khau_hao_luy_ke_tscd_vo_hinh",
+    "vn_name": "Khấu hao lũy kế TSCĐ vô hình",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 46,
+    "field_id": "cdkt_xay_dung_co_ban_dang_dang_do",
+    "vn_name": "Xây dựng cơ bản đang dang dở (trước 2015)",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 47,
+    "field_id": "cdkt_gia_tri_rong_tai_san_dau_tu",
+    "vn_name": "Giá trị ròng tài sản đầu tư",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 48,
+    "field_id": "cdkt_nguyen_gia_tai_san_dau_tu",
+    "vn_name": "Nguyên giá tài sản đầu tư",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 49,
+    "field_id": "cdkt_khau_hao_luy_ke_tai_san_dau_tu",
+    "vn_name": "Khấu hao lũy kế tài sản đầu tư",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  },
+  {
+    "row": 50,
+    "field_id": "cdkt_tai_san_do_dang_dai_han",
+    "vn_name": "Tài sản dở dang dài hạn",
+    "vietcap_key": "",
+    "mapped_value": "NO_KEY"
+  }
+]
