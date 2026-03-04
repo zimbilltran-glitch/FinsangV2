@@ -62,3 +62,12 @@ Theo dõi các khó khăn kỹ thuật và hướng giải quyết trong quá tr
 - **Tình trạng**: Workaround found
 - **Chẩn đoán**: `read_url_content` trả về HTTP 403 khi truy cập `trading.vietcap.com.vn`. Trang web dùng SPA (React) nên content chỉ có qua JavaScript rendering.
 - **Giải pháp**: Dùng **Bank schema ground truth** (đã có correct mapping) để xác nhận anchor points thay vì scrape web. Bank fields dùng `bsa` prefix cho shared items → cùng key number cho normal company.
+## 9. Local Frontend Hosting (npm permissions & recharts) ✅ RESOLVED
+
+- **Tình trạng**: ✅ Đã giải quyết
+- **Chẩn đoán**: Khi host lại frontend tại local, gặp lỗi:
+  - `UnauthorizedAccess` trên PowerShell do Policy chặn chạy script `npm`.
+  - Thiếu package `recharts` (mặc dù có trong `package.json`).
+- **Giải pháp**: 
+  - Dùng `powershell -ExecutionPolicy Bypass` để chạy `npm install` và `npm run dev`.
+  - Explicitly `npm install recharts` để fix lỗi Vite build error.
