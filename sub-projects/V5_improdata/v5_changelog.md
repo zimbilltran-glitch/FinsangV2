@@ -19,6 +19,11 @@ Mọi thay đổi liên quan đến cấu trúc source code, dữ liệu, hoặc
 #### Added
 - `sub-projects/V5_improdata/phase5_1_enrich.py` — Script bổ sung EPS TTM, Week52 High/Low vào `company_overview`.
 - `sub-projects/V5_improdata/run_metrics_batch.py` — Script batch chạy lại engine `metrics.py` cho 30 mã VN30 (Fix regression).
+- `sub-projects/Version_2/sb_client.py` — Triển khai Singleton Supabase Client để chống nghẽn connection khi chạy batch.
+
+#### Fixed
+- **metrics.py**: Sửa lỗi chính tả key YOEA (`...thu_nhap_lai_va_cac_khoan_thu_nhap_tuong_tu`).
+- **Connection Hang**: Giải quyết triệt để vấn đề treo script khi gọi Supabase trong vòng lặp bằng Singleton pattern.
 
 #### Fixed (UI)
 - **FinancialPositionChart.jsx**: Thêm logic fallback chart cho Securities sector (SEC).

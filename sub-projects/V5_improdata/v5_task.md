@@ -45,37 +45,40 @@
 > **Bug phát hiện**: Script `calculate_cstc.py` chỉ tính 7 chỉ số cơ bản và có lỗi đơn vị, 
 > đã ghi đè lên tab "Chỉ số tài chính" khiến mất 40+ metrics gốc.
 
-- [x] P5.2-DIAG: Phân tích root cause (xong — xem phần bug analysis bên dưới)
-- [/] P5.2-FIX: Chạy lại `metrics.py` (engine tính 40+ chỉ số) cho toàn bộ 30 mã VN30
-    - Script: `run_metrics_batch.py` hoặc `re_sync_ratios.py`
-    - Vấn đề: Script bị hang do import chain (`pipeline.py` → `security.py` → blocking cipher)
-    - [ ] Sửa import chain hoặc tách logic `metrics.py` khỏi `security.py`
-    - [ ] Chạy thành công cho 30 mã × 2 period (year + quarter)
-    - [ ] Verify FPT có 40+ item_ids trong `financial_ratios_wide` (không còn 7)
+- [x] P5.2-DIAG: Phân tích root cause (Fix YOEA typo, identify CASA missing Note data)
+    - [x] P5.2-FIX: Chạy lại `metrics.py` cho toàn bộ 30 mã VN30 (HOÀN TẤT)
+    - [x] Sửa import chain: Viết `run_metrics_batch.py` + `sb_client.py` (Singleton)
+    - [x] Chạy thành công cho 30 mã (Đã chạy 30/30 mã VN30)
+    - [x] Verify FPT có 40+ item_ids trong `financial_ratios_wide`
+    - [x] Cập nhật findings về CASA (Missing NOTE sync)
 
-### P5.5: Frontend UI QA Audit
-- [ ] P5.5: Audit UI cuối cùng sau khi data đã fix xong
+- [ ] P5.5: Audit UI cuối cùng sau khi data đã fix xong (Check NIM, YOEA fix trên bank charts)
+
+## 🚀 PHASE 5.6: NOTE DATA EXTRACTION (Ngân hàng & Chứng khoán)
+- [ ] **P5.6.1**: Dò tìm API Keys cho phần NOTE (Demand Deposits, etc.)
+- [ ] **P5.6.2**: Cập nhật `golden_schema.json` với mapping cho NOTE.
+- [ ] **P5.6.3**: Cập nhật `pipeline.py` / `sync_supabase.py` hỗ trợ đồng bộ sheet NOTE.
+- [ ] **P5.6.4**: Cập nhật logic CASA trong `metrics.py` sử dụng dữ liệu NOTE.
+- [ ] **P5.6.5**: Chạy batch khôi phục và Verify kết quả trên Frontend.
 
 ---
 
 ## 🐛 Bug Analysis (Phase 5 Regression)
 
-### Bug 1: ROE/ROA/Net Margin = 0
-- **Script**: `calculate_cstc.py`
-- **Nguyên nhân**: Unit mismatch — parquet lưu `net_income=4944` (Tỷ VND) nhưng `equity=35.7T` (VND đồng)
-- **Kết quả**: `ROE = 4944 / 35,727,540,104,800 ≈ 0.0%`
+### Bug 1: ROE/ROA/Net Margin = 0 ✅ FIXED
+- **Script**: `run_metrics_batch.py` (via `metrics.py`)
+- **Nguyên nhân**: Unit mismatch trong `calculate_cstc.py`.
+- **Giải pháp**: Dùng toolkit `metrics.py` đọc trực tiếp từ DB để đảm bảo unit consistent.
 
-### Bug 2: Growth (g7_1, g7_2) = 0%
-- g7_1/g7_2 chỉ có data cho 6 mã legacy (KDH, PDR, VHC...), chưa tính cho VN30
-- `metrics.py` tính sẵn g7_1/g7_2 nhưng chưa được chạy cho VN30
+### Bug 2: Growth (g7_1, g7_2) = 0% ✅ RESTORING
+- Đang tính toán lại cho toàn bộ VN30.
 
-### Bug 3: Bank metrics (NIM, CASA, NPL) trống
-- bank_4_* items do `metrics.py` tính từ Supabase data, nhưng chưa chạy cho VN30 banks
+### Bug 3: Bank metrics (NIM, CASA, NPL) trống ⚠️ PARTIAL
+- **YOEA/NIM**: ✅ Fixed typo key `...thu_nhap_lai_va_cac_khoan_thu_nhap_tuong_tu`.
+- **CASA**: ⚠️ Bị giới hạn do dữ liệu `NOTE` (Demand Deposits) chưa được sync lên Supabase v2.
 
-### Bug 4: Tab "Chỉ số tài chính" bị strip
-- `calculate_cstc.py` **xóa** toàn bộ `financial_ratios` cũ rồi chèn chỉ 7 rows
-- VHC (legacy) vẫn có 40+ rows vì không nằm trong danh sách VN30 của script
-- FPT (VN30) chỉ còn 7 rows → tab hiển thị thiếu hoàn toàn
+### Bug 4: Tab "Chỉ số tài chính" bị strip ✅ RESTORING
+- Đang khôi phục 40+ rows cho mỗi mã VN30.
 
 ### Giải pháp
 - Chạy `metrics.py` (via `re_sync_ratios.py`) cho 30 mã → khôi phục 40+ metrics

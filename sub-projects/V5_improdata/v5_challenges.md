@@ -71,19 +71,21 @@ Theo dõi các khó khăn kỹ thuật và hướng giải quyết trong quá tr
 - **Giải pháp**: 
   - Dùng `powershell -ExecutionPolicy Bypass` để chạy `npm install` và `npm run dev`
  - Explicitly `npm install recharts` để fix lỗi Vite build error.
-## 10. Unit Mismatch in Parquet Data (Phase 5) ⚠️ REGRESSION
+## 10. Unit Mismatch in Parquet Data (Phase 5) ✅ RESOLVED
 
-- **Tình trạng**: Đang xử lý
-- **Chẩn đoán**: Script `calculate_cstc.py` đọc dữ liệu trực tiếp từ các file Parquet bị mã hóa. Tuy nhiên:
-- `kqkd_loi_nhuan_cua_co_dong_cua_cong_ty_me` = `4944.0` (đơn vị Tỷ VND).
-- `cdkt_von_chu_so_huu` = `35,727,540,104,800.0` (đơn vị VND đồng).
-- Phép chia `net_income / total_equity` cho ra kết quả ~0.0000.
-- **Giải pháp**: Phải chuẩn hóa (normalize) đơn vị trước khi tính toán. Tuy nhiên, thay vì sửa `calculate_cstc.py`, giải pháp tốt nhất là quay lại dùng `metrics.py` vì script này đọc từ Supabase (dữ liệu đã được pipeline chuẩn hóa về Tỷ VND).
+- **Tình trạng**: ✅ Đã giải quyết bằng cách dùng `metrics.py` thuần.
+- **Chẩn đoán**: Script `calculate_cstc.py` bị lỗi unit giữa Tỷ VND (LNST) và VND đồng (Vốn CSH).
+- **Giải pháp**: Ngừng sử dụng `calculate_cstc.py`, quay lại dùng engine `metrics.py` vốn đã có logic handle unit chuẩn xác từ Supabase.
 
-## 11. Import Chain Hang (Security/Cipher) ⚠️ IN PROGRESS
+## 11. Import Chain Hang (Security/Cipher) ✅ RESOLVED
 
-- **Tình trạng**: Đang xử lý
-- **Chẩn đoán**: Khi chạy batch `re_sync_ratios.py` để gọi `metrics.py`, script bị treo (hang).
-- **Nguyên nhân**: `re_sync_ratios.py` → `metrics.py` → `pipeline.py` → `security.py`. Module `security.py` khởi tạo cipher và có thể bị block bởi filesystem hoặc cần input mà Agent không thấy. 
-- **Workaround**: Tách logic tính toán (`metrics.py`) khỏi các module cồng kềnh hoặc viết script batch siêu nhẹ (`run_metrics_batch.py`) bỏ qua các dependencies không cần thiết.
+- **Tình trạng**: ✅ Đã giải quyết
+- **Chẩn đoán**: Treo do dependencies phức tạp trong `pipeline.py`.
+- **Giải pháp**: Viết script batch độc lập `run_metrics_batch.py` chỉ import `calc_metrics` từ `metrics_debug.py` để cô lập logic.
+
+## 12. Supabase Client Hang in Loops ✅ RESOLVED
+
+- **Tình trạng**: ✅ Đã giải quyết
+- **Chẩn đoán**: Khi loop qua 30 mã và khởi tạo `supabase.create_client` mỗi lần, resource bị cạn kiệt hoặc pool bị block khiến lệnh `.execute()` treo vô hạn.
+- **Giải pháp**: Triển khai **Singleton Pattern** trong `sb_client.py` để tái sử dụng một instance duy nhất xuyên suốt quá trình chạy batch.
 

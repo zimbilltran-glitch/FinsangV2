@@ -203,3 +203,28 @@ NOTE: 6280 rows | Mapped: 0% (expected — API không hỗ trợ)
 
 ### ⏳ P5.5: Frontend UI QA Audit
 - Chờ P5.2 fix xong mới audit được.
+
+---
+
+## 🚀 PHASE 5.6: NOTE DATA EXTRACTION (Ngân hàng & Chứng khoán)
+
+> **Mục tiêu**: Chiết xuất dữ liệu từ phần Thuyết minh BCTC (NOTE) để tính toán chính xác các chỉ số chuyên biệt như CASA (Ngân hàng) và chi tiết nợ/tài sản (Chứng khoán).
+
+### 📋 Các bước thực hiện
+
+#### P5.6.1: Dò tìm API Keys cho phần NOTE
+- Probe endpoint `financial-statement?section=NOTE` cho các mã đại diện (ACB, MBB - Bank; SSI, VND - SEC).
+- Xác định các key cho "Tiền gửi không kỳ hạn" (Demand Deposits) và các khoản mục chi tiết khác.
+
+#### P5.6.2: Cập nhật Golden Schema & Pipeline
+- Bổ sung mapping `NOTE` vào `golden_schema.json`.
+- Cập nhật `pipeline.py` và `sync_supabase.py` để hỗ trợ đồng bộ dữ liệu từ sheet `NOTE` lên bảng `notes` (hoặc tương ứng) trên Supabase.
+
+#### P5.6.3: Cập nhật Metrics Engine (CASA, etc.)
+- Sửa hàm `calc_bank_metrics` trong `metrics.py` để ưu tiên lấy dữ liệu từ phần `NOTE` khi tính CASA.
+- Bổ sung các chỉ số chi tiết cho nhóm Chứng khoán nếu tìm thấy key phù hợp trong NOTE.
+
+#### P5.6.4: Chạy Batch & Re-verify
+- Chạy lại pipeline sync cho phần NOTE của VN30.
+- Chạy lại `run_metrics_batch.py` để cập nhật chỉ số mới.
+- Verify trên Frontend: Biểu đồ CASA của ngân hàng không còn trống.

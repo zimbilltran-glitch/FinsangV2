@@ -337,7 +337,7 @@ def calc_bank_metrics(periods, cdkt, kqkd, lctt, get_row, clean_num, add_row):
 
     def calc_yoea_approx(p):
         # Thu nhập lãi / Tổng tài sản sinh lời (TS - Tiền mặt - TSCĐ)
-        tn_lai = get_row(kqkd, "kqkd_bank_thu_nhap_lai_va_cac_thu_nhap_tuong_tu")
+        tn_lai = get_row(kqkd, "kqkd_bank_thu_nhap_lai_va_cac_khoan_thu_nhap_tuong_tu")
         ts_sl = (clean_num(tong_ts.get(p)) or 0) - (clean_num(tien.get(p)) or 0) - (clean_num(tscd.get(p)) or 0)
         v = clean_num(tn_lai.get(p))
         if v and ts_sl and ts_sl != 0:

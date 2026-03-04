@@ -125,3 +125,15 @@ Phát hiện các bug nghiêm trọng sau khi chạy `calculate_cstc.py` cho 30 
 
 ### Bug 4: Bank Efficiency metrics missing
 - Giải thích: Các mã Bank (MBB, VCB...) thiếu NIM, CASA, NPL... do các item `bank_4_*` chưa được tính/sync cho nhóm VN30.
+
+---
+
+## 7. Additional Technical Findings (Phase 5 Restoration)
+
+### Field Mapping Fixes
+- **YOEA (Yield on Earning Assets)**: Phát hiện lỗi chính tả trong `metrics.py`. Key `kqkd_bank_thu_nhap_lai_va_cac_thu_nhap_tuong_tu` được sửa thành `kqkd_bank_thu_nhap_lai_va_cac_khoan_thu_nhap_tuong_tu`.
+- **CASA Limitation**: Xác nhận các tính toán CASA (Tiền gửi không kỳ hạn) hiện đang bị hạn chế vì bảng phân bổ chi tiết tiền gửi nằm trong sheet `NOTE`, hiện chưa được đồng bộ lên Supabase trong pipeline v2 hiện tại.
+
+### Connection Stability
+- **Supabase Singleton**: Việc khởi tạo client mới liên tục trong vòng lặp 30 mã gây hiện tượng treo (Hang) tại lệnh `.execute()`. Đã chuyển sang sử dụng shared singleton client (`sb_client.py`) để duy trì connection pool ổn định.
+- **Batch Processing**: Cần ít nhất 15-20 phút để hồi phục toàn bộ metrics cho 30 mã VN30 do độ trễ API và lượng data lớn (mỗi mã ~300+ row ratios).
