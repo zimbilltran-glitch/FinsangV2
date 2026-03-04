@@ -1,0 +1,860 @@
+{
+  "generated_at": "2026-03-04",
+  "purpose": "V5 Phase 1 — API Key Structure Analysis & Schema Audit",
+  "api_key_analysis": {
+    "FPT": {
+      "sector": "normal",
+      "sections": {
+        "BALANCE_SHEET": {
+          "status": "OK",
+          "year": 2018,
+          "total_non_null_keys": 275,
+          "prefix_groups": {
+            "bsa": {
+              "count": 120,
+              "range": "bsa1..bsa211"
+            },
+            "bsb": {
+              "count": 64,
+              "range": "bsb97..bsb275"
+            },
+            "bsi": {
+              "count": 37,
+              "range": "bsi139..bsi208"
+            },
+            "bss": {
+              "count": 54,
+              "range": "bss133..bss257"
+            }
+          },
+          "all_keys_sample": [
+            "bsa1",
+            "bsa2",
+            "bsa3",
+            "bsa4",
+            "bsa5",
+            "bsa6",
+            "bsa7",
+            "bsa8",
+            "bsa9",
+            "bsa10",
+            "bsa11",
+            "bsa12",
+            "bsa13",
+            "bsa14",
+            "bsa15",
+            "bsa16",
+            "bsa17",
+            "bsa18",
+            "bsa19",
+            "bsa20"
+          ]
+        },
+        "INCOME_STATEMENT": {
+          "status": "OK",
+          "year": 2018,
+          "total_non_null_keys": 168,
+          "prefix_groups": {
+            "isa": {
+              "count": 25,
+              "range": "isa1..isa102"
+            },
+            "isb": {
+              "count": 17,
+              "range": "isb25..isb41"
+            },
+            "isi": {
+              "count": 63,
+              "range": "isi51..isi114"
+            },
+            "iss": {
+              "count": 63,
+              "range": "iss42..iss168"
+            }
+          },
+          "all_keys_sample": [
+            "isa1",
+            "isa2",
+            "isa3",
+            "isa4",
+            "isa5",
+            "isa6",
+            "isa7",
+            "isa8",
+            "isa9",
+            "isa10",
+            "isa11",
+            "isa12",
+            "isa13",
+            "isa14",
+            "isa15",
+            "isa16",
+            "isa17",
+            "isa18",
+            "isa19",
+            "isa20"
+          ]
+        },
+        "CASH_FLOW": {
+          "status": "OK",
+          "year": 2018,
+          "total_non_null_keys": 220,
+          "prefix_groups": {
+            "cfa": {
+              "count": 48,
+              "range": "cfa1..cfa105"
+            },
+            "cfb": {
+              "count": 37,
+              "range": "cfb46..cfb106"
+            },
+            "cfi": {
+              "count": 14,
+              "range": "cfi89..cfi102"
+            },
+            "cfs": {
+              "count": 121,
+              "range": "cfs82..cfs220"
+            }
+          },
+          "all_keys_sample": [
+            "cfa1",
+            "cfa2",
+            "cfa3",
+            "cfa4",
+            "cfa5",
+            "cfa6",
+            "cfa7",
+            "cfa8",
+            "cfa9",
+            "cfa10",
+            "cfa11",
+            "cfa12",
+            "cfa13",
+            "cfa14",
+            "cfa15",
+            "cfa16",
+            "cfa17",
+            "cfa18",
+            "cfa19",
+            "cfa20"
+          ]
+        }
+      }
+    },
+    "MBB": {
+      "sector": "bank",
+      "sections": {
+        "BALANCE_SHEET": {
+          "status": "OK",
+          "year": 2018,
+          "total_non_null_keys": 287,
+          "prefix_groups": {
+            "bsa": {
+              "count": 123,
+              "range": "bsa1..bsa278"
+            },
+            "bsb": {
+              "count": 64,
+              "range": "bsb97..bsb275"
+            },
+            "bsi": {
+              "count": 46,
+              "range": "bsi139..bsi287"
+            },
+            "bss": {
+              "count": 54,
+              "range": "bss133..bss257"
+            }
+          },
+          "all_keys_sample": [
+            "bsa1",
+            "bsa2",
+            "bsa3",
+            "bsa4",
+            "bsa5",
+            "bsa6",
+            "bsa7",
+            "bsa8",
+            "bsa9",
+            "bsa10",
+            "bsa11",
+            "bsa12",
+            "bsa13",
+            "bsa14",
+            "bsa15",
+            "bsa16",
+            "bsa17",
+            "bsa18",
+            "bsa19",
+            "bsa20"
+          ]
+        },
+        "INCOME_STATEMENT": {
+          "status": "OK",
+          "year": 2018,
+          "total_non_null_keys": 181,
+          "prefix_groups": {
+            "isa": {
+              "count": 25,
+              "range": "isa1..isa102"
+            },
+            "isb": {
+              "count": 17,
+              "range": "isb25..isb41"
+            },
+            "isi": {
+              "count": 75,
+              "range": "isi51..isi180"
+            },
+            "iss": {
+              "count": 64,
+              "range": "iss42..iss174"
+            }
+          },
+          "all_keys_sample": [
+            "isa1",
+            "isa2",
+            "isa3",
+            "isa4",
+            "isa5",
+            "isa6",
+            "isa7",
+            "isa8",
+            "isa9",
+            "isa10",
+            "isa11",
+            "isa12",
+            "isa13",
+            "isa14",
+            "isa15",
+            "isa16",
+            "isa17",
+            "isa18",
+            "isa19",
+            "isa20"
+          ]
+        },
+        "CASH_FLOW": {
+          "status": "OK",
+          "year": 2018,
+          "total_non_null_keys": 225,
+          "prefix_groups": {
+            "cfa": {
+              "count": 48,
+              "range": "cfa1..cfa105"
+            },
+            "cfb": {
+              "count": 38,
+              "range": "cfb46..cfb221"
+            },
+            "cfi": {
+              "count": 14,
+              "range": "cfi89..cfi102"
+            },
+            "cfs": {
+              "count": 125,
+              "range": "cfs82..cfs225"
+            }
+          },
+          "all_keys_sample": [
+            "cfa1",
+            "cfa2",
+            "cfa3",
+            "cfa4",
+            "cfa5",
+            "cfa6",
+            "cfa7",
+            "cfa8",
+            "cfa9",
+            "cfa10",
+            "cfa11",
+            "cfa12",
+            "cfa13",
+            "cfa14",
+            "cfa15",
+            "cfa16",
+            "cfa17",
+            "cfa18",
+            "cfa19",
+            "cfa20"
+          ]
+        }
+      }
+    },
+    "SSI": {
+      "sector": "sec",
+      "sections": {
+        "BALANCE_SHEET": {
+          "status": "OK",
+          "year": 2018,
+          "total_non_null_keys": 330,
+          "prefix_groups": {
+            "bsa": {
+              "count": 123,
+              "range": "bsa1..bsa278"
+            },
+            "bsb": {
+              "count": 64,
+              "range": "bsb97..bsb275"
+            },
+            "bsi": {
+              "count": 46,
+              "range": "bsi139..bsi287"
+            },
+            "bss": {
+              "count": 54,
+              "range": "bss133..bss257"
+            },
+            "nos": {
+              "count": 43,
+              "range": "nos355..nos616"
+            }
+          },
+          "all_keys_sample": [
+            "bsa1",
+            "bsa2",
+            "bsa3",
+            "bsa4",
+            "bsa5",
+            "bsa6",
+            "bsa7",
+            "bsa8",
+            "bsa9",
+            "bsa10",
+            "bsa11",
+            "bsa12",
+            "bsa13",
+            "bsa14",
+            "bsa15",
+            "bsa16",
+            "bsa17",
+            "bsa18",
+            "bsa19",
+            "bsa20"
+          ]
+        },
+        "INCOME_STATEMENT": {
+          "status": "OK",
+          "year": 2018,
+          "total_non_null_keys": 181,
+          "prefix_groups": {
+            "isa": {
+              "count": 25,
+              "range": "isa1..isa102"
+            },
+            "isb": {
+              "count": 17,
+              "range": "isb25..isb41"
+            },
+            "isi": {
+              "count": 75,
+              "range": "isi51..isi180"
+            },
+            "iss": {
+              "count": 64,
+              "range": "iss42..iss174"
+            }
+          },
+          "all_keys_sample": [
+            "isa1",
+            "isa2",
+            "isa3",
+            "isa4",
+            "isa5",
+            "isa6",
+            "isa7",
+            "isa8",
+            "isa9",
+            "isa10",
+            "isa11",
+            "isa12",
+            "isa13",
+            "isa14",
+            "isa15",
+            "isa16",
+            "isa17",
+            "isa18",
+            "isa19",
+            "isa20"
+          ]
+        },
+        "CASH_FLOW": {
+          "status": "OK",
+          "year": 2018,
+          "total_non_null_keys": 225,
+          "prefix_groups": {
+            "cfa": {
+              "count": 48,
+              "range": "cfa1..cfa105"
+            },
+            "cfb": {
+              "count": 38,
+              "range": "cfb46..cfb221"
+            },
+            "cfi": {
+              "count": 14,
+              "range": "cfi89..cfi102"
+            },
+            "cfs": {
+              "count": 125,
+              "range": "cfs82..cfs225"
+            }
+          },
+          "all_keys_sample": [
+            "cfa1",
+            "cfa2",
+            "cfa3",
+            "cfa4",
+            "cfa5",
+            "cfa6",
+            "cfa7",
+            "cfa8",
+            "cfa9",
+            "cfa10",
+            "cfa11",
+            "cfa12",
+            "cfa13",
+            "cfa14",
+            "cfa15",
+            "cfa16",
+            "cfa17",
+            "cfa18",
+            "cfa19",
+            "cfa20"
+          ]
+        }
+      }
+    }
+  },
+  "schema_audit": {
+    "CDKT": {
+      "total_fields": 122,
+      "has_vietcap_key": 0,
+      "empty_vietcap_key": 122,
+      "coverage_pct": 0.0,
+      "empty_field_ids": [
+        "cdkt_tai_san_ngan_han",
+        "cdkt_tien_va_tuong_duong_tien",
+        "cdkt_tien",
+        "cdkt_cac_khoan_tuong_duong_tien",
+        "cdkt_dau_tu_ngan_han",
+        "cdkt_dau_tu_ngan_han_1",
+        "cdkt_du_phong_giam_gia",
+        "cdkt_dau_tu_nam_giu_den_ngay_dao_han",
+        "cdkt_cac_khoan_phai_thu",
+        "cdkt_phai_thu_khach_hang",
+        "cdkt_tra_truoc_nguoi_ban",
+        "cdkt_phai_thu_noi_bo",
+        "cdkt_phai_thu_hop_dong_xay_dung_dang_thuc_hien",
+        "cdkt_phai_thu_cho_vay_ngan_han",
+        "cdkt_phai_thu_khac",
+        "cdkt_du_phong_no_kho_doi",
+        "cdkt_tai_san_thieu_can_xu_ly",
+        "cdkt_hang_ton_kho_rong",
+        "cdkt_hang_ton_kho",
+        "cdkt_du_phong_giam_gia_hang_ton_kho",
+        "cdkt_tai_san_luu_dong_khac",
+        "cdkt_chi_phi_tra_truoc_ngan_han",
+        "cdkt_thue_gtgt_duoc_khau_tru",
+        "cdkt_phai_thu_thue_khac",
+        "cdkt_giao_dich_mua_ban_lai_trai_phieu_chinh_phu",
+        "cdkt_tai_san_luu_dong_khac_1",
+        "cdkt_tai_san_dai_han",
+        "cdkt_phai_thu_dai_han",
+        "cdkt_phai_thu_khach_hang_dai_han",
+        "cdkt_tra_truoc_nguoi_ban_dai_han",
+        "cdkt_von_kinh_doanh_o_cac_don_vi_truc_thuoc",
+        "cdkt_phai_thu_noi_bo_dai_han",
+        "cdkt_phai_thu_cho_vay_dai_han",
+        "cdkt_phai_thu_dai_han_khac",
+        "cdkt_du_phong_phai_thu_dai_han",
+        "cdkt_tai_san_co_dinh",
+        "cdkt_gtcl_tscd_huu_hinh",
+        "cdkt_nguyen_gia_tscd_huu_hinh",
+        "cdkt_khau_hao_luy_ke_tscd_huu_hinh",
+        "cdkt_gtcl_tai_san_thue_tai_chinh",
+        "cdkt_nguyen_gia_tai_san_thue_tai_chinh",
+        "cdkt_khau_hao_luy_ke_tai_san_thue_tai_chinh",
+        "cdkt_gtcl_tai_san_co_dinh_vo_hinh",
+        "cdkt_nguyen_gia_tscd_vo_hinh",
+        "cdkt_khau_hao_luy_ke_tscd_vo_hinh",
+        "cdkt_xay_dung_co_ban_dang_dang_do",
+        "cdkt_gia_tri_rong_tai_san_dau_tu",
+        "cdkt_nguyen_gia_tai_san_dau_tu",
+        "cdkt_khau_hao_luy_ke_tai_san_dau_tu",
+        "cdkt_tai_san_do_dang_dai_han",
+        "cdkt_chi_phi_san_xuat_kinh_doanh_do_dang_dai_han",
+        "cdkt_xay_dung_co_ban_dang_do_dang",
+        "cdkt_dau_tu_dai_han",
+        "cdkt_dau_tu_vao_cac_cong_ty_con",
+        "cdkt_dau_tu_vao_cac_cong_ty_lien_ket",
+        "cdkt_dau_tu_dai_han_khac",
+        "cdkt_du_phong_giam_gia_dau_tu_dai_han",
+        "cdkt_dau_tu_nam_giu_den_ngay_dao_han_1",
+        "cdkt_loi_the_thuong_mai",
+        "cdkt_tai_san_dai_han_khac",
+        "cdkt_tra_truoc_dai_han",
+        "cdkt_thue_thu_nhap_hoan_lai",
+        "cdkt_thiet_bi_vat_tu_phu_tung_thay_the_dai_han",
+        "cdkt_cac_tai_san_dai_han_khac",
+        "cdkt_loi_the_thuong_mai_1",
+        "cdkt_tong_cong_tai_san",
+        "cdkt_no_phai_tra",
+        "cdkt_no_ngan_han",
+        "cdkt_phai_tra_nguoi_ban",
+        "cdkt_nguoi_mua_tra_tien_truoc",
+        "cdkt_thue_va_cac_khoan_phai_tra_nha_nuoc",
+        "cdkt_phai_tra_nguoi_lao_dong",
+        "cdkt_chi_phi_phai_tra",
+        "cdkt_phai_tra_noi_bo",
+        "cdkt_phai_tra_ve_xay_dung_co_ban",
+        "cdkt_doanh_thu_chua_thuc_hien_ngan_han",
+        "cdkt_phai_tra_khac",
+        "cdkt_vay_ngan_han",
+        "cdkt_du_phong_cac_khoan_phai_tra_ngan_han",
+        "cdkt_quy_khen_thuong_phuc_loi",
+        "cdkt_quy_binh_on_gia",
+        "cdkt_giao_dich_mua_ban_lai_trai_phieu_chinh_phu_1",
+        "cdkt_no_dai_han",
+        "cdkt_phai_tra_nha_cung_cap_dai_han",
+        "cdkt_nguoi_mua_tra_tien_truoc_dai_han",
+        "cdkt_chi_phi_phai_tra_dai_han",
+        "cdkt_phai_tra_noi_bo_ve_von_kinh_doanh",
+        "cdkt_phai_tra_noi_bo_dai_han",
+        "cdkt_doanh_thu_chua_thuc_hien",
+        "cdkt_phai_tra_dai_han_khac",
+        "cdkt_vay_dai_han",
+        "cdkt_trai_phieu_chuyen_doi",
+        "cdkt_co_phieu_uu_dai",
+        "cdkt_thue_thu_nhap_hoan_lai_1",
+        "cdkt_du_phong_tro_cap_thoi_viec",
+        "cdkt_du_phong_cac_khoan_no_dai_han",
+        "cdkt_quy_phat_trien_khoa_hoc_cong_nghe",
+        "cdkt_von_chu_so_huu",
+        "cdkt_von_va_cac_quy",
+        "cdkt_von_gop",
+        "cdkt_co_phieu_pho_thong",
+        "cdkt_co_phieu_uu_dai_1",
+        "cdkt_thang_du_von_co_phan",
+        "cdkt_quyen_chon_chuyen_doi_trai_phieu",
+        "cdkt_von_khac",
+        "cdkt_co_phieu_quy",
+        "cdkt_chenh_lech_danh_gia_lai_tai_san",
+        "cdkt_chenh_lech_ty_gia",
+        "cdkt_quy_dau_tu_va_phat_trien",
+        "cdkt_quy_ho_tro_sap_xep_doanh_nghiep",
+        "cdkt_quy_du_phong_tai_chinh",
+        "cdkt_quy_khac",
+        "cdkt_lai_chua_phan_phoi",
+        "cdkt_lnst_chua_phan_phoi_luy_ke_den_cuoi_ky_truoc",
+        "cdkt_lnst_chua_phan_phoi_ky_nay",
+        "cdkt_loi_ich_co_dong_khong_kiem_soat",
+        "cdkt_von_ngan_sach_nha_nuoc_va_quy_khac",
+        "cdkt_quy_khen_thuong_phuc_loi_1",
+        "cdkt_von_ngan_sach_nha_nuoc_va_quy_khac_1",
+        "cdkt_nguon_kinh_phi_da_hinh_thanh_tscd",
+        "cdkt_loi_ich_cua_co_dong_thieu_so",
+        "cdkt_tong_cong_nguon_von"
+      ]
+    },
+    "KQKD": {
+      "total_fields": 25,
+      "has_vietcap_key": 0,
+      "empty_vietcap_key": 25,
+      "coverage_pct": 0.0,
+      "empty_field_ids": [
+        "kqkd_doanh_thu_ban_hang_va_cung_cap_dich_vu",
+        "kqkd_cac_khoan_giam_tru_doanh_thu",
+        "kqkd_doanh_thu_thuan",
+        "kqkd_gia_von_hang_ban",
+        "kqkd_loi_nhuan_gop",
+        "kqkd_doanh_thu_hoat_dong_tai_chinh",
+        "kqkd_chi_phi_tai_chinh",
+        "kqkd_chi_phi_lai_vay",
+        "kqkd_lai_tu_cong_ty_lien_doanh",
+        "kqkd_chi_phi_ban_hang",
+        "kqkd_chi_phi_quan_ly_doanh_nghiep",
+        "kqkd_lai_tu_hoat_dong_kinh_doanh",
+        "kqkd_thu_nhap_khac_rong",
+        "kqkd_thu_nhap_khac",
+        "kqkd_chi_phi_khac",
+        "kqkd_lai_tu_cong_ty_lien_doanh_1",
+        "kqkd_lai_truoc_thue",
+        "kqkd_chi_phi_thue_thu_nhap_doanh_nghiep",
+        "kqkd_thue_thu_nhap_doanh_nghiep_hien_thoi",
+        "kqkd_thue_thu_nhap_doanh_nghiep_hoan_lai",
+        "kqkd_lai_thuan_sau_thue",
+        "kqkd_loi_ich_cua_co_dong_thieu_so",
+        "kqkd_loi_nhuan_cua_co_dong_cua_cong_ty_me",
+        "kqkd_lai_co_ban_tren_co_phieu",
+        "kqkd_lai_tren_co_phieu_pha_loang"
+      ]
+    },
+    "LCTT": {
+      "total_fields": 41,
+      "has_vietcap_key": 0,
+      "empty_vietcap_key": 41,
+      "coverage_pct": 0.0,
+      "empty_field_ids": [
+        "lctt_loi_nhuan_truoc_thue",
+        "lctt_khau_hao_tscd_va_bdsdt",
+        "lctt_phan_bo_loi_the_thuong_mai",
+        "lctt_chi_phi_du_phong",
+        "lctt_lailo_chenh_lech_ty_gia_hoi_doai_do_danh_gia_lai_cac_kh",
+        "lctt_lai_tu_thanh_ly_tai_san_co_dinh",
+        "lctt_lo_tu_hoat_dong_dau_tu",
+        "lctt_chi_phi_lai_vay",
+        "lctt_thu_lai_va_co_tuc",
+        "lctt_cac_khoan_dieu_chinh_khac",
+        "lctt_luu_chuyen_tien_te_rong_tu_cac_hoat_dong_san_xuat_kinh_",
+        "lctt_loi_nhuan_tu_hoat_dong_kinh_doanh_truoc_nhung_thay_doi_",
+        "lctt_giam_cac_khoan_phai_thu",
+        "lctt_giam_hang_ton_kho",
+        "lctt_tang_cac_khoan_phai_tra",
+        "lctt_giam_chi_phi_tra_truoc",
+        "lctt_giam_chung_khoan_kinh_doanh",
+        "lctt_tien_lai_vay_da_tra",
+        "lctt_thue_thu_nhap_doanh_nghiep_da_nop",
+        "lctt_tien_thu_khac_tu_hoat_dong_kinh_doanh",
+        "lctt_tien_chi_khac_cho_hoat_dong_kinh_doanh",
+        "lctt_luu_chuyen_tien_thuan_tu_hoat_dong_dau_tu",
+        "lctt_tien_chi_de_mua_sam_xay_dung_tscd_va_cac_tai_san_dai_ha",
+        "lctt_tien_thu_tu_thanh_ly_nhuong_ban_tscd_va_cac_tai_san_dai",
+        "lctt_tien_chi_cho_vay_mua_cac_cong_cu_no_cua_don_vi_khac",
+        "lctt_tien_thu_hoi_cho_vay_ban_lai_cac_cong_cu_no_cua_don_vi_",
+        "lctt_tien_chi_dau_tu_gop_von_vao_don_vi_khac",
+        "lctt_tien_thu_hoi_dau_tu_gop_von_vao_don_vi_khac",
+        "lctt_tien_thu_lai_cho_vay_co_tuc_va_loi_nhuan_duoc_chia",
+        "lctt_luu_chuyen_tien_thuan_tu_hoat_dong_tai_chinh",
+        "lctt_tien_thu_tu_phat_hanh_co_phieu_nhan_von_gop_cua_chu_so_",
+        "lctt_tien_chi_tra_von_gop_cho_cac_chu_so_huu_mua_lai_co_phie",
+        "lctt_tien_thu_duoc_cac_khoan_di_vay",
+        "lctt_tien_tra_no_goc_vay",
+        "lctt_tien_tra_no_goc_thue_tai_chinh",
+        "lctt_co_tuc_loi_nhuan_da_tra_cho_chu_so_huu",
+        "lctt_tien_lai_da_nhan",
+        "lctt_luu_chuyen_tien_thuan_trong_ky",
+        "lctt_tien_va_tuong_duong_tien_dau_ky",
+        "lctt_anh_huong_cua_thay_doi_ty_gia_hoi_doai_quy_doi_ngoai_te",
+        "lctt_tien_va_tuong_duong_tien_cuoi_ky"
+      ]
+    },
+    "NOTE": {
+      "total_fields": 157,
+      "has_vietcap_key": 0,
+      "empty_vietcap_key": 157,
+      "coverage_pct": 0.0,
+      "empty_field_ids": [
+        "note_tien_va_tuong_duong_tien",
+        "note_tien_mat",
+        "note_tien_gui_ngan_hang",
+        "note_tien_dang_chuyen",
+        "note_tien_va_tuong_duong_tien_1",
+        "note_dau_tu_tai_chinh_nh",
+        "note_chung_khoan_dau_tu_ngan_han",
+        "note_dau_tu_nam_giu_den_ngay_dao_han",
+        "note_dau_tu_ngan_han",
+        "note_dau_tu_dai_han",
+        "note_dau_tu_nh_khac",
+        "note_du_phong_giam_gia_dtnh",
+        "note_phai_thu_ngan_han_khac",
+        "note_phai_thu_ve_co_phan_hoa",
+        "note_phai_thu_ve_co_tuc_va_loi_nhuan_duoc_chia",
+        "note_phai_thu_nguoi_lao_dong",
+        "note_phai_thu_khac",
+        "note_hang_ton_kho",
+        "note_hang_mua_dang_di_duong",
+        "note_nguyen_lieu_vat_lieu",
+        "note_cong_cu_dung_cu",
+        "note_chi_phi_sx_kd_do_dang",
+        "note_thanh_pham",
+        "note_hang_hoa",
+        "note_hang_gui_di_ban",
+        "note_hang_hoa_kho_bao_thue",
+        "note_hang_hoa_bat_dong_san",
+        "note_tai_san_ngan_han_khac",
+        "note_tam_ung",
+        "note_tai_san_thieu_cho_xu_ly",
+        "note_cam_co_ky_quy_ky_cuoc_nh",
+        "note_khac",
+        "note_phai_thu_dai_han_khac",
+        "note_ky_quy_ky_cuoc_dai_han",
+        "note_cac_khoan_tien_nhan_uy_thac",
+        "note_cho_vay_khong_co_lai",
+        "note_phai_thu_dai_han_khac_1",
+        "note_nguyen_gia_tscdhh",
+        "note_nguyen_gia_dau_ky",
+        "note_tang_trong_ky",
+        "note_giam_trong_ky",
+        "note_hao_mon_tscdhh",
+        "note_dau_ky",
+        "note_tang_trong_ky_1",
+        "note_giam_trong_ky_1",
+        "note_nguyen_gia_tscd_ttc",
+        "note_nguyen_gia_dau_ky_1",
+        "note_tang_trong_ky_2",
+        "note_giam_trong_ky_2",
+        "note_hao_mon_tscd_ttc",
+        "note_dau_ky_1",
+        "note_tang_trong_ky_3",
+        "note_giam_trong_ky_3",
+        "note_nguyen_gia_tscdvh",
+        "note_nguyen_gia_dau_ky_2",
+        "note_tang_trong_ky_4",
+        "note_giam_trong_ky_4",
+        "note_hao_mon_tscdvh",
+        "note_dau_ky_2",
+        "note_tang_trong_ky_5",
+        "note_giam_trong_ky_5",
+        "note_dau_tu_dai_han_khac",
+        "note_dau_tu_co_phieu",
+        "note_dau_tu_trai_phieu",
+        "note_dau_tu_tin_phieu_ky_phieu",
+        "note_cho_vay_dai_han",
+        "note_dau_tu_dai_han_khac_1",
+        "note_vay_va_no_ngan_han",
+        "note_vay_ngan_han",
+        "note_vay_dai_han_den_han_tra",
+        "note_gia_goc_loi_the_thuong_mai",
+        "note_so_du_dau_ky",
+        "note_tang_trong_ky_6",
+        "note_giam_trong_ky_6",
+        "note_phan_bo_luy_ke",
+        "note_so_du_dau_ky_1",
+        "note_tang_trong_ky_7",
+        "note_giam_trong_ky_7",
+        "note_cac_khoan_phai_tra_ve_thue",
+        "note_thue_gtgt",
+        "note_thue_ttdb",
+        "note_thue_xnk",
+        "note_thue_tndn",
+        "note_thue_tncn",
+        "note_thue_tai_nguyen",
+        "note_thue_nha_dat_va_tien_thue_dat",
+        "note_cac_loai_thue_khac",
+        "note_cac_khoan_phi_le_phi_khac",
+        "note_chi_phi_phai_tra",
+        "note_trich_truoc_cp_luong_nghi_phep",
+        "note_chi_phi_scl_tscd",
+        "note_chi_phi_trong_thoi_gian_ngung_kd",
+        "note_khac_1",
+        "note_phai_tra_phai_nop_khac",
+        "note_tai_san_thua_cho_xl",
+        "note_kinh_phi_cong_doan",
+        "note_bao_hiem_xa_hoi",
+        "note_bao_hiem_y_te",
+        "note_bao_hiem_that_nghiep",
+        "note_phai_tra_ve_cph",
+        "note_nhan_ky_quy_ky_cuoc_nh",
+        "note_doanh_thu_chua_thuc_hien",
+        "note_khac_2",
+        "note_vay_dai_han",
+        "note_vay_ngan_hang",
+        "note_vay_doi_tuong_khac",
+        "note_trai_phieu_phat_hanh",
+        "note_thue_tai_chinh",
+        "note_no_dai_han_khac",
+        "note_von_chu_so_huu",
+        "note_von_gop_cua_nha_nuoc",
+        "note_von_dau_tu_cua_doi_tuong_khac",
+        "note_doanh_thu",
+        "note_doanh_thu_ban_hang",
+        "note_doanh_thu_cung_cap_dich_vu",
+        "note_doanh_thu_hop_dong_xay_dung",
+        "note_giam_tru_doanh_thu",
+        "note_chiet_khau_thuong_mai",
+        "note_giam_gia_hang_ban",
+        "note_hang_ban_bi_tra_lai",
+        "note_thue_gtgt_phai_nop",
+        "note_thue_tieu_thu_dac_biet",
+        "note_thue_xuat_khau",
+        "note_gia_von",
+        "note_gia_von_hang_hoa_da_ban",
+        "note_gia_von_thanh_pham_da_ban",
+        "note_gia_von_cua_dich_vu_cung_cap",
+        "note_gia_tri_con_lai_chi_phi_nhuong_ban_thanh_ly_bds_dau_tu_",
+        "note_chi_phi_kinh_doanh_bds_dau_tu",
+        "note_hao_hut_mat_mat_hang_ton_kho",
+        "note_cac_khoan_chi_phi_vuot_muc_binh_thuong",
+        "note_du_phong",
+        "note_doanh_thu_tai_chinh",
+        "note_lai_tien_gui_tien_cho_vay",
+        "note_lai_dau_tu_trai_phieu_ky_phieu_tin_phieu",
+        "note_co_tuc_loi_nhuan_duoc_chia",
+        "note_lai_tu_ban_thanh_ly_cac_khoan_dau_tu",
+        "note_lai_ban_ngoai_te",
+        "note_lai_chenh_lech_ty_gia_da_thuc_hien",
+        "note_lai_chenh_lech_ty_gia_chua_thuc_hien",
+        "note_lai_ban_hang_tra_cham",
+        "note_doanh_thu_hoat_dong_tai_chinh_khac",
+        "note_chi_phi_tai_chinh",
+        "note_lai_tien_vay",
+        "note_chiet_khau_thanh_toan_lai_ban_hang_tra_cham",
+        "note_lo_do_thanh_ly_cac_khoan_dau_tu_ngan_han_dai_han",
+        "note_lo_ban_ngoai_te",
+        "note_lo_chenh_lech_ty_gia_da_thuc_hien",
+        "note_lo_chenh_lech_ty_gia_chua_thuc_hien",
+        "note_du_phong_giam_gia_cac_khoan_dau_tu_ngan_han_dai_han",
+        "note_chi_phi_tai_chinh_khac",
+        "note_chi_phi_san_xuat_theo_yeu_to",
+        "note_chi_phi_nguyen_lieu_vat_lieu",
+        "note_chi_phi_nhan_cong",
+        "note_chi_phi_khau_hao_tai_san_co_dinh",
+        "note_chi_phi_dich_vu_mua_ngoai",
+        "note_chi_phi_khac_bang_tien"
+      ]
+    },
+    "CDKT_BANK": {
+      "total_fields": 87,
+      "has_vietcap_key": 87,
+      "empty_vietcap_key": 0,
+      "coverage_pct": 100.0,
+      "empty_field_ids": []
+    },
+    "KQKD_BANK": {
+      "total_fields": 26,
+      "has_vietcap_key": 26,
+      "empty_vietcap_key": 0,
+      "coverage_pct": 100.0,
+      "empty_field_ids": []
+    },
+    "LCTT_BANK": {
+      "total_fields": 52,
+      "has_vietcap_key": 52,
+      "empty_vietcap_key": 0,
+      "coverage_pct": 100.0,
+      "empty_field_ids": []
+    },
+    "CDKT_SEC": {
+      "total_fields": 208,
+      "has_vietcap_key": 208,
+      "empty_vietcap_key": 0,
+      "coverage_pct": 100.0,
+      "empty_field_ids": []
+    },
+    "KQKD_SEC": {
+      "total_fields": 80,
+      "has_vietcap_key": 80,
+      "empty_vietcap_key": 0,
+      "coverage_pct": 100.0,
+      "empty_field_ids": []
+    },
+    "LCTT_SEC": {
+      "total_fields": 148,
+      "has_vietcap_key": 148,
+      "empty_vietcap_key": 0,
+      "coverage_pct": 100.0,
+      "empty_field_ids": []
+    }
+  },
+  "comparison": {
+    "balance_sheet": {
+      "api_keys_count": 275,
+      "schema_fields_count": 122,
+      "schema_mapped_count": 0,
+      "schema_unmapped_count": 122,
+      "verdict": "CRITICAL_GAP"
+    }
+  }
+}
