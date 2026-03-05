@@ -226,11 +226,17 @@ def calc_bank_metrics(periods, cdkt, kqkd, lctt, get_row, clean_num, add_row):
     ln_cpp = get_row(cdkt, "cdkt_bank_loi_nhuan_chua_phan_phoi")
     von_dieu_le = get_row(cdkt, "cdkt_bank_von_dieu_le")
     
+    # —— KQKD_BANK fields ——
+    # Confirmed vietcap_key: NII=isb27, TOI=isb36
     toi = get_row(kqkd, "kqkd_bank_tong_thu_nhap_hoat_dong")
     nii = get_row(kqkd, "kqkd_bank_thu_nhap_lai_thuan")
     lai_dv = get_row(kqkd, "kqkd_bank_lailo_thuan_tu_hoat_dong_dich_vu")
     cp_dp = get_row(kqkd, "kqkd_bank_trich_lap_du_phong_ton_that_tin_dung")
     lntt = get_row(kqkd, "kqkd_bank_tong_loi_nhuanlo_truoc_thue")
+    # T3.2 FIX: chi_phi_hoat_dong does NOT exist — correct field is chi_phi_quan_ly_doanh_nghiep
+    cp_hoat_dong = get_row(kqkd, "kqkd_bank_chi_phi_quan_ly_doanh_nghiep")
+    cp_lai = get_row(kqkd, "kqkd_bank_chi_phi_lai_va_cac_chi_phi_tuong_tu")
+    tn_lai = get_row(kqkd, "kqkd_bank_thu_nhap_lai_va_cac_khoan_thu_nhap_tuong_tu")
     
     # Lãi ròng cổ đông mẹ
     ln_rong = get_row(kqkd, "kqkd_bank_co_dong_cua_cong_ty_me")
@@ -327,7 +333,6 @@ def calc_bank_metrics(periods, cdkt, kqkd, lctt, get_row, clean_num, add_row):
 
     def calc_cof_approx(p):
         # Chi phí trả lãi / (Tiền gửi + GTCG)
-        cp_lai = get_row(kqkd, "kqkd_bank_chi_phi_lai_va_cac_chi_phi_tuong_tu")
         huy_dong = (clean_num(tien_gui_kh.get(p)) or 0) + (clean_num(gtcg.get(p)) or 0)
         v = clean_num(cp_lai.get(p))
         if v and huy_dong and huy_dong != 0:
@@ -338,7 +343,6 @@ def calc_bank_metrics(periods, cdkt, kqkd, lctt, get_row, clean_num, add_row):
 
     def calc_yoea_approx(p):
         # Thu nhập lãi / Tổng tài sản sinh lời (TS - Tiền mặt - TSCĐ)
-        tn_lai = get_row(kqkd, "kqkd_bank_thu_nhap_lai_va_cac_khoan_thu_nhap_tuong_tu")
         ts_sl = (clean_num(tong_ts.get(p)) or 0) - (clean_num(tien.get(p)) or 0) - (clean_num(tscd.get(p)) or 0)
         v = clean_num(tn_lai.get(p))
         if v and ts_sl and ts_sl != 0:
@@ -362,12 +366,34 @@ def calc_bank_metrics(periods, cdkt, kqkd, lctt, get_row, clean_num, add_row):
     def calc_cir(p):
         t_tn = clean_num(toi.get(p))
         if not t_tn or t_tn == 0: return None
-        cp_hd = clean_num(get_row(kqkd, "kqkd_bank_chi_phi_hoat_dong").get(p))
-        if cp_hd:
-            return (abs(cp_hd) / t_tn) * 100
+        # T3.2 FIX: chi_phi_quan_ly_doanh_nghiep is the correct CIR cost field (not chi_phi_hoat_dong)
+        cp_hd = clean_num(cp_hoat_dong.get(p))
+        if cp_hd is not None:
+            return (abs(cp_hd) / abs(t_tn)) * 100
         return None
 
     add_row("bank_4_11", "Tỷ lệ CIR (%)", "%", 1, calc_cir)
+
+    # T3.1 — LDR (Loan-to-Deposit Ratio)
+    def calc_ldr(p):
+        """LDR = Cho vay khách hàng / Tiền gửi của khách hàng"""
+        loans   = clean_num(cho_vay.get(p))
+        deposits = clean_num(tien_gui_kh.get(p))
+        if loans is not None and deposits and deposits != 0:
+            return (loans / deposits) * 100
+        return None
+
+    add_row("bank_4_12", "Tỷ lệ LDR — Cho vay / Tiền gửi (%)", "%", 1, calc_ldr)
+
+    # T3.1 — Capital Adequacy Proxy: Equity / Total Assets
+    def calc_equity_ratio(p):
+        eq  = clean_num(von_csh.get(p))
+        ts  = clean_num(tong_ts.get(p))
+        if eq is not None and ts and ts != 0:
+            return (eq / ts) * 100
+        return None
+
+    add_row("bank_4_13", "Tỷ lệ Vốn CSH / Tổng TS (%)", "%", 1, calc_equity_ratio)
 
 def calc_sec_metrics(periods, cdkt, kqkd, lctt, get_row, clean_num, add_row):
     """
@@ -462,15 +488,46 @@ def calc_sec_metrics(periods, cdkt, kqkd, lctt, get_row, clean_num, add_row):
     add_row("sec_4_3", "Lãi từ các TS tài chính (FVTPL)", "tỷ đồng", 1, lambda p: clean_num(lai_fvtpl.get(p)))
     add_row("sec_4_4", "Lãi từ các khoản cho vay", "tỷ đồng", 1, lambda p: clean_num(lai_cho_vay.get(p)))
     add_row("sec_4_5", "Lợi nhuận Cổ đông Công ty mẹ", "tỷ đồng", 1, lambda p: clean_num(ln_rong.get(p)))
-    
+
     def calc_bien_ln_sec(p):
         d = clean_num(dt_hd.get(p))
         m = clean_num(ln_rong.get(p))
         if d and d != 0 and m is not None:
             return (m / d) * 100
         return None
-        
+
     add_row("sec_4_6", "Biên LN ròng / DT hoạt động", "%", 1, calc_bien_ln_sec)
+
+    # T3.4 — Margin Lending / Equity (key SEC metric)
+    def calc_margin_equity(p):
+        """Margin Lending to Equity = Cho vay ký quỹ / Vốn CSH"""
+        margin = clean_num(cho_vay.get(p))
+        eq     = clean_num(von_csh.get(p))
+        if margin is not None and eq and eq != 0:
+            return (margin / eq) * 100
+        return None
+
+    add_row("sec_4_7", "Margin Lending / Vốn CSH (%)", "%", 1, calc_margin_equity)
+
+    # T3.4 — Operating Efficiency: Chi phí / Doanh thu
+    def calc_cer_sec(p):
+        d  = clean_num(dt_hd.get(p))
+        cp = clean_num(cp_hd.get(p))
+        if d and d != 0 and cp is not None:
+            return (abs(cp) / abs(d)) * 100
+        return None
+
+    add_row("sec_4_8", "Tỷ lệ Chi phí HĐ / DT (CER) (%)", "%", 1, calc_cer_sec)
+
+    # T3.4 — Brokerage Revenue Share
+    def calc_brokerage_share(p):
+        total_rev = clean_num(dt_hd.get(p))
+        brokerage = clean_num(dt_mg.get(p))
+        if total_rev and total_rev != 0 and brokerage is not None:
+            return (abs(brokerage) / abs(total_rev)) * 100
+        return None
+
+    add_row("sec_4_9", "Tỷ trọng DT Môi giới / Tổng DT (%)", "%", 1, calc_brokerage_share)
 
 def calc_metrics(ticker: str, period: str) -> pd.DataFrame:
     """Entry point for calculating metrics based on sector."""
