@@ -58,6 +58,7 @@ Bảng theo dõi lộ trình phát triển tổng thể của siêu dự án Fin
 > **Chỉ làm khi toàn bộ data verified 100%.**
 
 - [x] `npm run build` thành công (Thư mục `dist/` sẵn sàng).
+- [x] **Massive Codebase Cleanup**: Di chuyển 60+ file rác/khảo sát vào `archive_legacy`. (Target: Standard A).
 - [ ] Deploy lên Vercel hoặc Netlify (User tự thực hiện khi sẵn sàng).
 - [ ] Set env vars production (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`).
 - [ ] Verify end-to-end trên production URL.
