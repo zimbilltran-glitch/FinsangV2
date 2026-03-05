@@ -39,21 +39,21 @@
 > **Mục tiêu:** Xác nhận SEC mapping đúng từng dòng; diệt hardcode còn sót.  
 > **Files chính:** `golden_schema.json`, `providers/vietcap.py`, `sector.py`
 
-- [ ] **T2.1 — Research Vietcap API cho SEC prefix**
+- [x] **T2.1 — Research Vietcap API cho SEC prefix**
   - Probe endpoint `/financial-statement?ticker=SSI&section=INCOME_STATEMENT` → ghi lại toàn bộ keys `iss*`
   - Probe CDKT (`bss*`) và LCTT (`cfs*`) cho VCI, VND
   - Kiểm tra xem Vietcap có tài liệu/compiler chính thức cho prefix `iss`, `bss`, `cfs` không
   - Lưu raw JSON vào `V5_improdata/_raw_sec/`
 
-- [ ] **T2.2 — Đối chiếu dòng-dòng SEC schema vs raw API**
+- [x] **T2.2 — Đối chiếu dòng-dòng SEC schema vs raw API**
   - Với mỗi field trong `golden_schema.json` (sheet: `cdkt_sec`, `kqkd_sec`, `lctt_sec`) → kiểm tra `vietcap_key` có khớp đúng với tên dòng từ raw API không
   - Ghi report vào `V5_improdata/_sec_mapping_audit.txt`
 
-- [ ] **T2.3 — Fix schema nếu phát hiện sai**
+- [x] **T2.3 — Fix schema nếu phát hiện sai**
   - Cập nhật `golden_schema.json` với đúng `vietcap_key` cho SEC
   - Xóa fallback/hardcode nếu còn
 
-- [ ] **T2.4 — Audit hardcode BANK_TICKERS/SEC_TICKERS**
+- [x] **T2.4 — Audit hardcode BANK_TICKERS/SEC_TICKERS**
   - Chạy: `grep -r "BANK_TICKERS" d:\Project_partial\Finsang\sub-projects\`
   - Chạy: `grep -r "SEC_TICKERS" d:\Project_partial\Finsang\sub-projects\`
   - Bất kỳ file nào còn hardcode → chuyển sang `from sector import get_sector`
@@ -67,31 +67,32 @@
 > **Files chính:** `sub-projects/Version_2/metrics.py`, `run_metrics_batch.py`
 
 ### Bank Metrics (không cần NOTE)
-- [ ] **T3.1 — Tính LDR (Loan-to-Deposit Ratio)**
+- [x] **T3.1 — Tính LDR (Loan-to-Deposit Ratio)**
   - Công thức: `LDR = Cho vay khách hàng / Tiền gửi khách hàng`
   - Field IDs: xác nhận từ `golden_schema.json` (cdkt_bank)
   - Thêm vào `calc_bank_metrics()` với item_id `bank_ldr`
 
-- [ ] **T3.2 — Tính CIR (Cost-to-Income Ratio)**
+- [x] **T3.2 — Tính CIR (Cost-to-Income Ratio)**
   - Công thức: `CIR = Chi phí hoạt động / (Thu nhập lãi thuần + Thu nhập ngoài lãi)`
   - Field IDs: từ `kqkd_bank` sheet
   - Thêm vào `calc_bank_metrics()` với item_id `bank_cir`
 
 ### NOTE API Research (cho CASA, NPL)
-- [ ] **T3.3 — Probe NOTE API cho Ngân hàng**
+- [x] **T3.3 — Probe NOTE API cho Ngân hàng**
   - Endpoint: `financial-statement?ticker=ACB&section=NOTE` và `MBB`
   - Mục tiêu: Tìm key "Tiền gửi không kỳ hạn" (Demand Deposits) → tính CASA
   - Nếu tìm được: Cập nhật `pipeline.py` sync NOTE → Supabase
   - Nếu không: Document limitation, tính CASA gần đúng từ dữ liệu có sẵn
+  - **Limitation:** Vietcap API for Bank NOTE returns 403 Forbidden. CASA calculation represents technical debt and is bypassed for V2.
 
 ### SEC Metrics
-- [ ] **T3.4 — Bổ sung SEC Metrics vào `calc_sec_metrics()`**
+- [x] **T3.4 — Bổ sung SEC Metrics vào `calc_sec_metrics()`**
   - Dựa trên kết quả T2.1-T2.2 (field IDs đúng từ probe)
   - Ưu tiên: Margin Lending/Equity, Brokerage Revenue %
   - Thêm vào `metrics.py` + kiểm tra unit nhất quán
 
 ### Final Verify
-- [ ] **T3.5 — Chạy metrics batch full VN30 + Frontend verify**
+- [x] **T3.5 — Chạy metrics batch full VN30 + Frontend verify**
   - Chạy `run_metrics_batch.py` (hoặc `re_sync_ratios.py`) cho 30 mã VN30
   - Mở localhost:5173, kiểm tra:
     - MBB → tabs Bank: NIM, YOEA, LDR, CIR có số
@@ -104,17 +105,17 @@
 > **Unlock khi:** T3.5 Pass  
 > **Files chính:** Supabase dashboard, `tools/`, docs
 
-- [ ] **T4.1 — Kiểm tra lại RLS Policy**
+- [x] **T4.1 — Kiểm tra lại RLS Policy**
   - Query: `SELECT tablename, policyname, cmd, roles FROM pg_policies WHERE schemaname='public' ORDER BY tablename;`
   - Confirm: `anon` role chỉ có `SELECT` trên 4 tables chính
   - Nếu còn INSERT/DELETE cho anon → sửa lại (dùng service_role key cho pipeline)
 
-- [ ] **T4.2 — Fix Requests Timeout (Bandit Medium)**
+- [x] **T4.2 — Fix Requests Timeout (Bandit Medium)**
   - Tìm tất cả: `grep -r "requests.get\|requests.post" d:\Project_partial\Finsang\sub-projects\ --include="*.py"`
   - Thêm `timeout=10` vào từng lệnh gọi
   - **Verify:** Chạy `bandit -r sub-projects/` → không còn cảnh báo Timeout
 
-- [ ] **T4.3 — Viết `QUARTERLY_UPDATE_GUIDE.md`**
+- [x] **T4.3 — Viết `QUARTERLY_UPDATE_GUIDE.md`**
   - Nội dung: 4 bước rõ ràng để cập nhật data mỗi quý
     1. `python vn30_enrichment.py` (auto-detect & fetch quarter mới)
     2. `python v5_full_resync.py` (sync to Supabase — sau khi T1 xong: < 5 phút)
@@ -128,7 +129,7 @@
 > **Unlock khi:** T4.3 Pass + Data 100% verified ổn định  
 > **⚠️ Không làm vội — chỉ khi mọi thứ đã ổn định hoàn toàn.**
 
-- [ ] **T5.1 — Build Frontend Production**
+- [x] **T5.1 — Build Frontend Production**
   - `cd d:\Project_partial\Finsang\frontend && npm run build`
   - Verify: Thư mục `dist/` được tạo, không lỗi build
 
@@ -155,10 +156,10 @@
 
 | Gate | Điều kiện | Unlock |
 |---|---|---|
-| **G1** | Resync 30 mã VN30 < 5 phút, accounting identity 100% | Giai đoạn 2 |
-| **G2** | SEC mapping audit pass, không còn hardcode BANK/SEC_TICKERS | Giai đoạn 3 |
-| **G3** | NIM/YOEA/LDR/CIR trên web có số, metrics batch 30 mã xong | Giai đoạn 4 |
-| **G4** | RLS đúng, Bandit clean, Quarterly Guide có | Giai đoạn 5 |
+| **G1** | Resync 30 mã VN30 < 5 phút, accounting identity 100% | Giai đoạn 2 | ✅ |
+| **G2** | SEC mapping audit pass, không còn hardcode BANK/SEC_TICKERS | Giai đoạn 3 | ✅ |
+| **G3** | NIM/YOEA/LDR/CIR trên web có số, metrics batch 30 mã xong | Giai đoạn 4 | ✅ |
+| **G4** | RLS đúng, Bandit clean, Quarterly Guide có | Giai đoạn 5 | ✅ |
 
 ---
 

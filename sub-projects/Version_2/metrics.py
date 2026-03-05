@@ -550,13 +550,13 @@ def calc_metrics(ticker: str, period: str) -> pd.DataFrame:
         print(f"  ❌ Cannot load supabase data: {e}")
         return pd.DataFrame()
 
-    if cdkt.empty or kqkd.empty or lctt.empty:
+    if cdkt.empty or kqkd.empty:
         return pd.DataFrame()
 
     meta_cols = ["field_id", "vn_name", "unit", "level"]
     cdkt_p = set(c for c in cdkt.columns if c not in meta_cols)
     kqkd_p = set(c for c in kqkd.columns if c not in meta_cols)
-    lctt_p = set(c for c in lctt.columns if c not in meta_cols)
+    lctt_p = set(c for c in lctt.columns if c not in meta_cols) if not lctt.empty else set()
     
     def sort_p(p):
         if str(p).startswith("Q"):
@@ -565,14 +565,20 @@ def calc_metrics(ticker: str, period: str) -> pd.DataFrame:
         try: return (int(p), 0)
         except: return (0, 0)
 
-    periods = sorted(list(cdkt_p & kqkd_p & lctt_p), key=sort_p, reverse=True)
+    base_p = cdkt_p & kqkd_p
+    if not lctt.empty and lctt_p:
+        base_p = base_p & lctt_p
+
+    periods = sorted(list(base_p), key=sort_p, reverse=True)
 
     if not periods:
         return pd.DataFrame()
 
     def get_row(df, fid):
+        if df is None or df.empty or "field_id" not in df.columns:
+            return pd.Series(dtype=float, index=periods)
         sub = df[df["field_id"] == fid]
-        if sub.empty: return pd.Series(None, index=periods)
+        if sub.empty: return pd.Series(dtype=float, index=periods)
         return sub.iloc[0]
 
     def clean_num(val):

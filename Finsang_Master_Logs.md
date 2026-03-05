@@ -125,7 +125,18 @@ This document serves as the centralized source of truth for the Finsang project'
 - **Data Architecture Fix (Phase 5.3):** Khắc phục dứt điểm lỗi nghiêm trọng "Positional Mapping Anti-Pattern" làm sai lệch toàn bộ dữ liệu Supabase (e.g. EPS bị map nhầm vào Lợi nhuận ròng do lệch dòng Excel). Áp dụng chiến lược **Exact Ground Truth Mapping**, khóa cứng các key lõi (e.g. `isa20`, `isb27`) trực tiếp vào `golden_schema.json` dựa vào BCTC thật. Gỡ bỏ toàn bộ dữ liệu hỏng.
 - **CTO Performance Audit (Score 67/100):** Phát hiện 3 "nút thắt cổ chai" (bottleneck) cấu trúc nghiêm trọng: (1) Chạy vòng lặp đồng bộ `subprocess` cực kỳ tốn RAM & CPU khởi tạo Python interpreter. (2) Schema `golden_schema.json` ~1MB quá cồng kềnh chứa nhiều text rác. (3) Dùng file Parquet làm trung gian thừa thãi khi daily sync làm chậm I/O ổ cứng.
 - **Technical Debt remediation plan (Phase 5.5 - Performance Tuning):**
-  - [ ] **Data Structure:** Trích xuất file `lite_schema.json` siêu nhẹ chỉ chứa mapping dùng cho bots ETL.
-  - [ ] **Asynchronous Processing:** Chuyển `v5_full_resync.py` sang kiến trúc ThreadPoolExecutor hoặc Asyncio chạy nhiều mã VN30 đồng thời mà không đẻ thêm Subprocess. Import chung function chạy Pipeline và Sync.
-  - [ ] **Stream-to-Database:** Load dữ liệu trực tiếp vào Pandas RAM và upsert lên Supabase. Tách bước sinh file Parquet cứng thành một chức năng Backup định kỳ tách biệt thay vì đưa vào đường găng (critical path).
+  - [x] **Data Structure:** Trích xuất file `lite_schema.json` siêu nhẹ chỉ chứa mapping dùng cho bots ETL.
+  - [x] **Asynchronous Processing:** Chuyển `v5_full_resync.py` sang kiến trúc ThreadPoolExecutor hoặc Asyncio chạy nhiều mã VN30 đồng thời mà không đẻ thêm Subprocess. Import chung function chạy Pipeline và Sync.
+  - [x] **Stream-to-Database:** Load dữ liệu trực tiếp vào Pandas RAM và upsert lên Supabase. Tách bước sinh file Parquet cứng thành một chức năng Backup định kỳ tách biệt thay vì đưa vào đường găng (critical path).
 
+### [v5.1.0] - 2026-03-05 (Bank & SEC Metrics Finalization)
+- **Data Mapping Audit (Phase 5.6):** 
+  - Hoàn tất rà soát API raw JSON từ Vietcap cho các nhóm ngành Ngân hàng (MBB) và Chứng khoán (SSI, VCI, VND). 
+  - Áp dụng các key `vietcap_key` (`isb27`, `isb36`, `bsb104`, v.v.) trực tiếp vào `golden_schema.json` để tính toán chính xác LDR, CIR.
+  - Mở rộng script `metrics.py` bổ sung các chuẩn phân tích Chứng khoán (Margin/Equity, CER, Brokerage Share).
+  - Tích hợp 100% data metrics vào `financial_ratios` table. 
+- **Security & Ops:** 
+  - Fix Bandit warnings (Timeout) trên toàn bộ codebase.
+  - Xóa bỏ quyền `INSERT/UPDATE/DELETE` cho `anon` roles để nâng cao bảo mật (T4.1).
+  - Khởi tạo tài liệu [QUARTERLY_UPDATE_GUIDE.md](QUARTERLY_UPDATE_GUIDE.md) hoàn chỉnh cho quy trình ETL Quý.
+  - Frontend Production Build hoàn tất. Smoke Test thành công.
