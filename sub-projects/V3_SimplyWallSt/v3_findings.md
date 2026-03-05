@@ -1,4 +1,5 @@
-# V3 Findings Log
+# V3 Findings Log (V3 Historical)
+> **Status:** ✅ COMPLETED / ARCHIVED
 
 > Ghi nhận các phát hiện kỹ thuật trong quá trình triển khai V3.
 

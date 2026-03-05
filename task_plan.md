@@ -1,9 +1,8 @@
 # Finsang v3.0 — Task Plan: Sector-Aware Financial Terminal
 
-> **Version:** 3.0 | **Date:** 2026-03-01 | **Status:** 🟡 PHASE 1 PENDING
-> **Supersedes:** `task_plan.md` v2.0 (B.L.A.S.T Vietcap Migration — Completed)
-> **Findings Ref:** `findings.md` (F-001 → F-010)
-> **Scope:** VN30 tickers (30 mã + VHC) — Scale lên toàn bộ HOSE/HNX sau khi UX/UI hoàn thiện
+> **Status:** ❌ DEPRECATED / COMPLETED
+> **Superseeded by:** [Finsang_Master_Task.md](Finsang_Master_Task.md)
+> **Note:** Giai đoạn này đã kết thúc. Mọi Task Tracker mới được quản lý tập trung tại `Finsang_Master_Task.md`.
 
 ---
 

@@ -54,11 +54,30 @@ Centralized log of critical technical hurdles encountered during the development
 
 ---
 
+### 8. Import Chain Blocking & Singleton DB client ✅ RESOLVED
+- **Symptom**: Pipeline bị treo (hanging) hoặc crash khi import `security.py` hoặc tạo hàng loạt `SupabaseClient`.
+- **Root Cause**: Phụ thuộc chéo (Circular import) và pool connection của Supabase bị cạn kiệt trong vòng lặp ThreadPool.
+- **Solution**: 
+  - Tách logic Supabase Client thành `sb_client.py` (Singleton).
+  - Viết `run_metrics_batch.py` độc lập để handle import chain sạch.
+- **Level**: MEDIUM.
+
+### 9. CSTC Tab Data Erosion (The "Strip" Bug) ✅ RESOLVED
+- **Symptom**: Tab CSTC chỉ hiện 7 dòng indicators thay vì 40+ dòng như thiết kế.
+- **Root Cause**: `calculate_cstc.py` (legacy) xóa sạch bảng ratios và chỉ insert 7 dòng.
+- **Solution**: 
+  - Deprecate `calculate_cstc.py`.
+  - Thay thế bằng `run_metrics_batch.py` gọi engine `metrics.py` (full 40+ metrics).
+- **Level**: HIGH.
+
+---
+
 ## 🛠️ Best Practices for Engineering Team
 1. **Never Trust Relative Positions:** Always use a unique ID or absolute row index from `golden_schema.json`.
 2. **Handle Errors Gracefully:** Cloud logging should be non-blocking. Use `try-except` for dependencies.
 3. **Encryption First:** Never store raw financial data in plain text Parquet. Use the `security.py` module.
 4. **Pure Logic in Provider:** Keep API quirks inside `providers/vietcap.py`, maintain a clean generic interface in `pipeline.py`.
+5. **Singleton for External Services:** Always use a shared client (like `sb_client.py`) for DB connections to prevent pooling exhaustion.
 
 ---
 
@@ -66,3 +85,4 @@ Centralized log of critical technical hurdles encountered during the development
 - [Finsang Master Team Guide](Finsang_Master_Team_Guide.md)
 - [Finsang Master Active Roadmap](Finsang_Master_Active_Roadmap.md)
 - [v5_challenges.md](sub-projects/V5_improdata/v5_challenges.md)
+

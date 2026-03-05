@@ -4,6 +4,16 @@ Mọi thay đổi liên quan đến cấu trúc source code, dữ liệu, hoặc
 
 ## [Released]
 
+### 2026-03-05 — Phase 5.5 (Performance) & Phase 5.6 (Sector Metrics)
+#### Added
+- **High Performance Sync**: Triển khai `ThreadPoolExecutor` trên `v5_full_resync.py`. Tốc độ nạp dữ liệu VN30 từ Vietcap → Supabase đạt ~28 giây.
+- **Sector Metrics (Bank/SEC)**: Hoàn tất công thức và tính toán cho LDR, CIR, Margin/Equity. Toàn bộ VN30 đã có dữ liệu chuyên ngành.
+- **Security Hardening**: Khóa chính sách RLS (SELECT only cho `anon`) và thêm `timeout=10` cho toàn bộ requests.
+- **Support Docs**: Phát hành `QUARTERLY_UPDATE_GUIDE.md` hỗ trợ đội vận hành.
+#### Fixed
+- **CSTC Regression**: Khôi phục 100% dữ liệu ratios bị mất (40+ rows/ticker) bằng cách chạy lại engine `metrics.py` chuẩn.
+- **Typo Fix**: Sửa key YOEA trong `metrics.py` (loại bỏ lỗi "khoản thu nhập").
+
 ### 2026-03-05 — Phase 5.3 Ground Truth Fix & Resync
 #### Fixed
 - **Catastrophic Positional Bug**: Khắc phục dứt điểm tình trạng keys bị trượt lệch vị trí nhờ chiến lược Exact Ground Truth Mapping.

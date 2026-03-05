@@ -6,38 +6,31 @@ Traceable history of system updates, version tags, and feature deployments.
 
 ## 🚀 Version History
 
-### [v4.0.0] — 2026-03-03 (Current)
+### [v5.1.0] — 2026-03-05 (Current)
+- **Feature:** Hoàn thiện Phase 5.6 - Sector Metrics Finalization (Bank/SEC).
+- **Security:** RLS Hardening (SELECT only) & Timeout implementation.
+- **Ops:** Phát hành `QUARTERLY_UPDATE_GUIDE.md` & Production Build.
+- **Performance:** ThreadPool Resync (~28s cho VN30).
+
+### [v5.0.0] — 2026-03-05
+- **Feature:** Exact Ground Truth Mapping (Sửa lỗi trượt dòng).
+- **Performance:** Khởi tạo `v5_full_resync.py` & `lite_schema.json`.
+- **Audit:** CTO Audit (Score 67/100) → Kế hoạch tối ưu cao độ.
+
+### [v4.0.0] — 2026-03-03
 - **Feature:** Khởi tạo `sub-projects/V4_Chart_Improve` - Tab Biểu đồ phân tích (Analysis Charts).
 - **UI:** Tích hợp Data Hook biến đổi dữ liệu từ bảng CDKT/KQKD sang định dạng tương thích biểu đồ `recharts`.
-- **Docs:** Tạo bộ Management Files chuẩn B.L.A.S.T cho V4 bao gồm Plan, Task, Changelog, Challenges, Findings.
+- **Docs:** Tạo bộ Management Files chuẩn B.L.A.S.T cho V4.
+
+### [v3.0.0] — 2026-03-01
+- **Feature:** Tích hợp Simply Wall St (Snowflake, Radar Chart, Gauge).
+- **Data:** Fetch OHLCV VN30 & Calc Snowflake Scores.
 
 ### [v2.3.0-audit] — 2026-03-01
-- **Audit:** Full project review — 10 findings documented → `Finsang_Master_Findings.md`
-- **Task Restructuring:** New 6-phase task plan (v3.0) — sector-aware frontend, dynamic routing, metrics per sector
-- **Key findings:** F-001 (crash bug), F-003 (frontend sector-blind), F-004 (hardcoded sectors), F-005 (RLS disabled)
-- **Confirmed:** Supabase đã có đầy đủ 31 VN30 tickers data (source: vietcap)
+- **Audit:** Full project review — 10 findings documented.
 
 ### [v2.2.0] — 2026-02-28
-- **Feature:** VN30 data enrichment via `vn30_enrichment.py` — 31 tickers synced to Supabase.
-- **Fix:** "0.0% Mapped" bug — sequential index vs absolute row mapping.
-- **UI:** Removed `<MiniBarChart />`, added Autocomplete search.
-
-### [v2.1.0] — 2026-02-26
-- **Feature:** Hierarchical Table UI (Vietcap Style) refinement in React/Vite.
-- **Fix:** Corrected index mapping bug for FPT and other tickers in `pipeline.py`.
-- **Audit:** Full project documentation rename and folder restructuring.
-- **Docs:** Implementation of `Finsang_Master_Logs.md`, `Finsang_Master_Challenges.md`, and `Finsang_Master_Team_Guide.md`.
-
-### [v2.0.0] — 2026-02-25
-- **Feature:** React Web Dashboard with OLED Dark Theme.
-- **Feature:** Supabase Cloud Sync pipeline.
-- **Security:** Implementation of Fernet encryption for Parquet storage.
-- **Architecture:** Migration from relative indexing to Golden Schema absolute mapping.
-
-### [v1.0.0] — 2026-02-21
-- **Feature:** Initial extraction pipeline (Vietcap API).
-- **Feature:** Terminal UI Viewer (Rich).
-- **Architecture:** Basic provider pattern implementation.
+- **Feature:** VN30 data enrichment. Fix index mapping.
 
 ---
 
@@ -45,14 +38,12 @@ Traceable history of system updates, version tags, and feature deployments.
 
 | Component | Version | Health | Last Update | Notes |
 |---|---|---|---|---|
-| ETL Pipeline | 2.0.1 | 🟢 Stable | 2026-02-28 | Sector routing implemented |
-| Golden Schema | 2.2.0 | 🟢 Stable | 2026-02-28 | 946 fields, 10 sector-specific sheets |
-| Supabase Sync | 2.0.0 | 🟡 Bug | 2026-02-28 | `load_tab_from_supabase()` crash (F-001) |
-| React Frontend | 2.1.0-dev | 🔴 Blocked | 2026-02-28 | Sector-blind (F-003) |
-| Metrics Engine | 2.0.0 | 🟡 Partial | 2026-02-28 | 3 sector calcs exist, not shown on web |
-| Supabase Data | 2.2.0 | 🟢 Full | 2026-02-28 | 31 VN30 tickers, 206K+ rows |
-| Security (RLS) | — | 🔴 Disabled | 2026-02-28 | Must enable before deploy (F-005) |
-| Fireant Pipeline | 1.0.0 | 🟡 Standalone | 2026-02-23 | Exists in tools/, not integrated V2 |
+| ETL Pipeline | 5.5.0 | 🟢 High Perf | 2026-03-05 | ~28s/VN30 Sync |
+| Golden Schema | 5.3.0 | 🟢 GroundTruth | 2026-03-05 | Exact Mapping |
+| Supabase Sync | 5.5.0 | 🟢 Streamed | 2026-03-05 | Bypasses Parquet path |
+| React Frontend | 5.6.0 | 🟢 SectorAware | 2026-03-05 | Charts show SEC/Bank data |
+| Metrics Engine | 5.6.0 | 🟢 Verified | 2026-03-05 | 40+ ratios per ticker |
+| Security (RLS) | 5.7.0 | 🔐 Hardened | 2026-03-05 | SELECT only for anon |
 
 ---
 
@@ -60,15 +51,11 @@ Traceable history of system updates, version tags, and feature deployments.
 
 | # | Phase | Status | Target |
 |---|---|---|---|
-| 1 | 🔧 Critical Fixes (F-001, F-002, F-005) | ⏳ Next | Week 1 |
-| 2 | 🏦 Sector Intelligence (dynamic routing) | ⏳ Pending | Week 1-2 |
-| 3 | 🖥️ Frontend Sector-Aware | ⏳ Pending | Week 2-3 |
-| 4 | 📊 Metrics per Sector | ⏳ Pending | Week 3-4 |
-| 5 | 🔍 Data Validation & Cross-ref | ⏳ Pending | Week 4 |
-| 6 | 🚀 Polish & Deploy | ⏳ Pending | Week 5 |
-| 7 | 📊 V4 Analysis Charts Integration | 🚀 Active | Week 6 |
-
-*Full details → `task_plan.md` v3.0 và `V4_Chart_Improve/v4_implementation_plan.md`*
+| 1 | 🔧 Phase 5.5 - Performance Tuning | ✅ DONE | Week 1 |
+| 2 | 🏦 Phase 5.6 - Sector Metrics | ✅ DONE | Week 1 |
+| 3 | 🚀 Phase 7.0 - Production Readiness | 🚀 ACTIVE | Week 2 |
+| 4 | 📄 Phase 6.0 - PDF Statement Parsing | ⏳ PENDING | Week 3 |
+| 5 | 📱 Phase 8.0 - Mobile Optimization | ⏳ BACKLOG| - |
 
 ---
 
@@ -76,8 +63,8 @@ Traceable history of system updates, version tags, and feature deployments.
 
 | Doc | Purpose |
 |---|---|
-| `task_plan.md` | Active task plan v3.0 — 6 phases |
-| `Finsang_Master_Findings.md` | Audit findings F-001 → F-010 |
-| `Finsang_Master_Logs.md` | Historical audit trail |
-| `Finsang_Master_Challenges.md` | Verified engineering solutions |
-| `Finsang_Master_Team_Guide.md` | Onboarding & standards |
+| `README.md` | Central Navigation |
+| `Finsang_Master_Active_Roadmap.md` | Timeline |
+| `Finsang_Master_Task.md` | Active Task Tracker |
+| `Finsang_Master_Logs.md` | Audit Trail |
+| `QUARTERLY_UPDATE_GUIDE.md` | Ops Guide |

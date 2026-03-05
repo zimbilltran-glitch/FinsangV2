@@ -183,22 +183,11 @@ NOTE: 6280 rows | Mapped: 0% (expected — API không hỗ trợ)
 - Đã bổ sung `eps_ttm`, `week52_high`, `week52_low` vào `company_overview` (script: `phase5_1_enrich.py`).
 - Đã tính lại P/E, P/B từ dữ liệu Supabase sạch.
 
-### ⚠️ P5.2: Tính toán lại CSTC — REGRESSION
-
-> **BÀI HỌC QUAN TRỌNG**: Cần dùng `metrics.py` (40+ chỉ số, đọc từ Supabase), KHÔNG dùng `calculate_cstc.py` (7 chỉ số, đọc từ parquet, có bug đơn vị).
-
-#### Chẩn đoán Bug (Đã xong)
-| Bug | Nguyên nhân | Ảnh hưởng |
-|-----|------------|----------|
-| ROE/ROA/Net Margin = 0 | Unit mismatch: net_income (Tỷ) vs equity (VND đồng) | Dấu `–` trên tab Chỉ số TC |
-| Growth (g7_1, g7_2) = 0% | Chưa tính cho VN30 | Biểu đồ tăng trưởng phẳng |
-| Bank metrics trống | bank_4_* chưa tính cho VN30 banks | Tab bank trống |
-| Tab CSTC bị strip | `calculate_cstc.py` xóa 40+ rows, chèn lại 7 | FPT: 7 rows vs VHC: 40+ rows |
-
-#### Fix cần thực hiện
-- [ ] Sửa hang khi chạy `re_sync_ratios.py` (import chain `security.py` blocking)
-- [ ] Chạy `metrics.py` batch cho 30 mã VN30 × 2 periods
-- [ ] Verify FPT có 40+ item_ids trong `financial_ratios_wide`
+### ✅ P5.2: Tính toán lại CSTC — COMPLETED
+- [x] Sửa hang khi chạy `re_sync_ratios.py` (via `run_metrics_batch.py` & `sb_client.py`)
+- [x] Chạy `metrics.py` batch cho 31 mã VN30 × 4 periods (Q1, Q2, Q3, Q4)
+- [x] Verify FPT có 40+ item_ids trong `financial_ratios_wide`.
+- [x] Đã khôi phục hoàn toàn tab chỉ số tài chính cho VN30.
 
 ### ✅ P5.3: Frontend Chart Fallbacks cho SEC
 - Đã cập nhật `FinancialPositionChart.jsx` và `DebtEquityHistoryChart.jsx` — thêm sec sector fallback.
@@ -207,8 +196,10 @@ NOTE: 6280 rows | Mapped: 0% (expected — API không hỗ trợ)
 ### ✅ P5.4: Snowflake Score Recalibration
 - Đã chạy `calc_snowflake.py` cho 31 mã — kết quả lưu vào `company_overview.score_*`.
 
-### ⏳ P5.5: Frontend UI QA Audit
-- Chờ P5.2 fix xong mới audit được.
+### ✅ P5.5: Frontend UI QA Audit — COMPLETED
+- Đã kiểm tra NIM, YOEA, LDR, CIR trên biểu đồ Bank charts cho MBB, VCB.
+- Đã kiểm tra Margin/Equity cho SSI.
+- Tất cả các item_id chuyên ngành đã hiển thị đúng trên UI.
 
 ---
 
@@ -224,25 +215,13 @@ NOTE: 6280 rows | Mapped: 0% (expected — API không hỗ trợ)
 
 ---
 
-## 🚀 PHASE 5.6: NOTE DATA EXTRACTION (Ngân hàng & Chứng khoán)
+## ✅ PHASE 5.6: SECTOR METRICS FINALIZATION & LIMITATIONS
 
-> **Mục tiêu**: Chiết xuất dữ liệu từ phần Thuyết minh BCTC (NOTE) để tính toán chính xác các chỉ số chuyên biệt như CASA (Ngân hàng) và chi tiết nợ/tài sản (Chứng khoán).
+> **Mục tiêu**: Hoàn thiện các chỉ số chuyên biệt và xác nhận giới hạn NOTE API.
 
-### 📋 Các bước thực hiện
-
-#### P5.6.1: Dò tìm API Keys cho phần NOTE
-- Probe endpoint `financial-statement?section=NOTE` cho các mã đại diện (ACB, MBB - Bank; SSI, VND - SEC).
-- Xác định các key cho "Tiền gửi không kỳ hạn" (Demand Deposits) và các khoản mục chi tiết khác.
-
-#### P5.6.2: Cập nhật Golden Schema & Pipeline
-- Bổ sung mapping `NOTE` vào `golden_schema.json`.
-- Cập nhật `pipeline.py` và `sync_supabase.py` để hỗ trợ đồng bộ dữ liệu từ sheet `NOTE` lên bảng `notes` (hoặc tương ứng) trên Supabase.
-
-#### P5.6.3: Cập nhật Metrics Engine (CASA, etc.)
-- Sửa hàm `calc_bank_metrics` trong `metrics.py` để ưu tiên lấy dữ liệu từ phần `NOTE` khi tính CASA.
-- Bổ sung các chỉ số chi tiết cho nhóm Chứng khoán nếu tìm thấy key phù hợp trong NOTE.
-
-#### P5.6.4: Chạy Batch & Re-verify
-- Chạy lại pipeline sync cho phần NOTE của VN30.
-- Chạy lại `run_metrics_batch.py` để cập nhật chỉ số mới.
-- Verify trên Frontend: Biểu đồ CASA của ngân hàng không còn trống.
+### 📋 Kết quả:
+- ✅ **LDR, CIR, NIM, YOEA**: Đã tính toán thành công cho Bank dựa trên IS/BS data.
+- ✅ **Margin/Equity, CER**: Đã tính toán thành công cho SEC.
+- 🟡 **CASA (Demand Deposits)**: **Limitation**. Vietcap NOTE API returns 403 Forbidden for Bank tickers. Calculation is bypassed for V2 production release.
+- ✅ **Security Audit**: RLS Locked, Timeout added (Phase 5.7).
+- ✅ **Ops Ready**: QUARTERLY_UPDATE_GUIDE.md issued.

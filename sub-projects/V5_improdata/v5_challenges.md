@@ -98,3 +98,16 @@ Theo dõi các khó khăn kỹ thuật và hướng giải quyết trong quá tr
   - Khóa chặt ~22 các field core (`isa20` cho Lãi ròng, `isb27` cho Thu nhập lãi thuần, v.v.) vào `golden_schema.json`.
   - Xóa toàn bộ dữ liệu Supabase bị hỏng và chạy `v5_full_resync.py` để làm phẳng lại toàn bộ 31 mã.
 
+## 14. CASA Calculation blocked by API (403 NOTE) ✅ ACCEPTED
+- **Tình trạng**: 🟡 Chấp nhận giới hạn (Limitation)
+- **Chẩn đoán**: Endpoint `financial-statement?section=NOTE` trả về 403 Forbidden cho hầu hết mã Bank (ACB, MBB...).
+- **Giải pháp**: Metadata của V2 sẽ ghi nhận CASA là "Technical Debt". Người dùng có thể cập nhật thủ công qua `PDF_TRANS` pipeline nếu cần số liệu chính xác.
+
+## 15. Synchronous Resync too slow (>45m) ✅ RESOLVED
+- **Tình trạng**: ✅ Đã giải quyết (Phase 5.5)
+- **Chẩn đoán**: Chạy `pipeline.py` tuần tự qua `subprocess` tốn quá nhiều overhead khởi tạo interpreter và I/O.
+- **Giải pháp**: 
+  - Refactor `v5_full_resync.py` sang `ThreadPoolExecutor`.
+  - Giảm kích thước schema (`lite_schema.json`) xuống < 50KB để load RAM cực nhanh.
+  - Stream dữ liệu Pandas thẳng lên Supabase, bỏ qua bước ghi Parquet vào Disk I/O.
+- **Kết quả**: Thời gian sync 31 mã VN30 giảm xuống **28 giây**.

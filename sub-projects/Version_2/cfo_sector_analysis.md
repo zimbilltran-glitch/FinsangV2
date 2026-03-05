@@ -1,4 +1,5 @@
-# Phân tích Đặc điểm Đầu mục Báo cáo Tài chính theo Nhóm Ngành
+# Phân tích Đặc điểm Đầu mục Báo cáo Tài chính theo Nhóm Ngành (V2 Historical)
+> **Status:** ✅ COMPLETED (Integrated into `metrics.py` and V5 Sector Metrics)
 
 Dưới đây là kết quả phân tích sự khác biệt về cấu trúc Báo cáo Tài chính của 3 nhóm ngành tiêu biểu trong VN30.
 

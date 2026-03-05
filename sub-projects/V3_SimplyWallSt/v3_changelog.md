@@ -1,4 +1,5 @@
-# V3 Progress Logs
+# V3 Progress Logs (V3 Historical)
+> **Status:** ✅ COMPLETED / ARCHIVED
 
 > Nhật ký tiến độ theo thời gian. Agent ghi log sau mỗi task hoàn thành.
 

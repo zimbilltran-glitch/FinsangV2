@@ -1,9 +1,8 @@
 # Finsang B.L.A.S.T. Execution Plan — Vietcap Migration
 
-> **Version:** 2.0 | **Date:** 2026-02-24 | **Status:** 🟡 AWAITING APPROVAL
-> **Primary Source:** [Vietcap IQ](https://trading.vietcap.com.vn/iq/company?ticker=VHC)
-> **Golden Schema:** `VHC_BCTC.xlsx` (4 sheets — Quarter/Year × CĐKT/KQKD/LCTT/CSTC)
-> **Supersedes:** `task_plan.md` v1.0 (KBSV / vnstock era)
+> **Version:** 2.0 | **Date:** 2026-02-24 | **Status:** ✅ COMPLETED & DEPRECATED
+> **Superseeded by:** `sub-projects/V5_improdata/v5_implementation_plan.md`
+> **Note:** Giai đoạn này đã hoàn tất. Mọi phát triển mới về Data Integrity và Performance đã chuyển sang V5.
 
 ---
 
