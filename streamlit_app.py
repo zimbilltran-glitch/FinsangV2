@@ -40,7 +40,7 @@ import metrics
 import importlib
 importlib.reload(metrics)
 from metrics import calc_metrics
-from audit import run_checksums
+# from audit import run_checksums  # Removed as audit is moved to archive_legacy
 
 # ─── 2. Streamlit Page Config & Custom CSS ────────────────────────────────────
 
@@ -161,7 +161,8 @@ def get_audit_status(ticker: str, period_type: str):
     """Run CFO Audit Checksums quietly using cloud data."""
     try:
         cdkt_df = load_tab_from_supabase(ticker, period_type, "cdkt")
-        results = run_checksums(cdkt_df)
+        # results = run_checksums(cdkt_df)
+        results = None # CFO audit removed
         if results:
             # We just take the status of the most recent period
             latest_period = list(results.keys())[0]
