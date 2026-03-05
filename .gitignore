@@ -58,19 +58,19 @@ logs/
 *.xlsx
 
 # ── CTO Security: Never commit secrets or raw API payloads ──────────────────
-keys.txt                   # Contains intercepted Fireant Bearer token URLs
-fireant_network.json       # Raw Playwright network intercept dump
-fireant_network.log        # Bearer token intercept log
-fireant_unmatched.log      # Unmatched COA items log
-lctt*.json                 # Raw LCTT API response dumps
+keys.txt
+fireant_network.json
+fireant_network.log
+fireant_unmatched.log
+lctt*.json
 lctt_dump.json
-cdkt.txt                   # Raw debug text
-kbsv_items.txt             # Internal API item list
-*.log                      # All log files
+cdkt.txt
+kbsv_items.txt
+*.log
 
 # ── CTO Security: Encrypted financial data (local-only, never commit) ───────
-data/                      # Hive-partitioned encrypted Parquet files
-*.parquet                  # Binary financial data
+data/
+*.parquet
 
 # ── CTO Security: Frontend credentials ─────────────────────────────────────
 frontend/.env              # Vite-injected Supabase anon key
