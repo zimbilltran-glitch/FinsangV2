@@ -53,6 +53,6 @@ if not os.path.exists('_raw_fpt_is.json'):
     url = "https://iq.vietcap.com.vn/api/iq-insight-service/v1/company/FPT/financial-statement?section=INCOME_STATEMENT"
     headers = {"User-Agent": "Mozilla/5.0", "Accept": "application/json", "Referer": "https://trading.vietcap.com.vn/", "Origin": "https://trading.vietcap.com.vn"}
     with open('_raw_fpt_is.json', 'w') as f:
-        json.dump(requests.get(url, headers=headers).json(), f)
+        json.dump(requests.get(url, headers=headers, timeout=10).json(), f)
 
 find_in_json("_raw_fpt_is.json", fpt_ground_truth_2024, 2024)

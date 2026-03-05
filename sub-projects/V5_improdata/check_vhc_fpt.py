@@ -12,7 +12,7 @@ def fetch_and_print(ticker, section):
         "Referer": "https://trading.vietcap.com.vn/",
         "Origin": "https://trading.vietcap.com.vn"
     }
-    r = requests.get(url, headers=headers)
+    r = requests.get(url, headers=headers, timeout=10)
     data = r.json()
     if "data" in data :
          rows = data["data"]

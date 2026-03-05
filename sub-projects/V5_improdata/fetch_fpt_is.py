@@ -9,7 +9,7 @@ headers = {
     "Referer": "https://trading.vietcap.com.vn/",
     "Origin": "https://trading.vietcap.com.vn",
 }
-r = requests.get(url, headers=headers)
+r = requests.get(url, headers=headers, timeout=10)
 data = r.json()
 print("Success:", data.get("successful"))
 if "data" in data and isinstance(data["data"], list):

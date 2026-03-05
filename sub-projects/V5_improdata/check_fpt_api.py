@@ -5,7 +5,7 @@ headers = {
     'Referer': 'https://trading.vietcap.com.vn/',
     'Origin': 'https://trading.vietcap.com.vn'
 }
-data = requests.get(url, headers=headers).json()
+data = requests.get(url, headers=headers, timeout=10).json()
 for p in data['data']['years']:
     if p['yearReport'] == 2023:
         print(f"FPT 2023 isa22 (Profit for Parent): {p.get('isa22')}")

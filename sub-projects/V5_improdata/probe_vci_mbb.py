@@ -9,7 +9,7 @@ def fetch_and_save(ticker, section, filepath):
         "Referer": "https://trading.vietcap.com.vn/",
         "Origin": "https://trading.vietcap.com.vn",
     }
-    r = requests.get(url, headers=headers)
+    r = requests.get(url, headers=headers, timeout=10)
     data = r.json()
     
     with open(filepath, "w", encoding="utf-8") as f:
