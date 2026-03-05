@@ -69,6 +69,15 @@
 - [x] **P5.6.4**: Hoàn tất Security Hardening (RLS + Timeout).
 - [x] **P5.6.5**: Phát hành QUARTERLY_UPDATE_GUIDE.md.
 
+## 🔍 PHASE 5.7: CFO AUDIT & DATA INTEGRITY (BL-2, BL-3)
+- [x] **P5.7.1**: Viết script `cfo_audit_bl2_bl3.py` kiểm tra đẳng thức kế toán.
+- [x] **P5.7.2**: Verify BL-2 (Assets = Liab + Equity) — 🟢 **PASSED** cho VN30.
+- [ ] **P5.7.3**: Verify BL-3 (Net CF = Op + Inv + Fin) — 🔴 **FAILED/GAP DETECTED**.
+    - **Finding**: Một số mã (FPT, MBB, KDH) bị thiếu dòng hoặc sai số lệch lớn trong bảng `cash_flow`.
+    - **MBB**: Không có dữ liệu LCTT trong Supabase dù đã chạy resync.
+    - **FPT/KDH**: Sai lệch phương trình dòng tiền (identity gap).
+- [ ] **P5.7.4**: Fix mapping LCTT trong `lite_schema.json` và chạy full resync LCTT.
+
 ---
 
 ## 🐛 Bug Analysis (Phase 5 Regression)
@@ -87,6 +96,10 @@
 
 ### Bug 4: Tab "Chỉ số tài chính" bị strip ✅ FIXED
 - Đã khôi phục 40+ rows cho mỗi mã VN30 thông qua `metrics.py`.
+
+### Bug 5: Cash Flow Identity Gap (BL-3) 🔴 OPEN
+- **Nguyên nhân**: Thiếu mapping một số key LCTT quan trọng hoặc dữ liệu từ Vietcap API không khớp với cấu trúc 3 phần (Op/Inv/Fin).
+- **Trạng thái**: Đang điều tra mapping cho từng Sector.
 
 ### Giải pháp Tổng thể
 - Đã chạy `run_metrics_batch.py` thành công cho 31 mã VN30. Dữ liệu CSTC đã đầy đủ và chuẩn xác.

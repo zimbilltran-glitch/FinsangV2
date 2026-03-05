@@ -152,8 +152,11 @@
 ## 🗃️ BACKLOG (Không khẩn cấp)
 
 - [ ] **BL-1:** Fireant V2 Provider — `FireantProvider(BaseProvider)` class
-- [ ] **BL-2:** CFO Audit checksums cho Bank/Sec (`validate_full.py` mở rộng)
-- [ ] **BL-3:** CF Identity: `Net CF = Op + Inv + Fin` cho toàn VN30
+- [x] **BL-2:** CFO Audit checksums cho Bank/Sec (`cfo_audit_bl2_bl3.py`) — **PASS (BS)**
+- [ ] **BL-3:** CF Identity: `Net CF = Op + Inv + Fin` — 🔴 **FAIL (GAP FOUND)**
+    - [ ] Re-probe Vietcap LCTT API cho Bank/Sec/Normal.
+    - [ ] Cập nhật `lite_schema.json` với đúng keys LCTT.
+    - [ ] Re-sync `cash_flow` table cho VN30.
 - [ ] **BL-4:** Mobile responsive UI
 
 ---
@@ -166,6 +169,7 @@
 | **G2** | SEC mapping audit pass, không còn hardcode BANK/SEC_TICKERS | Giai đoạn 3 | ✅ |
 | **G3** | NIM/YOEA/LDR/CIR trên web có số, metrics batch 30 mã xong | Giai đoạn 4 | ✅ |
 | **G4** | RLS đúng, Bandit clean, Quarterly Guide có | Giai đoạn 5 | ✅ |
+| **G5** | BL-2 Pass (BS balance), BL-3 investigating (CF Gap) | Phase 6/Deploy | ⏳ |
 
 ---
 

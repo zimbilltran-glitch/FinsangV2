@@ -75,4 +75,24 @@ Rà soát toàn diện dự án Finsang nhằm:
 
 ---
 
-> **⚠️ Bản ghi cập nhật kết thúc (End of Phase 5/6 Audit Report)**
+## F-020: Cash Flow Identity Gap (BL-3) — 🔴 OPEN
+
+| Field | Value |
+|---|---|
+| **Severity** | 🔴 HIGH |
+| **Component** | `cash_flow` table, `lite_schema.json`, mapping logic |
+| **Impact** | Dữ liệu lưu chuyển tiền tệ không cân đối, ảnh hưởng đến phân tích sức khỏe tài chính (Health score). |
+
+**Chi tiết:**
+1. **Dữ liệu Bank (MBB)**: Bảng `cash_flow` hụt hoàn toàn 2024 data dù các bảng khác đầy đủ.
+2. **Dữ liệu Normal (FPT, KDH)**: Đẳng thức `Kinh doanh + Đầu tư + Tài chính = Lưu chuyển thuần` bị lệch lớn (FPT lệch ~10k tỷ, KDH hụt dòng).
+3. **Nguyên nhân dự kiến**: Sai lệch `vietcap_key` trong mảng LCTT hoặc do đặc thù phân loại dòng tiền của Vietcap API khác với cấu trúc Standard 3-part.
+
+**Khuyến nghị:**
+- Thực hiện "Probe" lại toàn bộ cấu trúc API LCTT cho 3 Sector.
+- Mapping lại `vietcap_key` chính xác cho LCTT.
+- Chạy đợt Resync cục bộ (LCTT only) để tiết kiệm quota.
+
+---
+
+> **⚠️ Bản ghi cập nhật kết thúc (Audit Continuation - CF Identity Gap)**

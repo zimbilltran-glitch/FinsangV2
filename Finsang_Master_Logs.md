@@ -141,6 +141,14 @@ This document serves as the centralized source of truth for the Finsang project'
   - Khởi tạo tài liệu [QUARTERLY_UPDATE_GUIDE.md](QUARTERLY_UPDATE_GUIDE.md) hoàn chỉnh cho quy trình ETL Quý.
   - Frontend Production Build hoàn tất. Smoke Test thành công.
 
+### [v5.1.8-audit] - 2026-03-05 (CFO Audit & CF Identity Investigation)
+- **Audit Tooling**: Phát triển `cfo_audit_bl2_bl3.py` để tự động hóa việc kiểm tra tính cân đối của BCTC và LCTT trên Supabase Cloud.
+- **Milestone BL-2 (PASSED)**: Xác nhận 100% rổ VN30 đạt đẳng thức `Tài sản = Nguồn vốn` (Accounting Identity).
+- **Milestone BL-3 (FAILED)**: Phát hiện lỗ hổng dữ liệu (Data Gap) trong bảng `cash_flow`.
+    - Các mã Ngân hàng (MBB) bị hụt hoàn toàn dữ liệu LCTT.
+    - Một số mã Phi tài chính (FPT, KDH) bị lệch đẳng thức `Lưu chuyển tiền thuần = Kinh doanh + Đầu tư + Tài chính`.
+- **Action Plan**: Rà soát lại mapping `vietcap_key` cho mảng LCTT trong `lite_schema.json` và thực hiện đợt re-sync cục bộ cho Cash Flow.
+
 ### [v5.1.5-cleanup] - 2026-03-05 (Massive Codebase Cleanup)
 - **Action**: Thực hiện dọn dẹp quy mô lớn toàn bộ dự án. Di chuyển 60+ file không cần thiết vào `archive_legacy`.
 - **Legacy Removal**: Di chuyển toàn bộ script khảo sát, logs, audit reports, và raw Excel files vào `archive_legacy/explorations` và `archive_legacy/clutter_cleanup`.
