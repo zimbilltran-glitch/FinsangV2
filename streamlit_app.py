@@ -16,8 +16,8 @@ st.set_page_config(
 warnings.filterwarnings("ignore")
 
 # ─── 1. Setup Environment & Imports ───────────────────────────────────────────
-# Add Version_2 to sys.path so we can import its modules directly
-sys.path.insert(0, str(Path(__file__).parent / "sub-projects" / "Version_2"))
+# Add V2_Data_Pipeline to sys.path so we can import its modules directly
+sys.path.insert(0, str(Path(__file__).parent / "sub-projects" / "V2_Data_Pipeline"))
 
 # Load Secrets
 # If running on Streamlit Cloud, use st.secrets. Otherwise fallback to .env

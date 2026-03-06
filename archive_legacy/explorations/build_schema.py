@@ -13,7 +13,7 @@ def slugify(text: str) -> str:
     text = re.sub(r"_+", "_", text)
     return text[:55]
 
-with open("sub-projects/Version_2/golden_schema.json", "r", encoding="utf-8") as f:
+with open("sub-projects/V2_Data_Pipeline/golden_schema.json", "r", encoding="utf-8") as f:
     schema = json.load(f)
 
 # Keep the original sheets
@@ -87,7 +87,7 @@ for code in ["CDKT_BANK", "KQKD_BANK", "LCTT_BANK", "CDKT_SEC", "KQKD_SEC", "LCT
     base = code.split("_")[0]
     schema["period_columns"][code] = schema["period_columns"][base]
 
-with open("sub-projects/Version_2/golden_schema.json", "w", encoding="utf-8") as f:
+with open("sub-projects/V2_Data_Pipeline/golden_schema.json", "w", encoding="utf-8") as f:
     json.dump(schema, f, ensure_ascii=False, indent=2)
 
 print(f"Updated golden_schema.json with Bank and Sec forms. Total: {len(schema['fields'])}")

@@ -4,7 +4,7 @@ Probe Vietcap API for FPT Balance Sheet and save raw JSON for comparison.
 import requests, json
 from pathlib import Path
 
-OUT = Path(r'd:\Project_partial\Finsang\sub-projects\Version_2')
+OUT = Path(r'd:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline')
 TICKER = "FPT"
 SECTION = "BALANCE_SHEET"
 BASE = "https://iq.vietcap.com.vn/api/iq-insight-service/v1/company/{t}/financial-statement?section={s}"

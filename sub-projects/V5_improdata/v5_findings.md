@@ -66,7 +66,7 @@ Vietcap API sử dụng **multi-prefix key system**. Mỗi section có nhiều p
 
 ## 3. Lỗi Mapping TRƯỚC V5
 
-- **File lỗi**: `Version_2/golden_schema.json`
+- **File lỗi**: `V2_Data_Pipeline/golden_schema.json`
 - **Triệu chứng**: Toàn bộ 188 field `CDKT`, `KQKD`, `LCTT` (normal company) có `vietcap_key: ""`.
 - **Chỉ 10 field** được hardcode override trong `providers/vietcap.py` — nhưng **6/10 override cũng SAI**:
   - `cdkt_tong_cong_tai_san → bsa96` ❌ (đúng là `bsa53`)

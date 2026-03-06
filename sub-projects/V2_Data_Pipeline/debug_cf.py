@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-sys.path.insert(0, r'd:\Project_partial\Finsang\sub-projects\Version_2')
+sys.path.insert(0, r'd:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline')
 from sync_supabase import get_supabase
 sb = get_supabase()
 

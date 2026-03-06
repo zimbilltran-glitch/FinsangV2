@@ -16,9 +16,9 @@ Data model: long-format (one row per ticker × period × field)
 The *_wide views in Supabase automatically pivot these via jsonb_object_agg.
 
 Usage:
-  python Version_2/sync_supabase.py --ticker VHC
-  python Version_2/sync_supabase.py --ticker FPT --period year
-  python Version_2/sync_supabase.py --all          # all FINSANG_TICKERS
+  python V2_Data_Pipeline/sync_supabase.py --ticker VHC
+  python V2_Data_Pipeline/sync_supabase.py --ticker FPT --period year
+  python V2_Data_Pipeline/sync_supabase.py --all          # all FINSANG_TICKERS
 """
 
 import argparse, os, sys, json, warnings, pandas as pd

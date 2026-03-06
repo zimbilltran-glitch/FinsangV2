@@ -30,8 +30,8 @@ try:
 except ImportError:
     pass
 
-# ── Add Version_2 to path ─────────────────────────────────────────────────────
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "Version_2"))
+# ── Add V2_Data_Pipeline to path ─────────────────────────────────────────────────────
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "V2_Data_Pipeline"))
 from sector import get_all_tickers, get_sector
 
 RATE_DELAY = 1.0   # seconds between tickers (vnstock rate limit)

@@ -3,9 +3,9 @@ Phase T — Trigger: Multi-Ticker Runner
 run_all.py — Run the pipeline for all tickers defined in FINSANG_TICKERS (.env)
 
 Usage:
-  python Version_2/run_all.py                     # uses FINSANG_TICKERS from .env
-  python Version_2/run_all.py --tickers VHC FPT   # override with CLI args
-  python Version_2/run_all.py --tickers VHC --dry-run  # show tickers, no run
+  python V2_Data_Pipeline/run_all.py                     # uses FINSANG_TICKERS from .env
+  python V2_Data_Pipeline/run_all.py --tickers VHC FPT   # override with CLI args
+  python V2_Data_Pipeline/run_all.py --tickers VHC --dry-run  # show tickers, no run
 
 Design:
   - Reads FINSANG_TICKERS from .env (comma-separated)
@@ -21,7 +21,7 @@ from datetime import datetime
 
 # ── Bootstrap: resolve project root ──────────────────────────────────────────
 ROOT = Path(__file__).parent.parent
-sys.path.insert(0, str(ROOT / "Version_2"))
+sys.path.insert(0, str(ROOT / "V2_Data_Pipeline"))
 
 # Load .env early before importing pipeline (which also loads it, but be safe)
 try:

@@ -73,8 +73,8 @@ Schema field  [121]     → bsa96         (TỔNG NGUỒN VỐN)
 - Xóa `field_mapping` dict (10 overrides) + fallback `f"bsa{idx}"` trong `vietcap.py`
 
 ### Files đã sửa
-- `Version_2/golden_schema.json` — rebuilt
-- `Version_2/providers/vietcap.py` — cleaned
+- `V2_Data_Pipeline/golden_schema.json` — rebuilt
+- `V2_Data_Pipeline/providers/vietcap.py` — cleaned
 
 ---
 
@@ -162,13 +162,13 @@ NOTE: 6280 rows | Mapped: 0% (expected — API không hỗ trợ)
 
 | File | Đường dẫn | Vai trò |
 |------|-----------|---------|
-| Golden Schema | `Version_2/golden_schema.json` | Registry ánh xạ field → Vietcap key (**ĐÃ SỬA**) |
-| Vietcap Provider | `Version_2/providers/vietcap.py` | Logic đọc API value (**ĐÃ SỬA** — xóa fallback) |
-| Pipeline | `Version_2/pipeline.py` | Orchestrate fetch → normalize → parquet |
-| Sync | `Version_2/sync_supabase.py` | Parquet → Supabase upsert |
-| Metrics Engine | `Version_2/metrics.py` | Tính 40+ chỉ số tài chính (CSTC) cho 3 sector |
-| Batch Sync | `Version_2/re_sync_ratios.py` | Batch chạy metrics.py cho VN30 |
-| CSTC Basic | `Version_2/calculate_cstc.py` | ⚠️ Script cũ (7 ratios, có bug đơn vị) — ĐÃ THAY THẾ |
+| Golden Schema | `V2_Data_Pipeline/golden_schema.json` | Registry ánh xạ field → Vietcap key (**ĐÃ SỬA**) |
+| Vietcap Provider | `V2_Data_Pipeline/providers/vietcap.py` | Logic đọc API value (**ĐÃ SỬA** — xóa fallback) |
+| Pipeline | `V2_Data_Pipeline/pipeline.py` | Orchestrate fetch → normalize → parquet |
+| Sync | `V2_Data_Pipeline/sync_supabase.py` | Parquet → Supabase upsert |
+| Metrics Engine | `V2_Data_Pipeline/metrics.py` | Tính 40+ chỉ số tài chính (CSTC) cho 3 sector |
+| Batch Sync | `V2_Data_Pipeline/re_sync_ratios.py` | Batch chạy metrics.py cho VN30 |
+| CSTC Basic | `V2_Data_Pipeline/calculate_cstc.py` | ⚠️ Script cũ (7 ratios, có bug đơn vị) — ĐÃ THAY THẾ |
 | Spot Check | `V5_improdata/validate_spotcheck.py` | 12-field validation + accounting identity |
 | Rebuild Script | `V5_improdata/rebuild_schema_keys.py` | Segmented mapping builder |
 | CFO Skill | `.agent/skills/professional-cfo-analyst/` | Audit rules & checksum |

@@ -33,7 +33,7 @@ APPLYING SEGMENTED MAPPING:
   NAME FIX: cdkt_loi_ich_cua_co_dong_thieu_so                  bsa164     → bsa210 (Lợi ích của cổ đông thiểu số)
 
   Total changes applied: 73
-  Saved to: d:\Project_partial\Finsang\sub-projects\Version_2\golden_schema.json
+  Saved to: d:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline\golden_schema.json
 
 ======================================================================
 VERIFICATION (FPT 2024 values via new mapping):

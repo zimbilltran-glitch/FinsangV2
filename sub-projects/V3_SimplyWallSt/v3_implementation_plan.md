@@ -5,7 +5,7 @@
 > **Date**: 2026-03-01 | **Version**: 1.0 (Final - 100% Complete)  
 > **Supabase Project**: `zuphshdgudnwlfjlfbbs`  
 > **Frontend**: `Finsang/frontend/` (Vite + React 19, Vanilla CSS)  
-> **Backend**: `Finsang/sub-projects/Version_2/`  
+> **Backend**: `Finsang/sub-projects/V2_Data_Pipeline/`  
 > **This file**: `Finsang/sub-projects/V3_SimplyWallSt/implementation_plan.md`
 
 ---
@@ -84,7 +84,7 @@ Finsang/
 │   ├── App.css                           ← P3.1 Apply SWS theme
 │   └── index.css                         ← P3.2 Global theme variables
 │
-├── sub-projects/Version_2/
+├── sub-projects/V2_Data_Pipeline/
 │   └── metrics.py                        ← P1.5 Thêm ROE, ROA, D/E, Current Ratio
 ```
 
@@ -103,7 +103,7 @@ Finsang/
 ### P1.1 — Fetch OHLCV VN30 (2025-2026) ✅ DONE
 
 **File tạo**: `V3_SimplyWallSt/scripts/fetch_ohlcv_vn30.py`  
-**File đọc trước**: `sub-projects/Version_2/sector.py` (hàm `get_all_tickers(vn30_only=True)`)  
+**File đọc trước**: `sub-projects/V2_Data_Pipeline/sector.py` (hàm `get_all_tickers(vn30_only=True)`)  
 **Ghi vào**: Supabase table `stock_ohlcv` (đã có schema)
 
 **Logic**:
@@ -146,7 +146,7 @@ ORDER BY stock_name;
 > **Thực tế**: Dùng `vnstock` (VCI source) thay vì Vietcap API trực tiếp. Script: `V3_SimplyWallSt/scripts/fetch_company_overview.py`. 31/31 tickers upserted.
 
 **File tạo**: `V3_SimplyWallSt/scripts/fetch_company_overview.py`  
-**File đọc trước**: `sub-projects/Version_2/sector.py`  
+**File đọc trước**: `sub-projects/V2_Data_Pipeline/sector.py`  
 **Ghi vào**: Supabase table `company_overview` (CẦN TẠO MỚI — xem P1.3)
 
 **Data cần fetch per ticker**:
@@ -163,7 +163,7 @@ ORDER BY stock_name;
 | industry | Companies table | Có thể enrichment thêm |
 
 **Primary API**: Vietcap financial overview  
-**Fallback**: TCBS (đã có `get_tcbs.py` trong Version_2)
+**Fallback**: TCBS (đã có `get_tcbs.py` trong V2_Data_Pipeline)
 
 **Token Note**: Script này nhỏ (~100 lines). Agent chỉ cần đọc `sector.py` + `.env` rồi viết.
 
@@ -215,7 +215,7 @@ CREATE POLICY "service_write" ON company_overview FOR ALL
 > **Script**: `V3_SimplyWallSt/scripts/calc_snowflake.py`. Bank/Sec/Normal sector-aware scoring. 31/31 scores computed.
 
 **File tạo**: `V3_SimplyWallSt/scripts/calc_snowflake.py`  
-**File đọc trước**: `sub-projects/Version_2/metrics.py` (lines 415-585, hàm `calc_metrics`)  
+**File đọc trước**: `sub-projects/V2_Data_Pipeline/metrics.py` (lines 415-585, hàm `calc_metrics`)  
 **Skill tham chiếu**: `professional-cfo-analyst` → Step 2
 
 **Scoring Logic** (5 dimensions, mỗi dim = 1.0 → 5.0):
@@ -259,7 +259,7 @@ def calc_snowflake_scores(ticker: str) -> dict:
 ### P1.5 — Extend `metrics.py`: Thêm ROE, ROA, D/E, Current Ratio ✅ DONE (via Snowflake)
 > **Thực tế**: ROE/ROA/D/E được tính trực tiếp trong `calc_snowflake.py` thay vì thêm vào `metrics.py`. Không cần sửa `metrics.py`.
 
-**File sửa**: `sub-projects/Version_2/metrics.py`  
+**File sửa**: `sub-projects/V2_Data_Pipeline/metrics.py`  
 **Đọc trước**: `metrics.py` lines 1-100 + lines 480-585 (calc_metrics routing)  
 **Skill tham chiếu**: `professional-cfo-analyst`
 

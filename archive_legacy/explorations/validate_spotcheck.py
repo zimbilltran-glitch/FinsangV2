@@ -8,7 +8,7 @@ import json, pandas as pd
 from pathlib import Path
 
 BASE = Path(r'd:\Project_partial\Finsang')
-V2   = Path(r'd:\Project_partial\Finsang\sub-projects\Version_2')
+V2   = Path(r'd:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline')
 V5   = Path(r'd:\Project_partial\Finsang\sub-projects\V5_improdata')
 
 # Load schema to get ACTUAL mapped keys

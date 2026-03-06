@@ -1,6 +1,6 @@
 """
 Phase L — Link: Live Vietcap API Probe
-Fires one GET per section, saves raw JSON to Version_2/_raw_*.json
+Fires one GET per section, saves raw JSON to V2_Data_Pipeline/_raw_*.json
 No auth required — API is fully public.
 """
 import requests, json

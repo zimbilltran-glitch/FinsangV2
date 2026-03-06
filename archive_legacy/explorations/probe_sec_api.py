@@ -67,7 +67,7 @@ def extract_keys(payload: dict) -> dict:
 # --- Load golden schema SEC fields --------------------------------------
 def load_sec_schema() -> dict:
     """Returns {sheet: [{field_id, vn_name, vietcap_key}, ...]} for SEC sheets."""
-    schema_path = ROOT / "sub-projects" / "Version_2" / "golden_schema.json"
+    schema_path = ROOT / "sub-projects" / "V2_Data_Pipeline" / "golden_schema.json"
     with open(schema_path, encoding="utf-8") as f:
         raw = json.load(f)
     sec = {}

@@ -3,7 +3,7 @@ from pathlib import Path
 print("Starting debug_imports.py...", flush=True)
 
 ROOT = Path(__file__).parent.parent.parent
-v2_path = ROOT / "sub-projects" / "Version_2"
+v2_path = ROOT / "sub-projects" / "V2_Data_Pipeline"
 sys.path.insert(0, str(v2_path))
 
 print("Importing os, pd, math...", flush=True)

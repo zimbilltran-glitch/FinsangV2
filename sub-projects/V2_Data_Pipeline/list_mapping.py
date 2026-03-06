@@ -1,6 +1,6 @@
 import json
 
-with open("c:/Users/Admin/OneDrive/Learn Anything/Antigravity/2.Project v2/sub-projects/Version_2/lite_schema.json", "r", encoding="utf-8") as f:
+with open("c:/Users/Admin/OneDrive/Learn Anything/Antigravity/2.Project v2/sub-projects/V2_Data_Pipeline/lite_schema.json", "r", encoding="utf-8") as f:
     schema = json.load(f)
 
 with open("mapping_out.txt", "w", encoding="utf-8") as out:

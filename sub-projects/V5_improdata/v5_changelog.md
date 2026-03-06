@@ -38,7 +38,7 @@ Mọi thay đổi liên quan đến cấu trúc source code, dữ liệu, hoặc
 #### Added
 - `sub-projects/V5_improdata/phase5_1_enrich.py` — Script bổ sung EPS TTM, Week52 High/Low vào `company_overview`.
 - `sub-projects/V5_improdata/run_metrics_batch.py` — Script batch chạy lại engine `metrics.py` cho 30 mã VN30 (Fix regression).
-- `sub-projects/Version_2/sb_client.py` — Triển khai Singleton Supabase Client để chống nghẽn connection khi chạy batch.
+- `sub-projects/V2_Data_Pipeline/sb_client.py` — Triển khai Singleton Supabase Client để chống nghẽn connection khi chạy batch.
 
 #### Fixed
 - **metrics.py**: Sửa lỗi chính tả key YOEA (`...thu_nhap_lai_va_cac_khoan_thu_nhap_tuong_tu`).
@@ -66,8 +66,8 @@ Mọi thay đổi liên quan đến cấu trúc source code, dữ liệu, hoặc
 - **9 name-based corrections**: Bank schema ground truth fix thêm 9 keys (e.g., `cdkt_tai_san_co_dinh: bsa36→bsa29`).
 
 #### Changed
-- `Version_2/golden_schema.json` — Rebuilt 188 fields: CDKT (122), KQKD (25), LCTT (41).
-- `Version_2/providers/vietcap.py` — Xóa `field_mapping` dict (10 overrides) + fallback logic `f"bsa{idx}"`. Function `get_api_value()` giờ return `None` cho unmapped fields.
+- `V2_Data_Pipeline/golden_schema.json` — Rebuilt 188 fields: CDKT (122), KQKD (25), LCTT (41).
+- `V2_Data_Pipeline/providers/vietcap.py` — Xóa `field_mapping` dict (10 overrides) + fallback logic `f"bsa{idx}"`. Function `get_api_value()` giờ return `None` cho unmapped fields.
 
 #### Added
 - `V5_improdata/rebuild_schema_keys.py` — Final version: Segmented mapping + Bank anchor + name-based correction.

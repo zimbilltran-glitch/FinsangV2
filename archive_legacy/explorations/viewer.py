@@ -3,10 +3,10 @@ Phase S — Stylize: Terminal Tab Viewer
 viewer.py — Mimics Vietcap IQ's BCTC tab interface in the terminal.
 
 Usage:
-    python Version_2/viewer.py --ticker VHC --sheet kqkd --period year
-    python Version_2/viewer.py --ticker VHC --sheet cdkt --period quarter --n 8
-    python Version_2/viewer.py --ticker VHC --sheet lctt --period year
-    python Version_2/viewer.py --ticker VHC --sheet note --period quarter
+    python V2_Data_Pipeline/viewer.py --ticker VHC --sheet kqkd --period year
+    python V2_Data_Pipeline/viewer.py --ticker VHC --sheet cdkt --period quarter --n 8
+    python V2_Data_Pipeline/viewer.py --ticker VHC --sheet lctt --period year
+    python V2_Data_Pipeline/viewer.py --ticker VHC --sheet note --period quarter
 
 Sheets:  cdkt | kqkd | lctt | note
 Periods: year | quarter
@@ -197,7 +197,7 @@ def main():
             df = load_tab(args.ticker, args.period, args.sheet)
     except FileNotFoundError as e:
         console.print(f"\n[red]❌ {e}[/]")
-        console.print("[yellow]Hint: Run pipeline first:[/]  python Version_2/pipeline.py --ticker VHC\n")
+        console.print("[yellow]Hint: Run pipeline first:[/]  python V2_Data_Pipeline/pipeline.py --ticker VHC\n")
         sys.exit(1)
 
     # Run CFO Audit quietly for header badge

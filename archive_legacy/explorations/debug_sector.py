@@ -7,7 +7,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 print("Starting debug_sector.py...", flush=True)
 
 ROOT = Path(__file__).parent.parent.parent
-v2_path = ROOT / "sub-projects" / "Version_2"
+v2_path = ROOT / "sub-projects" / "V2_Data_Pipeline"
 sys.path.insert(0, str(v2_path))
 
 load_dotenv(dotenv_path=ROOT / "frontend" / ".env")

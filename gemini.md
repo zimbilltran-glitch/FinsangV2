@@ -8,7 +8,7 @@ Dài liệu Hiến pháp và Quy tắc tối thượng dành cho các AI Agent t
 Dự án được cấu trúc theo triết lý "Clean State", tách biệt code vận hành (Production) và code khảo sát (Archive).
 
 - **Root**: Các tài liệu Master Control (`README.md`, `Finsang_Master_*.md`,`challenges.md`,`logs.md`,`task.md`,`active_roadmap.md`,`team_guide.md`,`findings.md`,`changelog.md`).
-- **`sub-projects/Version_2`**: Trái tim của dự án (Core Engine). Chứa Pipeline, Security và Metrics.
+- **`sub-projects/V2_Data_Pipeline`**: Trái tim của dự án (Core Engine). Chứa Pipeline, Security và Metrics.
 - **`sub-projects/V5_improdata`**: Performance & Data Integrity. Chứa resync async và run metrics batch.
 - **`archive_legacy`**: Nơi lưu trữ toàn bộ code cũ, log và data nháp. **Agent phải kiểm tra đây nếu không tìm thấy script cũ.**
 

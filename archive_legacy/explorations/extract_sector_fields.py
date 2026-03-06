@@ -3,7 +3,7 @@ import os
 
 def extract_fields():
     # Use absolute path for golden_schema.json
-    base_dir = r'd:\Project_partial\Finsang\sub-projects\Version_2'
+    base_dir = r'd:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline'
     schema_path = os.path.join(base_dir, 'golden_schema.json')
     output_path = os.path.join(base_dir, 'sector_fields.json')
     

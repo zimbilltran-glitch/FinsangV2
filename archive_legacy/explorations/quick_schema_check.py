@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-SCHEMA_PATH = Path("c:/Users/Admin/OneDrive/Learn Anything/Antigravity/2.Project v2/sub-projects/Version_2/golden_schema.json")
+SCHEMA_PATH = Path("c:/Users/Admin/OneDrive/Learn Anything/Antigravity/2.Project v2/sub-projects/V2_Data_Pipeline/golden_schema.json")
 
 def quick_check():
     if not SCHEMA_PATH.exists():

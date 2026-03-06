@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(ROOT / "sub-projects/Version_2"))
+sys.path.insert(0, str(ROOT / "sub-projects/V2_Data_Pipeline"))
 
 load_dotenv(dotenv_path=ROOT / ".env")
 
@@ -94,7 +94,7 @@ def run_vn30_enrichment():
             
             # 3. Upsert to Supabase
             print(f"   -> Upserting to Supabase...")
-            script_path = str(ROOT / "sub-projects/Version_2/sync_supabase.py")
+            script_path = str(ROOT / "sub-projects/V2_Data_Pipeline/sync_supabase.py")
             subprocess.run([sys.executable, script_path, "--ticker", ticker], check=True)
             
             successful += 1

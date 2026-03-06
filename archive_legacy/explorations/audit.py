@@ -11,7 +11,7 @@ Rules (Task 3.3):
    bsa97 = bsa98 + bsa118
 
 Usage:
-  python Version_2/audit.py --ticker VHC --period year
+  python V2_Data_Pipeline/audit.py --ticker VHC --period year
 """
 
 import argparse

@@ -15,7 +15,7 @@ import json, re
 from pathlib import Path
 from collections import OrderedDict
 
-V2   = Path(r'd:\Project_partial\Finsang\sub-projects\Version_2')
+V2   = Path(r'd:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline')
 V5   = Path(r'd:\Project_partial\Finsang\sub-projects\V5_improdata')
 
 # ─── Load schema ──────────────────────────────────────────────────────────────

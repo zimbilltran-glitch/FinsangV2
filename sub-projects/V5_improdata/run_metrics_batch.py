@@ -12,7 +12,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 print("Starting run_metrics_batch.py...", flush=True)
 
 ROOT = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(ROOT / "sub-projects" / "Version_2"))
+sys.path.insert(0, str(ROOT / "sub-projects" / "V2_Data_Pipeline"))
 
 # Load env
 print("Loading environment...", flush=True)

@@ -10,7 +10,7 @@ import json, re, time, requests
 from pathlib import Path
 from collections import OrderedDict
 
-BASE = Path(r'd:\Project_partial\Finsang\sub-projects\Version_2')
+BASE = Path(r'd:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline')
 V5   = Path(r'd:\Project_partial\Finsang\sub-projects\V5_improdata')
 
 API_URL = "https://iq.vietcap.com.vn/api/iq-insight-service/v1/company/{ticker}/financial-statement?section={section}"

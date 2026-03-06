@@ -396,7 +396,7 @@
 - [ ] All 4 sheets parsed without errors
 - [ ] `field_id` uniqueness confirmed
 - [ ] Period columns (Year + Quarter) detected correctly
-- [ ] `golden_schema.json` written to `Version_2/`
+- [ ] `golden_schema.json` written to `V2_Data_Pipeline/`
 - [ ] Extraction strategy decision documented in `findings.md`
 - [ ] Phase B Gate: PM sign-off received
 

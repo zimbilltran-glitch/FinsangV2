@@ -17,7 +17,7 @@ try:
 except ImportError:
     pass
 
-sys.path.insert(0, str(Path(__file__).parent.parent / "Version_2"))
+sys.path.insert(0, str(Path(__file__).parent.parent / "V2_Data_Pipeline"))
 from pipeline import run_pipeline
 
 # VN30 tickers đầy đủ (31 mã)

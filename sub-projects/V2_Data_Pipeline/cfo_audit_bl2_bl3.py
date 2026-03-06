@@ -8,7 +8,7 @@ Checks:
 import os, sys
 from pathlib import Path
 
-V2 = Path(r'd:\Project_partial\Finsang\sub-projects\Version_2')
+V2 = Path(r'd:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline')
 sys.path.insert(0, str(V2))
 
 from sync_supabase import get_supabase

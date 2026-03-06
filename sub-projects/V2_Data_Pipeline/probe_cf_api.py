@@ -3,8 +3,8 @@ import sys
 import json
 from pathlib import Path
 
-# Setup paths to include Version_2 for VietcapProvider
-V2_PATH = Path(r'c:\Users\Admin\OneDrive\Learn Anything\Antigravity\2.Project v2\sub-projects\Version_2')
+# Setup paths to include V2_Data_Pipeline for VietcapProvider
+V2_PATH = Path(r'c:\Users\Admin\OneDrive\Learn Anything\Antigravity\2.Project v2\sub-projects\V2_Data_Pipeline')
 sys.path.insert(0, str(V2_PATH))
 
 try:

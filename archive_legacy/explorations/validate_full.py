@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 
 # Setup paths
-V2 = Path(r'd:\Project_partial\Finsang\sub-projects\Version_2')
+V2 = Path(r'd:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline')
 V5 = Path(r'd:\Project_partial\Finsang\sub-projects\V5_improdata')
 sys.path.insert(0, str(V2))
 

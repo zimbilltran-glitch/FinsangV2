@@ -27,7 +27,7 @@ V3_SimplyWallSt/
 |---|---|
 | Supabase Project ID | `zuphshdgudnwlfjlfbbs` |
 | Frontend | `Finsang/frontend/` (Vite + React 19) |
-| Backend | `Finsang/sub-projects/Version_2/` |
+| Backend | `Finsang/sub-projects/V2_Data_Pipeline/` |
 | Theme Reference | `Finsang/design-themes/simply-wall-st-theme/` |
 | CTO Skill | `Finsang/.agent/skills/cto-mentor-supervisor/` |
 | CFO Skill | `Finsang/.agent/skills/professional-cfo-analyst/` |

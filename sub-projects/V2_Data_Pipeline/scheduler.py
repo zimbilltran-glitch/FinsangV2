@@ -3,11 +3,11 @@ Phase T — Trigger: Windows Scheduler Wrapper
 scheduler.py — Register/remove Finsang pipeline as a Windows scheduled task
 
 Usage:
-  python Version_2/scheduler.py install          # Register daily task at 06:00
-  python Version_2/scheduler.py install --time 08:30
-  python Version_2/scheduler.py remove           # Unregister task
-  python Version_2/scheduler.py status           # Check if task is registered
-  python Version_2/scheduler.py run-now          # Trigger task immediately via schtasks
+  python V2_Data_Pipeline/scheduler.py install          # Register daily task at 06:00
+  python V2_Data_Pipeline/scheduler.py install --time 08:30
+  python V2_Data_Pipeline/scheduler.py remove           # Unregister task
+  python V2_Data_Pipeline/scheduler.py status           # Check if task is registered
+  python V2_Data_Pipeline/scheduler.py run-now          # Trigger task immediately via schtasks
 
 Requirements:
   - Must be run as Administrator (for schtasks /Create)
@@ -28,9 +28,9 @@ from datetime import datetime
 # ── Paths ──────────────────────────────────────────────────────────────────────
 ROOT        = Path(__file__).parent.parent
 VENV_PY     = ROOT / ".venv" / "Scripts" / "python.exe"
-RUN_ALL     = ROOT / "Version_2" / "run_all.py"
+RUN_ALL     = ROOT / "V2_Data_Pipeline" / "run_all.py"
 TASK_NAME   = "Finsang_DailyPipeline"
-LOG_FILE    = ROOT / "Version_2" / "scheduler.log"
+LOG_FILE    = ROOT / "V2_Data_Pipeline" / "scheduler.log"
 
 def _log(msg: str):
     ts = datetime.now().strftime("%Y-%m-%dT%H:%M:%S+07:00")

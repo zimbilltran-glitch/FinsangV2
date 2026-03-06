@@ -1,7 +1,7 @@
 import requests, json
 from pathlib import Path
 
-OUT = Path(r'd:\Project_partial\Finsang\sub-projects\Version_2')
+OUT = Path(r'd:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline')
 TICKER = "MBB"
 SECTIONS = ["BALANCE_SHEET", "INCOME_STATEMENT", "CASH_FLOW", "NOTE"]
 BASE = "https://iq.vietcap.com.vn/api/iq-insight-service/v1/company/{t}/financial-statement?section={s}"

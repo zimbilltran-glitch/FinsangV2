@@ -4,7 +4,7 @@ Reads raw API JSON and golden_schema.json to identify misaligned keys.
 """
 import json
 
-BASE = r'd:\Project_partial\Finsang\sub-projects\Version_2'
+BASE = r'd:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline'
 
 # Load schema
 with open(f'{BASE}\\golden_schema.json', 'r', encoding='utf-8') as f:

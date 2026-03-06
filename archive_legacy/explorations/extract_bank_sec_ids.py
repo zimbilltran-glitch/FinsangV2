@@ -1,6 +1,6 @@
 import json
 
-schema_path = "c:/Users/Admin/OneDrive/Learn Anything/Antigravity/2.Project v2/sub-projects/Version_2/golden_schema.json"
+schema_path = "c:/Users/Admin/OneDrive/Learn Anything/Antigravity/2.Project v2/sub-projects/V2_Data_Pipeline/golden_schema.json"
 with open(schema_path, "r", encoding="utf-8") as f:
     schema = json.load(f)
 

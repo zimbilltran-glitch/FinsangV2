@@ -36,7 +36,7 @@ Rà soát toàn diện dự án Finsang nhằm:
 | Field | Value |
 |---|---|
 | **Severity** | 🟡 MEDIUM (Limitation) |
-| **Component** | `sub-projects/Version_2/pipeline.py` & Vietcap Provider |
+| **Component** | `sub-projects/V2_Data_Pipeline/pipeline.py` & Vietcap Provider |
 | **Impact** | Không thể tự động tính toán CASA (Tiền gửi không kỳ hạn) và NPL (Nợ xấu) chi tiết cho Bank. |
 
 **Chi tiết:**

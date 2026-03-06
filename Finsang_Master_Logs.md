@@ -36,7 +36,7 @@ This document serves as the centralized source of truth for the Finsang project'
 ### [2026-02-26] - PROJECT RESTRUCTURING & SCALABILITY
 - **Action:** Consolidated 10+ fragmented directories into 3 master parent folders (`internal-skills`, `design-themes`, `sub-projects`).
 - **Goal:** Preparation for GitHub Team collaboration and reduction of root-level cognitive load.
-- **Architecture Change:** Moved `Version_2` (Core) into `sub-projects/` but maintained `streamlit_app.py` as a root router for quick access.
+- **Architecture Change:** Moved `V2_Data_Pipeline` (Core) into `sub-projects/` but maintained `streamlit_app.py` as a root router for quick access.
 
 ---
 
@@ -74,7 +74,7 @@ This document serves as the centralized source of truth for the Finsang project'
 - **Architecture:** Gom cụm cấu trúc thành 3 thư mục lõi: `sub-projects`, `design-themes`, `internal-skills`.
 - **Documentation:** Viết mới `Finsang_Master_Team_Guide.md` và tái cấu trúc `README.md` thành điều hướng trung tâm.
 - **Security Review:** Rà soát `.gitignore` bảo vệ tuyệt đối file `.env`, `keys.txt` và `data/` Parquet.
-- **Legacy Cleanup:** Gắn cờ `[DEPRECATED]` cho `Version_1`, định hướng toàn bộ dev mới sang `Version_2`.
+- **Legacy Cleanup:** Gắn cờ `[DEPRECATED]` cho `Version_1`, định hướng toàn bộ dev mới sang `V2_Data_Pipeline`.
 - **Visualization:** Đưa giao diện `streamlit_app.py` ra ngoài root làm Secondary Audit UI dự phòng cho React Dashboard.
 - **Bug Fixes:** Cải thiện và tối ưu lại logic load data từ mã hóa Parquet thông qua `pipeline.py` nhằm fix các lỗi đọc sai dòng của thư viện `pyarrow`/`pandas`.
 ### [v2.2.0] - 2026-02-28 (Data Enrichment & UI Refinement)
@@ -150,8 +150,18 @@ This document serves as the centralized source of truth for the Finsang project'
 - **Action**: Thực hiện dọn dẹp quy mô lớn toàn bộ dự án. Di chuyển 60+ file không cần thiết vào `archive_legacy`.
 - **Legacy Removal**: Di chuyển toàn bộ script khảo sát, logs, audit reports, và raw Excel files vào `archive_legacy/explorations` và `archive_legacy/clutter_cleanup`.
 - **Git Hygiene**: Untrack thư mục `data/` và file binary lớn khỏi Git index để tối ưu repo size.
-- **Project Structure**: Các thư mục `sub-projects/Version_2` và `V5_improdata` hiện chỉ chứa code operational sạch.
+- **Project Structure**: Các thư mục `sub-projects/V2_Data_Pipeline` và `V5_improdata` hiện chỉ chứa code operational sạch.
 - **Score**: **Production Readiness Standard A achieved.**
+
+### [v6.0.0-planning] - 2026-03-06 (Automated Excel Extraction & V2 Defragmentation)
+- **Project Structure:**
+  - Đổi tên toàn bộ lõi ETL từ `sub-projects/Version_2` thành `sub-projects/V2_Data_Pipeline` để đồng bộ chuẩn Naming Convention với V3, V4, V5, V6.
+  - Cập nhật ~200 file script, markdown, import path sang định dạng thư mục mới.
+- **Architectural Shift (Phase 6):**
+  - Vấn đề lõi: API Vietcap từ chối truy cập 403 Forbidden đối với phần "**Thuyết minh**" của Ngân hàng, khiến hệ số CASA và Phân loại Nợ Xấu (NPL) rơi vào bế tắc (Blocker).
+  - Giải pháp phê duyệt: Xây dựng Worker **Giả lập trình duyệt (Playwright)** tự động tải báo cáo tài chính dạng Excel từ trang web Vietcap.
+  - **Ground Truth Concept:** Data Excel được chọn làm Chân Lý (Truth source) để Cross-check và Ghi đè (Overwrite) lại CĐKT, KQKD, LCTT nếu API JSON bị sai lệch. Áp dụng chung cho cả 3 nhóm ngành.
+  - Mở sub-project mới `V6_Excel_Extractor` chứa 3 file điều khiển (Master Plan, Task Tracker, Technical Specs) phục vụ Phase 6.
 
 ---
 *Finsang Master Logs - System finalized.*

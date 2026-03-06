@@ -4,7 +4,7 @@ import os
 import sys
 
 sys.stdout.reconfigure(encoding='utf-8')
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'Version_2'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'V2_Data_Pipeline'))
 
 from pathlib import Path
 

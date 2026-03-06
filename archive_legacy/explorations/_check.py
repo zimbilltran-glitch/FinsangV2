@@ -1,6 +1,6 @@
 import json
 
-s = json.load(open(r'd:\Project_partial\Finsang\sub-projects\Version_2\golden_schema.json', 'r', encoding='utf-8'))
+s = json.load(open(r'd:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline\golden_schema.json', 'r', encoding='utf-8'))
 cdkt = [f for f in s['fields'] if f['sheet'] == 'CDKT']
 cdkt.sort(key=lambda x: x.get('row_number', 0))
 

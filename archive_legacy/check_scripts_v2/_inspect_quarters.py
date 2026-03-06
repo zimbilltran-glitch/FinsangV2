@@ -3,7 +3,7 @@ import json, warnings
 warnings.filterwarnings("ignore")
 from pathlib import Path
 
-data = json.loads(Path("Version_2/_raw_balance_sheet.json").read_text(encoding="utf-8"))["data"]
+data = json.loads(Path("V2_Data_Pipeline/_raw_balance_sheet.json").read_text(encoding="utf-8"))["data"]
 quarters = data.get("quarters", [])
 print(f"Total quarters: {len(quarters)}")
 for i, q in enumerate(quarters[:5]):

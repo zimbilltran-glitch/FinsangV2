@@ -12,7 +12,7 @@ The project is strictly organized into functional groups to ensure long-term mai
     - Uses OLED Dark aesthetics.
     - Connects to Supabase for near real-time financial data.
 - **`/sub-projects`**: High-level feature integrations and core engines (CORE ONLY).
-    - `Version_2/`: Core "Finsang Engine" (`pipeline.py`, `security.py`, `metrics.py`). Cleaned of explorations.
+    - `V2_Data_Pipeline/`: Core "Finsang Engine" (`pipeline.py`, `security.py`, `metrics.py`). Cleaned of explorations.
     - `V5_improdata/`: **Performance Engine**. Contains ops scripts (`run_metrics_batch.py`) and schema builders.
 - **`/archive_legacy`**: **CRITICAL FOR AGENTS.** This directory contains 60+ archived scripts and audit data moved during the v5.1.5 cleanup. If a script is missing from `/sub-projects`, check here.
     - `explorations/`: Deprecated research, debug, and probe scripts.
@@ -42,7 +42,7 @@ VITE_SUPABASE_ANON_KEY="yours (anon for reads)"
 
 ### 2. High-Performance ETL Workflow (Phase 5+)
 Every data refresh MUST follow the [QUARTERLY_UPDATE_GUIDE.md](QUARTERLY_UPDATE_GUIDE.md):
-1.  **Sync:** `python sub-projects/Version_2/v5_full_resync.py` (Parallel resync to Supabase).
+1.  **Sync:** `python sub-projects/V2_Data_Pipeline/v5_full_resync.py` (Parallel resync to Supabase).
 2.  **Metrics:** `python sub-projects/V5_improdata/run_metrics_batch.py` (CSTC calculation).
 
 ---

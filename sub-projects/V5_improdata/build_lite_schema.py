@@ -8,8 +8,8 @@ Loại bỏ: sample_values, notes, en_name, unit, data_type, level, sheet_en, sh
 import json
 import os
 
-INPUT_PATH  = "sub-projects/Version_2/golden_schema.json"
-OUTPUT_PATH = "sub-projects/Version_2/lite_schema.json"
+INPUT_PATH  = "sub-projects/V2_Data_Pipeline/golden_schema.json"
+OUTPUT_PATH = "sub-projects/V2_Data_Pipeline/lite_schema.json"
 
 # Keys giữ lại cho runtime pipeline
 KEEP_FIELD_KEYS = {

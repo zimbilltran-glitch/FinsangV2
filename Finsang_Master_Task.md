@@ -8,7 +8,7 @@
 
 ## ✅ GIAI ĐOẠN 1 — Pipeline Performance Tuning (Phase 5.5)
 > **Mục tiêu:** Tăng tốc re-sync từ 45+ phút → < 5 phút cho 30 mã VN30.  
-> **Files chính:** `sub-projects/Version_2/v5_full_resync.py`, `pipeline.py`, `golden_schema.json`
+> **Files chính:** `sub-projects/V2_Data_Pipeline/v5_full_resync.py`, `pipeline.py`, `golden_schema.json`
 
 - [x] **T1.1 — Tạo `lite_schema.json`**
   - Extract từ `golden_schema.json`: chỉ giữ `field_id`, `vietcap_key`, `sheet`, `period_type`
@@ -64,7 +64,7 @@
 ## ⏳ GIAI ĐOẠN 3 — Bank & SEC Metrics Completion (Phase 5.6)
 > **Unlock khi:** T2.4 Pass  
 > **Mục tiêu:** Tab CSTC Ngân hàng + Chứng khoán đủ chỉ số chuyên ngành.  
-> **Files chính:** `sub-projects/Version_2/metrics.py`, `run_metrics_batch.py`
+> **Files chính:** `sub-projects/V2_Data_Pipeline/metrics.py`, `run_metrics_batch.py`
 
 ### Bank Metrics (không cần NOTE)
 - [x] **T3.1 — Tính LDR (Loan-to-Deposit Ratio)**
@@ -180,4 +180,4 @@ g keys LCTT.
 | [Finsang_Master_Findings.md](Finsang_Master_Findings.md) | F-001 → F-016 findings gốc |
 | [Finsang_Master_Logs.md](Finsang_Master_Logs.md) | Log mỗi khi hoàn thành gate |
 | [sub-projects/V5_improdata/v5_task.md](sub-projects/V5_improdata/v5_task.md) | V5 task chi tiết |
-| [sub-projects/Version_2/metrics.py](sub-projects/Version_2/metrics.py) | Engine tính CSTC |
+| [sub-projects/V2_Data_Pipeline/metrics.py](sub-projects/V2_Data_Pipeline/metrics.py) | Engine tính CSTC |

@@ -20,9 +20,9 @@ Phase T (Trigger):
   Each section run logs one row. Graceful fallback if supabase-py not installed.
 
 Usage:
-  python Version_2/pipeline.py --ticker VHC
-  python Version_2/pipeline.py --ticker FPT
-  python Version_2/run_all.py          # runs all FINSANG_TICKERS from .env
+  python V2_Data_Pipeline/pipeline.py --ticker VHC
+  python V2_Data_Pipeline/pipeline.py --ticker FPT
+  python V2_Data_Pipeline/run_all.py          # runs all FINSANG_TICKERS from .env
 """
 
 import argparse, json, re, os, logging, logging.handlers

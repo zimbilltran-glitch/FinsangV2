@@ -31,7 +31,7 @@ try:
 except ImportError:
     pass
 
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "Version_2"))
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "V2_Data_Pipeline"))
 from sector import get_all_tickers, get_sector
 
 

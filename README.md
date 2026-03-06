@@ -24,12 +24,13 @@ To ensure engineering consistency and rapid onboarding, use the following master
 Finsang/
 ├── frontend/             # Primary React + Vite visualization (OLED Dark)
 ├── sub-projects/         # High-level engine components (CORE ONLY)
-│   ├── Version_2/        # Core ETL Pipeline (Cleaned - only operational scripts)
+│   ├── V2_Data_Pipeline/ # Core ETL Pipeline (Cleaned - only operational scripts)
 │   ├── Version_1/        # [ARCHIVED] Legacy / Baseline code
-│   ├── PDF_TRANS_Pipeline/ # Financial PDF extraction suite (Phase 6)
+│   ├── PDF_TRANS_Pipeline/ # Financial PDF extraction suite
 │   ├── V3_SimplyWallSt/  # SWS Overview Integration (Done - Production Ready)
 │   ├── V4_Chart_Improve/ # Analysis Charts (Done - Production Ready)
-│   └── V5_improdata/     # Performance & Integrity (Cleaned - Ops scripts only)
+│   ├── V5_improdata/     # Performance & Integrity (Cleaned - Ops scripts only)
+│   └── V6_Excel_Extractor/ # Automated Playwright Excel Bot & Ground Truth Validator
 ├── internal-skills/      # Agent capabilities & Automated test suites
 ├── design-themes/        # UI/UX reference systems
 ├── archive_legacy/       # [STORAGE] Rot bin for explorations & clutter cleanup

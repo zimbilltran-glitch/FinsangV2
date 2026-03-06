@@ -6,9 +6,9 @@ from dotenv import load_dotenv
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-# Add Version_2 to path
+# Add V2_Data_Pipeline to path
 ROOT = Path(__file__).parent.parent.parent
-v2_path = ROOT / "sub-projects" / "Version_2"
+v2_path = ROOT / "sub-projects" / "V2_Data_Pipeline"
 sys.path.insert(0, str(v2_path))
 
 from metrics import calc_metrics

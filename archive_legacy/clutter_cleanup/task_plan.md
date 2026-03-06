@@ -23,7 +23,7 @@
 > *Sửa toàn bộ bugs đang chặn hoạt động hệ thống*
 
 ### Task 1.1: Fix `load_tab_from_supabase()` crash [F-001]
-- **File:** `sub-projects/Version_2/pipeline.py` line 392
+- **File:** `sub-projects/V2_Data_Pipeline/pipeline.py` line 392
 - **Action:** Thay `sheet_upper` → `sheet.upper()`
 - **Verify:** Chạy `python metrics.py --ticker VHC --period year` không crash
 - **Owner:** Backend
@@ -306,7 +306,7 @@ Phase 1 (Critical Fixes)
 - [Master Logs](Finsang_Master_Logs.md) — Audit trail lịch sử
 - [Master Challenges](Finsang_Master_Challenges.md) — Giải pháp kỹ thuật đã verify
 - [Team Guide](Finsang_Team_Guide.md) — Onboarding & standards
-- [CFO Sector Analysis](sub-projects/Version_2/cfo_sector_analysis.md) — Phân tích BCTC 3 ngành
+- [CFO Sector Analysis](sub-projects/V2_Data_Pipeline/cfo_sector_analysis.md) — Phân tích BCTC 3 ngành
 
 ---
 

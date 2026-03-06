@@ -8,13 +8,13 @@ Bảng theo dõi lộ trình phát triển tổng thể của siêu dự án Fin
 
 | Tên Giai Đoạn | Mã Hệ Thống | Trạng Thái | Tiến Độ / Mục Tiêu |
 |---|---|---|---|
-| Phase 1.0 - Core ETL Framework | `Version_1` & `Version_2` | ✅ Hoàn thành | Pipeline, Golden Schema, Fernet AES-128. |
+| Phase 1.0 - Core ETL Framework | `Version_1` & `V2_Data_Pipeline` | ✅ Hoàn thành | Pipeline, Golden Schema, Fernet AES-128. |
 | Phase 2.0 - React Web Dashboard | `frontend` base | ✅ Hoàn thành | UI cơ bản, BCTC tables, Supabase, Dark Mode. |
 | Phase 3.0 - Simply Wall St 360 Overview | `V3_SimplyWallSt` | ✅ Hoàn thành | Radar chart, Valuation Gauge, Sector-specific summary. |
 | Phase 4.0 - Analysis Charts Integration | `V4_Chart_Improve` | ✅ Hoàn thành | `recharts`, biểu đồ chuyên sâu 3 Sector. |
 | Phase 5.0 - Data Integrity (Exact Ground Truth) | `V5_improdata` | ✅ Hoàn thành | Semantic mapping thay Positional. Resync sạch 100% VN30. |
 | Phase 5.5 - Pipeline Performance Tuning | `V5_improdata` | ✅ Hoàn thành | `lite_schema` + ThreadPool async + Stream-to-DB. |
-| Phase 5.6 - Sector Metrics Completion | `Version_2` | ✅ Hoàn thành | LDR, CIR, Margin/Equity, CER. (CASA: API Limit). |
+| Phase 5.6 - Sector Metrics Completion | `V2_Data_Pipeline` | ✅ Hoàn thành | LDR, CIR, Margin/Equity, CER. (CASA: API Limit). |
 | Phase 6.0 - PDF Financial Parsing | `PDF_TRANS_Pipeline` | ⏳ Chờ | Bóc tách PDF BCTC → Markdown/CSDL. |
 | Phase 7.0 - Production Readiness | `frontend` deploy | 🚀 **ACTIVE** | `npm run build` ✅, RLS Hardened ✅, Bandit Clean ✅. |
 

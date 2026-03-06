@@ -2,7 +2,7 @@ import json
 import os
 
 def search_raw_mbb():
-    base_dir = r'd:\Project_partial\Finsang\sub-projects\Version_2'
+    base_dir = r'd:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline'
     files = ['_raw_mbb_balance_sheet.json', '_raw_mbb_income_statement.json', '_raw_mbb_note.json']
     
     terms = ["không kỳ hạn", "nợ xấu", "nợ nhóm", "quá hạn", "vốn chủ", "cho vay"]

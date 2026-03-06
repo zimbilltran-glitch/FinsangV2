@@ -33,7 +33,7 @@
 
 ============================================================
 TOTAL updated fields: 188
-Saved to: d:\Project_partial\Finsang\sub-projects\Version_2\golden_schema.json
+Saved to: d:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline\golden_schema.json
 
 ============================================================
 POST-REBUILD AUDIT:

@@ -12,4 +12,4 @@
 
 ## Instruction for New Team Members
 Do **NOT** use scripts from this directory for new feature development.
-All active development, ETL execution, and data extraction must happen in `sub-projects/Version_2`.
+All active development, ETL execution, and data extraction must happen in `sub-projects/V2_Data_Pipeline`.

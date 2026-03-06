@@ -4,7 +4,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 ROOT = Path(__file__).parent.parent.parent
-sys.path.append(str(ROOT / "sub-projects" / "Version_2"))
+sys.path.append(str(ROOT / "sub-projects" / "V2_Data_Pipeline"))
 
 from sb_client import get_sb
 

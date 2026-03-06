@@ -1,6 +1,6 @@
 import json
 
-with open("sub-projects/Version_2/golden_schema.json", "r", encoding="utf-8") as f:
+with open("sub-projects/V2_Data_Pipeline/golden_schema.json", "r", encoding="utf-8") as f:
     fields = json.load(f)["fields"]
 
 print("-- BANK --")

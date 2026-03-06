@@ -19,7 +19,7 @@ Strategy for CDKT (122 fields):
 import json, re
 from pathlib import Path
 
-V2 = Path(r'd:\Project_partial\Finsang\sub-projects\Version_2')
+V2 = Path(r'd:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline')
 V5 = Path(r'd:\Project_partial\Finsang\sub-projects\V5_improdata')
 
 with open(V2 / "golden_schema.json", "r", encoding="utf-8") as f:

@@ -1,7 +1,7 @@
 import json
 import os
 
-SCHEMA_PATH = "c:/Users/Admin/OneDrive/Learn Anything/Antigravity/2.Project v2/sub-projects/Version_2/golden_schema.json"
+SCHEMA_PATH = "c:/Users/Admin/OneDrive/Learn Anything/Antigravity/2.Project v2/sub-projects/V2_Data_Pipeline/golden_schema.json"
 
 # Ground Truth Map: field_id -> {sector: vietcap_key}
 GROUND_TRUTH = {

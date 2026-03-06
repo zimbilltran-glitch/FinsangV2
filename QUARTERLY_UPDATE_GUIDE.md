@@ -11,7 +11,7 @@ Thực hiện chạy tệp cập nhật thông tin tổng quát và kiểm tra q
 ```bash
 cd d:\Project_partial\Finsang
 $env:PYTHONIOENCODING='utf-8'
-python sub-projects/Version_2/vn30_enrichment.py
+python sub-projects/V2_Data_Pipeline/vn30_enrichment.py
 ```
 > **Tác dụng:**
 > - Cập nhật thông tin tổng quát (Company Overview) cho 30 mã VN30 (vốn hóa, giá, EPS, PE, ...).
@@ -20,7 +20,7 @@ python sub-projects/Version_2/vn30_enrichment.py
 ## Bước 2: Chạy Full Resync (Đồng bộ Pipeline V5.5 -> Supabase)
 Nếu bạn chỉ muốn fetch và đẩy dữ liệu tài chính BCTC mới nhất lên Supabase:
 ```bash
-python sub-projects/Version_2/v5_full_resync.py
+python sub-projects/V2_Data_Pipeline/v5_full_resync.py
 ```
 > **Tác dụng:**
 > - Script đã được tối ưu bằng ThreadPoolExecutor, chạy song song 8 mã cùng lúc.

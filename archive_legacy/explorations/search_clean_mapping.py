@@ -1,8 +1,8 @@
 import os
 
 def search_text_mapping():
-    path = r'd:\Project_partial\Finsang\sub-projects\Version_2\field_mapping_clean.txt'
-    output_path = r'd:\Project_partial\Finsang\sub-projects\Version_2\search_results_mapping.txt'
+    path = r'd:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline\field_mapping_clean.txt'
+    output_path = r'd:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline\search_results_mapping.txt'
     terms = ["vốn chủ sở hữu", "thu nhập hoạt động", "chi phí quản lý", "cho vay khách hàng", "tiền gửi của khách hàng", "cho vay ký quỹ", "môi giới"]
     
     results = []

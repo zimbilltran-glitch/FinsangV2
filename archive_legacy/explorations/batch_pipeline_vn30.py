@@ -5,7 +5,7 @@ import sys, os, time
 from pathlib import Path
 
 # Setup paths
-V2 = Path(r'd:\Project_partial\Finsang\sub-projects\Version_2')
+V2 = Path(r'd:\Project_partial\Finsang\sub-projects\V2_Data_Pipeline')
 sys.path.insert(0, str(V2))
 
 from pipeline import run_pipeline

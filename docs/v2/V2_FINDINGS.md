@@ -39,9 +39,9 @@
 **Period columns detected:** 8 years (2018–2025) + 32 quarters per sheet.
 
 **Outputs generated:**
-- ✅ `Version_2/golden_schema.json` — 345 fields, canonical field registry
-- ✅ `Version_2/schema_report.md` — human-readable full field table per sheet
-- ✅ `Version_2/extract_golden_schema.py` — reproducible extractor script
+- ✅ `V2_Data_Pipeline/golden_schema.json` — 345 fields, canonical field registry
+- ✅ `V2_Data_Pipeline/schema_report.md` — human-readable full field table per sheet
+- ✅ `V2_Data_Pipeline/extract_golden_schema.py` — reproducible extractor script
 
 **CTO Score (Phase B):** 88/100
 - ✅ stdlib-only (no new dependencies)
@@ -125,8 +125,8 @@ Tài Chính (Financial)
 ### Golden Schema (`VHC_BCTC.xlsx`)
 - **Source:** User-provided ground truth
 - **Sheets:** CDKT (122), KQKD (25), LCTT (41), NOTE (157) = **345 total fields**
-- **Canonical field registry:** `Version_2/golden_schema.json` ✅ WRITTEN
-- **Human report:** `Version_2/schema_report.md` ✅ WRITTEN
+- **Canonical field registry:** `V2_Data_Pipeline/golden_schema.json` ✅ WRITTEN
+- **Human report:** `V2_Data_Pipeline/schema_report.md` ✅ WRITTEN
 
 ---
 

@@ -12,7 +12,7 @@ Báo cáo tài chính chuẩn mực (VAS) được Bộ Tài chính quy định 
 
 ## 2. Các điểm khác biệt cốt lõi gây ra lỗi hiển thị (Trống dữ liệu)
 
-Vấn đề trên hệ thống Finsang hiện tại xuất phát từ việc luồng xử lý `Version_2/pipeline.py` đang dùng một `golden_schema.json` duy nhất (dựa trên nhóm Phi tài chính) để áp đặt cho tất cả mã.
+Vấn đề trên hệ thống Finsang hiện tại xuất phát từ việc luồng xử lý `V2_Data_Pipeline/pipeline.py` đang dùng một `golden_schema.json` duy nhất (dựa trên nhóm Phi tài chính) để áp đặt cho tất cả mã.
 
 ### A. Ngân hàng (Ví dụ: MBB) không có các đầu mục sau:
 1. **cdkt_hang_ton_kho_rong (Hàng tồn kho)**: Ngân hàng không sản xuất hay bán lẻ hàng hóa, nên mục này hoàn toàn rỗng `0.0` (Nan).

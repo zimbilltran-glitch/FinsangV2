@@ -1,6 +1,6 @@
 import os, sys, warnings
 warnings.filterwarnings("ignore")
-sys.path.insert(0, "sub-projects/Version_2")
+sys.path.insert(0, "sub-projects/V2_Data_Pipeline")
 from dotenv import load_dotenv
 load_dotenv(".env")
 from metrics import calc_metrics
