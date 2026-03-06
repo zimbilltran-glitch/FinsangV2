@@ -45,7 +45,7 @@ Rà soát toàn diện dự án Finsang nhằm:
 
 **Giải pháp & Khuyến nghị:**
 - Đây là giới hạn từ nguồn dữ liệu (Data Source Limitation). 
-- **Workaround:** User có thể sử dụng `PDF_TRANS_Pipeline` để bóc tách thủ công từ file PDF BCTC chính thức nếu cần số liệu CASA/NPL chính xác tuyệt đối.
+- **Workaround:** Sử dụng phương án tự động tải file Excel từ nền tảng Vietcap (`V6_Excel_Extractor`) làm Ground Truth thay thế hoàn toàn cho PDF_TRANS_Pipeline (đã bị hủy do quá phức tạp).
 
 ---
 

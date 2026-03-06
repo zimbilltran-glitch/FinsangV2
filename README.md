@@ -26,7 +26,6 @@ Finsang/
 ├── sub-projects/         # High-level engine components (CORE ONLY)
 │   ├── V2_Data_Pipeline/ # Core ETL Pipeline (Cleaned - only operational scripts)
 │   ├── Version_1/        # [ARCHIVED] Legacy / Baseline code
-│   ├── PDF_TRANS_Pipeline/ # Financial PDF extraction suite
 │   ├── V3_SimplyWallSt/  # SWS Overview Integration (Done - Production Ready)
 │   ├── V4_Chart_Improve/ # Analysis Charts (Done - Production Ready)
 │   ├── V5_improdata/     # Performance & Integrity (Cleaned - Ops scripts only)
@@ -35,6 +34,7 @@ Finsang/
 ├── design-themes/        # UI/UX reference systems
 ├── archive_legacy/       # [STORAGE] Rot bin for explorations & clutter cleanup
 │   ├── explorations/     # 40+ deprecated research & debug scripts
+│   │   └── PDF_TRANS_Pipeline/ # [ARCHIVED] Financial PDF extraction suite (Too complex)
 │   └── clutter_cleanup/  # Raw Excel files, logs, and temporary audit data
 └── data/                 # (Gitignored/Untracked) Encrypted financial store
 ```

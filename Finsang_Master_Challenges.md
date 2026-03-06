@@ -49,7 +49,7 @@ Centralized log of critical technical hurdles encountered during the development
 ### 7. Bank Note API 403 Forbidden (CASA Limitation)
 - **Symptom:** Cannot calculate CASA (Demand Deposits) for Banks.
 - **Root Cause:** Vietcap API for `section=NOTE` returns `HTTP 403 Forbidden` for most bank tickers on the web integration endpoint.
-- **Solution:** Documented as a **Limitation**. CASA is currently bypassed. User must manually verify this through official PDF reports via `PDF_TRANS_Pipeline`.
+- **Solution:** Documented as a **Limitation**. CASA is currently bypassed. User will use the newer `V6_Excel_Extractor` automated Playwright bot to establish Excel Ground Truth instead of the deprecated `PDF_TRANS_Pipeline`.
 - **Level:** MEDIUM.
 
 ---

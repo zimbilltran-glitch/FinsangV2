@@ -15,7 +15,8 @@ Bảng theo dõi lộ trình phát triển tổng thể của siêu dự án Fin
 | Phase 5.0 - Data Integrity (Exact Ground Truth) | `V5_improdata` | ✅ Hoàn thành | Semantic mapping thay Positional. Resync sạch 100% VN30. |
 | Phase 5.5 - Pipeline Performance Tuning | `V5_improdata` | ✅ Hoàn thành | `lite_schema` + ThreadPool async + Stream-to-DB. |
 | Phase 5.6 - Sector Metrics Completion | `V2_Data_Pipeline` | ✅ Hoàn thành | LDR, CIR, Margin/Equity, CER. (CASA: API Limit). |
-| Phase 6.0 - PDF Financial Parsing | `PDF_TRANS_Pipeline` | ⏳ Chờ | Bóc tách PDF BCTC → Markdown/CSDL. |
+| Phase 6.0 - Automated Excel Extraction | `V6_Excel_Extractor` | 🟢 Active | Bóc tách Excel BCTC thay thế PDF. |
+| [ARCHIVED] PDF Extraction  | `archive_legacy/explorations/PDF_TRANS_Pipeline` | ❌ Hủy bỏ | Không nghiên cứu tiếp do quá phức tạp. |
 | Phase 7.0 - Production Readiness | `frontend` deploy | 🚀 **ACTIVE** | `npm run build` ✅, RLS Hardened ✅, Bandit Clean ✅. |
 
 ---
