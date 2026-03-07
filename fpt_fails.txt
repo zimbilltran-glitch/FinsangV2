@@ -1,0 +1,14 @@
+cdkt_dau_tu_ngan_han                       |                0 | 21,785,213,686,808 | [FAIL] DRIFT 2178521368680800.00%
+cdkt_dau_tu_ngan_han_1                     |                0 | 21,785,213,686,808 | [FAIL] DRIFT 2178521368680800.00%
+cdkt_du_phong_giam_gia                     |                0 | -133,467,537,483 | [FAIL] DRIFT 13346753748300.00%
+cdkt_tai_san_luu_dong_khac                 |                0 | 1,197,007,778,928 | [FAIL] DRIFT 119700777892800.00%
+cdkt_tai_san_luu_dong_khac_1               |                0 | 1,197,007,778,928 | [FAIL] DRIFT 119700777892800.00%
+cdkt_phai_thu_khach_hang_dai_han           |                0 | 10,537,019,113,380 | [FAIL] DRIFT 1053701911338000.00%
+cdkt_tra_truoc_nguoi_ban_dai_han           |                0 |  610,379,845,664 | [FAIL] DRIFT 61037984566400.00%
+cdkt_loi_the_thuong_mai                    |                0 | 1,097,458,206,678 | [FAIL] DRIFT 109745820667800.00%
+cdkt_cac_tai_san_dai_han_khac              |                0 | 26,464,052,832,167 | [FAIL] DRIFT 2646405283216700.00%
+cdkt_nguoi_mua_tra_tien_truoc_dai_han      |                0 | 6,725,619,929,289 | [FAIL] DRIFT 672561992928900.00%
+cdkt_chi_phi_phai_tra_dai_han              |                0 | 1,241,089,122,260 | [FAIL] DRIFT 124108912226000.00%
+cdkt_co_phieu_quy                          |                0 |   87,730,484,825 | [FAIL] DRIFT 8773048482500.00%
+cdkt_quy_khen_thuong_phuc_loi_1            |                0 | 1,835,037,318,363 | [FAIL] DRIFT 183503731836300.00%
+TOTAL=122  [OK]=109  [FAIL DRIFT]=13  [FAIL MISS]=0

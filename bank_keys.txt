@@ -1,0 +1,12 @@
+cdkt_bank_tong_tai_san: TỔNG TÀI SẢN
+cdkt_bank_cac_cong_cu_tai_chinh_phai_sinh_va_cac_tai_san_tai_chin: Các công cụ tài chính phái sinh và các tài sản tài chính khác
+cdkt_bank_tai_san_co_dinh: Tài sản cố định
+cdkt_bank_tai_san_co_dinh_huu_hinh: Tài sản cố định hữu hình
+cdkt_bank_tai_san_co_dinh_thue_tai_chinh: Tài sản cố định thuê tài chính
+cdkt_bank_tai_san_co_dinh_vo_hinh: Tài sản cố định vô hình
+cdkt_bank_tai_san_co_khac: Tài sản Có khác
+cdkt_bank_tai_san_thue_tndn_hoan_lai: Tài sản thuế TNDN hoãn lại
+cdkt_bank_tai_san_co_khac_1: Tài sản Có khác
+cdkt_bank_cac_khoan_du_phong_rui_ro_cho_cac_tai_san_co_noi_bang_k: Các khoản dự phòng rủi ro cho các tài sản Có nội bảng khác
+cdkt_bank_tong_no_phai_tra: TỔNG NỢ PHẢI TRẢ
+cdkt_bank_chenh_lech_danh_gia_lai_tai_san: Chênh lệch đánh giá lại tài sản

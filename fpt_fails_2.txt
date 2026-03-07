@@ -1,0 +1,5 @@
+cdkt_dau_tu_ngan_han                       |                0 | 21,785,213,686,808 | [FAIL] DRIFT 2178521368680800.00%
+cdkt_dau_tu_ngan_han_1                     |                0 | 21,785,213,686,808 | [FAIL] DRIFT 2178521368680800.00%
+cdkt_tai_san_luu_dong_khac                 |                0 | 1,197,007,778,928 | [FAIL] DRIFT 119700777892800.00%
+cdkt_tai_san_luu_dong_khac_1               |                0 | 1,197,007,778,928 | [FAIL] DRIFT 119700777892800.00%
+TOTAL=85  [OK]=81  [FAIL DRIFT]=4  [FAIL MISS]=0
