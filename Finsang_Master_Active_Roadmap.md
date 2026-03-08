@@ -19,6 +19,7 @@ Bảng theo dõi lộ trình phát triển tổng thể của siêu dự án Fin
 | [ARCHIVED] PDF Extraction  | `archive_legacy/explorations/PDF_TRANS_Pipeline` | ❌ Hủy bỏ | Không nghiên cứu tiếp do quá phức tạp. |
 | Phase 7.0 - Production Readiness | `frontend` deploy | ✅ Hoàn thành | `npm run build`, RLS Hardened, Bandit Clean. |
 | Phase 8.0 - Data Integrity Audit | `V6_Excel_Extractor` | ✅ Hoàn thành | Đạt độ chính xác 100% cho 3 nhóm ngành VN30. |
+| Phase 9.0 - Hybrid Sentinel Architecture | `V9_Hybrid_Sentinel` | 🔄 Đang triển khai (100% Code) | Sentinel Worker tự map key từ Excel, Pruning 8 năm. |
 
 ---
 
@@ -70,3 +71,11 @@ Bảng theo dõi lộ trình phát triển tổng thể của siêu dự án Fin
 - [x] **Automated Key Fixing**: Phát triển `fix_keys.py` tự động ánh xạ API keys dựa trên so khớp giá trị Excel.
 - [x] **VN30 Scale-up**: Resync đồng loạt 30 mã VN30 bằng bộ keys đã verified.
 - [x] **Kết quả:** MBB 100%, SSI 100%, FPT 100%. Đạt chuẩn Enterprise Grade.
+
+### Giai Đoạn 7 — Hybrid Sentinel Architecture (Phase 9) (✅ HOÀN THÀNH CODE)
+> **Mục tiêu:** Chống Rollback dữ liệu khi Vietcap đổi API, tạo cấu trúc tự chữa lành (Self-healing).
+
+- [x] **Sentinel Worker**: Bot Tự động so khớp dữ liệu từ `Excel Ground Truth` qua `API JSON` để update dictionary `vietcap_key`.
+- [x] **8-Year Pruning**: Cắt giảm dữ liệu kéo về còn 8 năm (32 Quý) để tăng gấp đôi tốc độ pipeline và truy vấn UI.
+- [x] **Zero-Mapping Fallback**: Ngăn chặn provider nhận diện sai các giá trị `0.0`. 
+- [x] **Tài liệu Hướng dẫn V9**: Đóng gói hoàn chỉnh nguyên tắc không sửa code map tay (`V9_DEVELOPER_GUIDE.md`).

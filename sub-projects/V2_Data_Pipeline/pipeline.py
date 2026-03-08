@@ -153,11 +153,24 @@ def normalize(payload: dict, section: str, sheet_id: str,
         lengthReport = 1|2|3|4 for quarterly, 5 for full-year annual rows
     """
     records = []
+    
+    # ── Phase 9: 8-year History Pruning ──
+    # Find the latest year in the payload to establish the 8-year window (e.g., 2025 -> 2018)
+    all_years = []
+    for pt in ("years", "quarters"):
+        for r in payload.get(pt, []):
+            if r.get("yearReport"):
+                all_years.append(int(r.get("yearReport")))
+    max_year = max(all_years) if all_years else 2025
+    min_year = max_year - 7
 
     for period_type in ("years", "quarters"):
         rows = payload.get(period_type, [])
         for api_row in rows:
             yr = api_row.get("yearReport")
+            if not yr or int(yr) < min_year:
+                continue
+                
             lr = api_row.get("lengthReport")   # 1-4 = quarter, 5 = full year
 
             if period_type == "quarters":
