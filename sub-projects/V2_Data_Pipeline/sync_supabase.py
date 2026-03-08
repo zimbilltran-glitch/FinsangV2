@@ -85,6 +85,8 @@ else:
     # Ensure these are set in the environment for subsequent calls
     os.environ["SUPABASE_URL"] = url
     os.environ["SUPABASE_SERVICE_ROLE_KEY"] = key
+    key_type = "service_role" if len(key) > 210 else "anon"
+    print(f"  [DEBUG] Using Supabase Key type: {key_type} (length: {len(key)})")
 
 # ─── Supabase Client ──────────────────────────────────────────────────────────
 def get_supabase():
@@ -195,15 +197,15 @@ def purge_ticker(sb, ticker: str) -> None:
         print(f"    🗑️  Purged {deleted:>5} rows from {tbl} for {ticker}")
 
 
-# ─── Core Upload ──────────────────────────────────────────────────────────────
 def upsert_rows(sb, table: str, rows: list[dict], batch_size: int = 500) -> int:
-    """Batch upsert rows into a Supabase table. Returns total rows inserted."""
+    """Batch upsert rows into a Supabase table. Returns total rows inserted/updated."""
     if not rows:
         return 0
     total = 0
+    on_conflict = "stock_name,period,ratio_name,source" if table == "financial_ratios" else "stock_name,period,item_id,source"
     for i in range(0, len(rows), batch_size):
         batch = rows[i:i + batch_size]
-        sb.table(table).insert(batch).execute()
+        sb.table(table).upsert(batch, on_conflict=on_conflict).execute()
         total += len(batch)
     return total
 
@@ -218,8 +220,10 @@ def sync_ticker(ticker: str, period_types: list[str] = ("year", "quarter")):
     sb = get_supabase()
 
     # Step 1: Purge existing data for this ticker (idempotent)
-    print(f"  ▶ Step 1: Purging existing data for {ticker}...")
-    purge_ticker(sb, ticker)
+    # Phase 9: Pruning 8-Year strategy - DO NOT purge existing data anymore.
+    # We only upsert the new (8-year moving window), leaving older data intact.
+    # print(f"  ▶ Step 1: Purging existing data for {ticker}...")
+    # purge_ticker(sb, ticker)
 
     # Step 2: Determine sector-specific sheets for this ticker
     sector = get_sector(ticker)
