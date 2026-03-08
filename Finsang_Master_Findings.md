@@ -187,3 +187,24 @@ Rà soát toàn diện dự án Finsang nhằm:
 
 ---
 
+## F-026: V2 Pipeline Lite Schema Desync (Blank Data in UI) — ✅ SOLVED
+
+| Field | Value |
+|---|---|
+| **Severity** | 🔴 HIGH (Data Loss Visual) |
+| **Component** | `lite_schema.json`, `golden_schema_v9.json`, `pipeline.py` |
+| **Impact** | Dữ liệu trên Web bị trống (trả về `-` hoặc `0`) ở những tab đặc biệt như Lưu chuyển tiền tệ MBB dù API tải về bình thường. |
+
+**Chi tiết Lỗi (Root Cause):**
+- **Sự cố:** Code Phase 9 của `sentinel_worker.py` chỉ cập nhật kết quả map key mới vào file gốc `golden_schema_v9.json`.
+- Tuy nhiên, V2 Data Pipeline (trong bước tối ưu Phase 5.5) lại được cấu hình để **ĐỌC TỪ BỘ ĐỆM `lite_schema.json`** (~173KB) thay vì file golden gốc (~940KB) để chạy nhanh hơn.
+- Hậu quả: Schema được bot map đúng nhưng pipeline vẫn lấy key cũ, sai lệch từ `lite_schema.json` cũ kỹ, dẫn đến việc không thể trích xuất giá trị API trả về -> Dữ liệu vào Database bị 0.
+
+**Giải pháp & YÊU CẦU BẮT BUỘC (V9 Fix):**
+- **Hành động 1:** Viết script Python copy toàn bộ schema chuẩn từ `golden_schema_v9.json` và build đè lại `lite_schema.json`.
+- **Hành động 2:** Script build `lite_schema.json` bắt buộc phải giữ lại key `unit` và `level` vì Frontend/Pipeline cần đọc chúng, thiếu sẽ gây ra lỗi KeyError: 'unit'.
+- **📣 QUY TẮC CỨNG DÀNH CHO CÁC AGENT (AGENT RULES):**
+  1. Khi Sentinel Worker học xong hoặc khi bạn thay đổi Schema thủ công/bot ở file `golden_schema_v9.json`, bạn **BẮT BUỘC** phải rebuild lại file `lite_schema.json` trong dự án thì dữ liệu mới ăn vào CSDL.
+  2. Tuyệt đối **KHÔNG ĐƯỢC ĐOÁN MÒ LỖI DỮ LIỆU HIỂN THỊ RỖNG**. Khi Web hiện rỗng hoặc 0 đứt quãng, Agent PHẢI mở đọc ngay file `Finsang_Master_Findings.md` (chính là file này) hoặc `V9_DEVELOPER_GUIDE.md` để biết mấu chốt nguyên nhân. Việc đoán mò rồi sửa source `pipeline.py` mù quáng sẽ phá hỏng dự án.
+
+---

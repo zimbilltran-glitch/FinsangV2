@@ -20,6 +20,13 @@ If data is missing or wrong:
    - Fetch the **API JSON Payload**.
    - Compare values to find the **True API Key**.
    - Automatically update `golden_schema.json` for all tickers in that sector.
+3. 🚨 **CRITICAL STEP**: After `golden_schema.json` is automatically updated, you MUST manually or via script convert it and overwrite `sub-projects/V2_Data_Pipeline/lite_schema.json`. (Include `unit` and `level`). If you skip this, the V2 Pipeline will read old cached keys and fail silently (UI data becomes 0 or `-`).
+
+### 2.1 Handling Blank UI Data (Zeroes or dashes)
+If the web UI shows no data (just dashes or zeroes) for a specific row/tab even though API fetch succeeds:
+- **Do NOT guess the error** or rewrite pipeline logic randomly.
+- **Rule Book First**: Read `Finsang_Master_Findings.md` (specifically F-026) immediately.
+- The likely root cause is a **Schema Desync** between what the bot learned (`golden_schema_v9.json`) and what the pipeline reads (`lite_schema.json`). Re-sync the schema.
 
 ### 3. Data Pruning (8-Year Limit)
 Finsang now strictly enforces an **8-year / 32-quarter** limit. 
