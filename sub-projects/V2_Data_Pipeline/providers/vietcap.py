@@ -42,12 +42,22 @@ class VietcapProvider(BaseProvider):
 
     def get_api_value(self, row: dict, section: str, sheet_row_idx: int, field_id: str = "") -> Optional[float]:
         """
-        Fallback when vietcap_key is empty (e.g. NOTE section).
-        V5: Removed hardcoded field_mapping and positional bsa{N} fallback
-            which caused data misalignment for normal company sheets.
-            All CDKT/KQKD/LCTT fields now have explicit vietcap_key in
-            golden_schema.json (populated by V5 rebuild_schema_keys.py).
+        Fallback when vietcap_key is empty (e.g. NOTE section, or unmapped KQKD/LCTT).
+        Iterates through possible sector prefixes to extract values dynamically.
         """
-        # V5: No more guessing. Return None for unmapped fields.
-        return None
+        best_val = None
+        for prefix in self.API_PREFIX.get(section, []):
+            key = f"{prefix}{sheet_row_idx}"
+            val = row.get(key)
+            if val is None and isinstance(row.get("values"), dict):
+                val = row["values"].get(key)
+            
+            if val is not None:
+                f_val = float(val)
+                if best_val is None or f_val != 0.0:
+                    best_val = f_val
+                if f_val != 0.0:
+                    break
+                    
+        return best_val
 
