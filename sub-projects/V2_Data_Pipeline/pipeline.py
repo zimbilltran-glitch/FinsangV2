@@ -553,6 +553,7 @@ def load_tab(ticker: str, period_type: str, sheet: str) -> pd.DataFrame:
             "vn_name":  field["vn_name"],
             "unit":     field["unit"],
             "level":    field["level"],
+            "sheet_row_idx": field["row_number"],
         }
         for p in all_periods:
             p_row = sub[sub["period_label"] == p]
@@ -560,8 +561,8 @@ def load_tab(ticker: str, period_type: str, sheet: str) -> pd.DataFrame:
         rows.append(row_dict)
 
     result = pd.DataFrame(rows)
-    period_cols = [c for c in result.columns if c not in ("field_id", "vn_name", "unit", "level")]
-    return result[["field_id", "vn_name", "unit", "level"] + sorted(period_cols, reverse=True)]
+    period_cols = [c for c in result.columns if c not in ("field_id", "vn_name", "unit", "level", "sheet_row_idx")]
+    return result[["field_id", "vn_name", "unit", "level", "sheet_row_idx"] + sorted(period_cols, reverse=True)]
 
 
 if __name__ == "__main__":

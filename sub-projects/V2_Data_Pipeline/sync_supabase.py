@@ -106,7 +106,7 @@ def parquet_exists(ticker: str, period_type: str, sheet: str) -> bool:
 def build_rows_for_sheet(df, ticker: str, sheet_id: str, period_type: str) -> list[dict]:
     """Transform V2 long-format DataFrame into list of dicts for Supabase upsert."""
     rows = []
-    period_cols = [c for c in df.columns if c not in ("field_id", "vn_name", "unit", "level")]
+    period_cols = [c for c in df.columns if c not in ("field_id", "vn_name", "unit", "level", "sheet_row_idx")]
 
     # Map sheet_id to row_number via schema-defined row_number (V2 stores this in sheet_row_idx)
     for _, row in df.iterrows():
